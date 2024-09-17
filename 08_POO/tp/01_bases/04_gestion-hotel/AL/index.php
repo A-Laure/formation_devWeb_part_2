@@ -1,5 +1,8 @@
 <?php 
 
+require 'Chambre.php';
+require 'Hotel.php';
+
 # Exercice :
 
 /**
@@ -17,6 +20,39 @@
  * 
  */
 
+$hotel = new Hotel();
+
+ $chambre1 = new Chamber(1, 'Simple', 32,56);
+ $chambre2 = new Chamber(2, 'Double', 60);
+
+ $hotel->addRoom($chambre1);
+ $hotel->addRoom($chambre2);
+
+ echo 'detailsDisplay';
+ echo '<br>';
+ echo '<br>';
+ echo $chambre1->displayDetails();
+ echo '<br>';
+ echo '<hr>';
+ echo 'detailsDisplay';
+ echo '<br>';
+ echo '<br>';
+ echo $chambre2->displayDetails();
+ echo '<br>';
+ echo '<hr>'; 
+  echo $hotel->displayHotel();
+ echo '<hr>';
+ echo 'Réservation :';
+ echo '<br>';
+ echo '<br>';
+ echo $hotel->roomReservation(1);
+ echo '<hr>';
+ echo '<br>';
+ echo '<br>';
+ echo $hotel->totalStay(2,2);
+ echo '<hr>';
+
+ 
 
 
 
