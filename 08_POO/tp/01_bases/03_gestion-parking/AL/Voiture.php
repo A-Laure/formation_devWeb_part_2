@@ -62,16 +62,16 @@ public function detailsDisplay (){
 
 # Setters
 
-public function setImmat() : string{
-    return $this->immat;
+public function setImmat($newValue) : string{
+    return $this->immat = $newValue;
   }
 
-  public function setBrand() : string{
-    return $this->brand;
+  public function setBrand($newValue) : string{
+    return $this->brand = $newValue;
   }
 
-  public function setColor() : string{
-    return $this->color;
+  public function setColor($newValue) : string{
+    return $this->color = $newValue;
   }
 
 

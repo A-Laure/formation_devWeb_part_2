@@ -45,26 +45,26 @@ public function displayDetails(){
 
 # Getters
 
-public function getNumber() : int {
+public function getNumber()  {
     return $this->number;
 }
-public function getType() : int {
+public function getType()  {
     return $this->type;
 }
-public function getNightPrice() : int {
+public function getNightPrice()  {
     return $this->nightPrice;
 }
 
 # Setters
 
-public function setNumber() : int {
-    return $this->number;
+public function setNumber($newValue)  {
+    return $this->number = $newValue;
 }
-public function setType() : int {
-    return $this->type;
+public function setType($newValue)  {
+    return $this->type = $newValue;
 }
-public function setNightPrice() : int {
-    return $this->nightPrice;
+public function setNightPrice($newValue)  {
+    return $this->nightPrice = $newValue;
 }
 
 
