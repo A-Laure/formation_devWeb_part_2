@@ -13,11 +13,11 @@ include 'inc/head.php';
 
 <?php
 
- # Connexion à la BDD
- $pdo = dbConnect();
+# Connexion à la BDD
+$pdo = dbConnect();
 
 try {
- 
+
 
 
   $query = 'SELECT DISTINCT
@@ -29,9 +29,9 @@ try {
   RIGHT JOIN ville v ON n.n_ville_fk = v.v_id
   JOIN taverne t ON t.t_ville_fk = v.v_id
   RIGHT JOIN groupe g ON n.n_groupe_fk  = g.g_id
-  GROUP BY n.n_nom' ;
-  
-  
+  GROUP BY n.n_nom';
+
+
 
   # REQUETE PREPARE | On prepare la requete avant de l'éxécuter
   if (($request = $pdo->prepare($query)) !== false) {
@@ -73,7 +73,7 @@ if (($request = $pdo->prepare($queryNainCount)) !== false) {
 
 try {
 
-$query2 = 'SELECT DISTINCT
+  $query2 = 'SELECT DISTINCT
  n.n_nom,  
  v1.v_nom AS ville_depart, 
  v2.v_nom AS ville_arrivee
@@ -83,11 +83,11 @@ LEFT JOIN tunnel t ON t.t_villedepart_fk = v1.v_id
 RIGHT JOIN ville v2 ON t.t_villearrivee_fk = v2.v_id
 GROUP BY n.n_nom  
 ';
-  
-  
+
+
 
   # REQUETE PREPARE | On prepare la requete avant de l'éxécuter
-  if (($request2 = $pdo->prepare($query2)) !== false) {   
+  if (($request2 = $pdo->prepare($query2)) !== false) {
 
     // echo '<pre>';
     //   echo 'LOG bindvalue';
@@ -112,7 +112,6 @@ GROUP BY n.n_nom
       $request2->closeCursor();
     }
   }
-
 } catch (PDOException $e) {
 
   # On tue le processus (arrete la lecture du fichier) et affiche le message d'erreur
@@ -161,7 +160,7 @@ $itemsOnPage = array_slice($nainAll, $startIndex, $elementByPage);
 
 ?>
 
-<h1 class="text-align-center title">Liste des Nains - <?=  $countnain ?></h1>
+<h1 class="text-align-center title">Liste des Nains - <?= $countnain ?></h1>
 
 <div><a href="dashboard.php" class="n-container btn btn-primary mb-5">HOME</a></div>
 
@@ -173,38 +172,38 @@ $itemsOnPage = array_slice($nainAll, $startIndex, $elementByPage);
 
   <?php foreach ($nainAll as $nain) : ?>
     <div class=" supplierCard n-col-3">
-    
-      <h1><?=$nain['n_nom'] ?></h1>
+
+      <h1><?= $nain['n_nom'] ?></h1>
 
       <h2 class="mt-5 fw-bold">Groupe :</h2>
       <?php if (!empty($nain['g_id'])) : ?>
-    <p><?= $nain['g_id']; ?></p>
-<?php elseif (empty($nain['g_id'])) : ?>
-    <p>Non affecté.</p>
-<?php endif; ?>
-   
+        <p><?= $nain['g_id']; ?></p>
+      <?php elseif (empty($nain['g_id'])) : ?>
+        <p>Non affecté.</p>
+      <?php endif; ?>
+
 
       <h2 class="mt-5 fw-bold">Longueur Barbe</h2>
-      <p><?=$nain['n_barbe'] ?></p>
+      <p><?= $nain['n_barbe'] ?></p>
 
       <h2 class="mt-5 fw-bold">Ville Natale</h2>
-      <p><?=$nain['v_nom'] ?></p>
+      <p><?= $nain['v_nom'] ?></p>
 
-      <h2 class="mt-5 fw-bold">Taverne</h2> 
+      <h2 class="mt-5 fw-bold">Taverne</h2>
       <?php if (!empty($nain['t_nom'])) : ?>
-    <p><?= $nain['t_nom']; ?></p>
-<?php elseif (empty($nain['t_nom'])) : ?>
-    <p>Aucune taverne disponible.</p>
-<?php endif; ?>
+        <p><?= $nain['t_nom']; ?></p>
+      <?php elseif (empty($nain['t_nom'])) : ?>
+        <p>Aucune taverne disponible.</p>
+      <?php endif; ?>
 
-      <h2 class="mt-5 fw-bold">Tunnel</h2>  
-      <p class="text-danger">J'ai "devrai" faire un foreach sur nainVille mais pas bon fait trop de tour</p>   
-      <p><?= $nainVille['ville_depart'] .' - ' . $nainVille['ville_arrivee'] ?></p>
-      
+      <h2 class="mt-5 fw-bold">Tunnel</h2>
+      <p class="text-danger">J'ai "devrai" faire un foreach sur nainVille mais pas bon fait trop de tour</p>
+      <p><?= $nainVille['ville_depart'] . ' - ' . $nainVille['ville_arrivee'] ?></p>
+
       <h2 class="mt-5 fw-bold">HORAIRES DE TRAVAIL</h2>
-      <p><?=$nain['g_debuttravail']  . ' à ' . $nain['g_fintravail'] ?></p>    
-      <a href="group_edit.php?id=<?= $nain['n_id']?>" class="btn btn-primary mt-5">Changer de Groupe</a> 
-   </div>
+      <p><?= $nain['g_debuttravail']  . ' à ' . $nain['g_fintravail'] ?></p>
+      <a href="group_edit.php?id=<?= $nain['n_id'] ?>" class="btn btn-primary mt-5">Changer de Groupe</a>
+    </div>
   <?php endforeach ?>
 </section>
 

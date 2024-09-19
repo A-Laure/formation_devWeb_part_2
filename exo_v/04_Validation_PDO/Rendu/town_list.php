@@ -120,10 +120,10 @@ $itemsOnPage = array_slice($townAll, $startIndex, $elementByPage);
   <!-- CARD USER -->
 
   <?php foreach ($townAll as $town) : ?>
-   
+
     <div class=" supplierCard n-col-3">
 
-    <!-- AFFICHAGE TUNNEL FINI -->
+      <!-- AFFICHAGE TUNNEL FINI -->
       <?php if ($town['t_progres'] != 100) : ?>
         <?= $fini = '';
         $color = ''; ?>
@@ -131,7 +131,7 @@ $itemsOnPage = array_slice($townAll, $startIndex, $elementByPage);
         <?php $fini = 'TUNNEL FINI!!!';
         $color = 'text-success';
         ?>
-    
+
 
       <?php endif; ?>
 
@@ -146,17 +146,17 @@ $itemsOnPage = array_slice($townAll, $startIndex, $elementByPage);
 
       <h3 class="mt-5 fw-bold">Liste des Nains</h3>
       <p><?= $town['nainlist'] ?></p>
-     
+
       <h3 class="mt-5 fw-bold">Tunnel vers...</h3>
-      <p><?=$town['ville_arrivee'] ?></p>
+      <p><?= $town['ville_arrivee'] ?></p>
 
 
       <h3 class="mt-5 fw-bold">Progression</h3>
       <p class='<?= $color ?>'><?= $town['t_progres'] . '%' ?></p>
 
     </div>
-    <?php endforeach ?>
- 
+  <?php endforeach ?>
+
 </section>
 
 

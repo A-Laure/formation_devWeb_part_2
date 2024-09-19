@@ -13,12 +13,12 @@ include 'inc/head.php';
 
 <?php
 
-  # Connexion à la BDD
-  $pdo = dbConnect();
+# Connexion à la BDD
+$pdo = dbConnect();
 
-  try {
+try {
 
- 
+
 
   $query = 'SELECT
    v.v_nom, v.v_superficie, v.v_id,
@@ -33,35 +33,35 @@ include 'inc/head.php';
   WHERE :idUrl= v.v_id
   ';
 
-  
+
 
   # REQUETE PREPARE | On prepare la requete avant de l'éxécuter
   if (($request = $pdo->prepare($query)) !== false) {
-    if($request->bindValue(':idUrl', $_GET['id'])){
+    if ($request->bindValue(':idUrl', $_GET['id'])) {
 
       // echo '<pre>';
       //   echo 'LOG bindvalue';
       //   echo '</pre>';
 
-    if ($request->execute()) {
+      if ($request->execute()) {
 
-      // echo '<pre>';
-      // echo 'LOG execute ok  ';
-      // echo '</pre>';
+        // echo '<pre>';
+        // echo 'LOG execute ok  ';
+        // echo '</pre>';
 
-      # On récupère et stocke le jeu de résultats au format tableau associatif
-      $town = $request->fetch(PDO::FETCH_ASSOC);
+        # On récupère et stocke le jeu de résultats au format tableau associatif
+        $town = $request->fetch(PDO::FETCH_ASSOC);
 
-       // echo '<pre>';
-      // echo 'LOG town fetch   ';
-      // var_dump($town);
-      // echo '</pre>';
+        // echo '<pre>';
+        // echo 'LOG town fetch   ';
+        // var_dump($town);
+        // echo '</pre>';
 
 
-      # on termine le traitement de la requete
-      $request->closeCursor();
+        # on termine le traitement de la requete
+        $request->closeCursor();
+      }
     }
-  }
   }
 } catch (PDOException $e) {
 
@@ -71,9 +71,9 @@ include 'inc/head.php';
 
 # RECUP DU TUNNEL
 
-  try {
+try {
 
-   $query2 = 'SELECT DISTINCT
+  $query2 = 'SELECT DISTINCT
  v1.v_nom,  
  v1.v_nom AS ville_depart, 
  v2.v_nom AS ville_arrivee
@@ -84,35 +84,35 @@ JOIN ville v2 ON t.t_villearrivee_fk = v2.v_id
 WHERE :idUrl= v1.v_id
   ';
 
-  
+
 
   # REQUETE PREPARE | On prepare la requete avant de l'éxécuter
   if (($request = $pdo->prepare($query2)) !== false) {
-    if($request->bindValue('idUrl', $_GET['id'])){
+    if ($request->bindValue('idUrl', $_GET['id'])) {
 
       // echo '<pre>';
       //   echo 'LOG bindvalue';
       //   echo '</pre>';
 
-    if ($request->execute()) {
+      if ($request->execute()) {
 
-      // echo '<pre>';
-      // echo 'LOG execute ok  ';
-      // echo '</pre>';
+        // echo '<pre>';
+        // echo 'LOG execute ok  ';
+        // echo '</pre>';
 
-      # On récupère et stocke le jeu de résultats au format tableau associatif
-      $tunnel = $request->fetch(PDO::FETCH_ASSOC);
+        # On récupère et stocke le jeu de résultats au format tableau associatif
+        $tunnel = $request->fetch(PDO::FETCH_ASSOC);
 
-      //  echo '<pre>';
-      // echo 'LOG tunnel fetch   ';
-      // var_dump($tunnel);
-      // echo '</pre>';
+        //  echo '<pre>';
+        // echo 'LOG tunnel fetch   ';
+        // var_dump($tunnel);
+        // echo '</pre>';
 
 
-      # on termine le traitement de la requete
-      $request->closeCursor();
+        # on termine le traitement de la requete
+        $request->closeCursor();
+      }
     }
-  }
   }
 } catch (PDOException $e) {
 
@@ -128,38 +128,38 @@ WHERE :idUrl= v1.v_id
 
 
 
-<?php if($town['t_progres'] == 100) : ?>
+<?php if ($town['t_progres'] == 100) : ?>
   <?php $fini = 'TUNNEL FINI!!!';
   $color = 'text-success';
   ?>
-<section class="n-container n-d-grid supplierList">
+  <section class="n-container n-d-grid supplierList">
 
-  <!-- CARD USER -->
+    <!-- CARD USER -->
 
- 
-  
+
+
 
     <div class=" supplierCard n-col-3">
-    <h1 class='<?= $color ?>'><?= $fini?></h1>
-    <h1><?= $town['v_nom'] ?></h1>
-    <h2 class="mt-5 fw-bold">Superficie</h2>
-    <p><?=$town['v_superficie'] ?></p>
-    <h3 class="mt-5 fw-bold">Liste des Tavernes</h3>
-     <p><?= $town['tavernlist'] ?></p>
-     <h3 class="mt-5 fw-bold">Liste des Nains</h3>
-    <p><?=$town['nainlist'] ?></p> 
-     <h3 class="mt-5 fw-bold">Tunnel</h3>
-    <p><?=$tunnel['ville_depart'] . ' à ' . $tunnel['ville_arrivee'] ?></p> 
-   
-     <h3 class="mt-5 fw-bold">Progression</h3>
-    <p><?=$town['t_progres'] . '%' ?></p> 
-      
-      
-      
-   </div>
+      <h1 class='<?= $color ?>'><?= $fini ?></h1>
+      <h1><?= $town['v_nom'] ?></h1>
+      <h2 class="mt-5 fw-bold">Superficie</h2>
+      <p><?= $town['v_superficie'] ?></p>
+      <h3 class="mt-5 fw-bold">Liste des Tavernes</h3>
+      <p><?= $town['tavernlist'] ?></p>
+      <h3 class="mt-5 fw-bold">Liste des Nains</h3>
+      <p><?= $town['nainlist'] ?></p>
+      <h3 class="mt-5 fw-bold">Tunnel</h3>
+      <p><?= $tunnel['ville_depart'] . ' à ' . $tunnel['ville_arrivee'] ?></p>
+
+      <h3 class="mt-5 fw-bold">Progression</h3>
+      <p><?= $town['t_progres'] . '%' ?></p>
 
 
-</section>
+
+    </div>
+
+
+  </section>
 
 <?php endif; ?>
 

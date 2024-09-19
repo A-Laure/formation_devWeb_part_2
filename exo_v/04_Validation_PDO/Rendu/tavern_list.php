@@ -13,19 +13,9 @@ include 'inc/head.php';
 
 <?php
 
- # Connexion à la BDD
- $pdo = dbConnect();
+# Connexion à la BDD
+$pdo = dbConnect();
 try {
-
-  // $query = 'SELECT
-  //  v.v_nom,
-  //  r.t_villedepart_fk,  r.t_villearrivee_fk,   r.t_progres, 
-  // GROUP_CONCAT(n.n_nom) AS nainlist,
-  // GROUP_CONCAT(t.t_nom) AS tavernlist
-  // FROM ville v
-  // JOIN tunnel r ON v.v_id = r.t_villedepart_fk
-  // JOIN taverne t ON v.v_id = t.t_ville_fk
-  // JOIN nain n ON n.n_ville_fk = v.v_id
 
   $query = 'SELECT
    t.t_nom, t.t_chambres, t.t_blonde, t.t_brune, t.t_rousse,
@@ -35,7 +25,7 @@ try {
 
   ';
 
-  
+
 
   # REQUETE PREPARE | On prepare la requete avant de l'éxécuter
   if (($request = $pdo->prepare($query)) !== false) {
@@ -84,9 +74,9 @@ GROUP BY t_nom
 if (($request = $pdo->prepare($query2)) !== false) {
   if ($request->execute()) {
     $nainCount = $request->fetchAll(PDO::FETCH_ASSOC);
-   
-      foreach ($nainCount as $count) {  
-        $nainCount[$count['t_nom']] = $count['nainCount'];
+
+    foreach ($nainCount as $count) {
+      $nainCount[$count['t_nom']] = $count['nainCount'];
     }
     //  echo '<pre>';
     //   echo 'LOG  nainCount   ';
@@ -146,31 +136,31 @@ $itemsOnPage = array_slice($tavernAll, $startIndex, $elementByPage);
   <?php foreach ($tavernAll as $tavern) : ?>
 
     <div class=" supplierCard n-col-3">
-    <h2><?= $tavern['t_nom'] ?></h2>
+      <h2><?= $tavern['t_nom'] ?></h2>
 
-    <h2 class="mt-5 fw-bold">Ville</h2>
-    <p><?=$tavern['v_nom'] ?></p>
+      <h2 class="mt-5 fw-bold">Ville</h2>
+      <p><?= $tavern['v_nom'] ?></p>
 
-    <h2 class="mt-5 fw-bold">Nbre de chambres(s)</h2>
-    <p><?=$tavern['t_chambres'] ?></p>
+      <h2 class="mt-5 fw-bold">Nbre de chambres(s)</h2>
+      <p><?= $tavern['t_chambres'] ?></p>
 
-    <?php
+      <?php
       // Obtenir le nombre de nains pour cette taverne (si disponible)
       $countnain = isset($nainCount[$tavern['t_nom']]) ? $nainCount[$tavern['t_nom']] : 0;
       $chambreDispo = $tavern['t_chambres'] - $countnain;
       ?>
- <h2 class="mt-5 fw-bold">Chambre(s) disponible(s)</h2>
-    <p><?= $chambreDispo ?></p>
+      <h2 class="mt-5 fw-bold">Chambre(s) disponible(s)</h2>
+      <p><?= $chambreDispo ?></p>
 
-    <h2 class="mt-5 fw-bold">Bière(s) disponible(s)</h2>
-    <p>Blondes : <?=$tavern['t_blonde'] == 0 ? ' Non' : ' Oui'?></p>
-    <p>Brunes :  <?=$tavern['t_brune'] == 0 ? ' Non' : ' Oui'?></p>
-    <p>Rousses :  <?=$tavern['t_rousse'] == 0 ? ' Non' : 'Oui'?></p>
- 
-     
-      
-      
-   </div>
+      <h2 class="mt-5 fw-bold">Bière(s) disponible(s)</h2>
+      <p>Blondes : <?= $tavern['t_blonde'] == 0 ? ' Non' : ' Oui' ?></p>
+      <p>Brunes : <?= $tavern['t_brune'] == 0 ? ' Non' : ' Oui' ?></p>
+      <p>Rousses : <?= $tavern['t_rousse'] == 0 ? ' Non' : 'Oui' ?></p>
+
+
+
+
+    </div>
 
   <?php endforeach ?>
 </section>

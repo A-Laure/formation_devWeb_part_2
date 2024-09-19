@@ -99,20 +99,20 @@ GROUP BY g.g_id, ta.t_nom
   <!-- CARD USER -->
 
   <?php foreach ($groupeAll as $groupe) : ?>
-     <!-- AFFICHAGE TUNNEL FINI -->
-     <?php if ($groupe['t_progres'] != 100) : ?>
-        <?= $fini = '';
-        $color = ''; ?>
-      <?php elseif ($groupe['t_progres'] == 100) : ?>
-        <?php $fini = 'TUNNEL FINI!!!';
-        $color = 'text-success';
-        ?>
-      <?php endif; ?>
+    <!-- AFFICHAGE TUNNEL FINI -->
+    <?php if ($groupe['t_progres'] != 100) : ?>
+      <?= $fini = '';
+      $color = ''; ?>
+    <?php elseif ($groupe['t_progres'] == 100) : ?>
+      <?php $fini = 'TUNNEL FINI!!!';
+      $color = 'text-success';
+      ?>
+    <?php endif; ?>
 
-    <div class=" supplierCard n-col-4 ">     
+    <div class=" supplierCard n-col-4 ">
 
 
-        <h1 class=<?= $color?>><?=$fini?></h1>
+      <h1 class=<?= $color ?>><?= $fini ?></h1>
 
       <h1>Groupe . <?= $groupe['g_id'] ?></h1>
 
@@ -135,7 +135,7 @@ GROUP BY g.g_id, ta.t_nom
       <p><?= $groupe['arrivee_nom'] ?></p>
 
       <h2 class="mt-3 fw-bold ">Progression : </h2>
-      <p class="fw-bold <?=$color?>"><?= $groupe['t_progres'] . ' %' ?></p>
+      <p class="fw-bold <?= $color ?>"><?= $groupe['t_progres'] . ' %' ?></p>
 
     </div>
 

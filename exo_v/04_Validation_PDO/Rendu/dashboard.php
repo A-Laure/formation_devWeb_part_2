@@ -167,18 +167,18 @@ try {
 <section class="container">
 
 
-<h1>Sélectionner un item</h1>
+  <h1>Sélectionner un item</h1>
 
-  <form action="" method="post" class = "mt-5">
+  <form action="" method="post" class="mt-5">
 
     <div class="mb-3">
 
       <!-- NAINS -->
 
       <label for="nainform" class="form-label fs-5 ">Choisir un Nain</label>
-    
-      <select name="nainform" id="nainform" class="form-select"  >
-      <option selected default></option>
+
+      <select name="nainform" id="nainform" class="form-select">
+        <option selected default></option>
         <?php foreach ($nainName as $newnain) : ?>
 
 
@@ -193,7 +193,7 @@ try {
       <label for="villeform" class="form-label fs-5">Choisir une ville</label>
 
       <select name="villeform" id="villeform" class="form-select">
-      <option selected default></option>
+        <option selected default></option>
         <?php foreach ($villeName as $newville) : ?>
 
 
@@ -205,25 +205,25 @@ try {
 
       <!-- TAVERNES -->
 
-      <label for="taverneform" class="form-label fs-5">Choisir une  Taverne</label>
+      <label for="taverneform" class="form-label fs-5">Choisir une Taverne</label>
 
       <select name="taverneform" id="taverneform" class="form-select">
-      <option selected default></option>
+        <option selected default></option>
         <?php foreach ($taverneName as $newtaverne) : ?>
 
 
           <!-- <option <?= $newtaverne['t_id'] ?> value="<?= $newtaverne['t_id'] ?>"><?= $newtaverne['t_nom'] ?></option> -->
-          <option  value="<?= $newtaverne['t_id'] ?>"><?= $newtaverne['t_nom'] ?></option>
+          <option value="<?= $newtaverne['t_id'] ?>"><?= $newtaverne['t_nom'] ?></option>
 
         <?php endforeach; ?>
       </select>
 
       <!-- GROUPES -->
 
-      <label for="groupeform" class="form-label fs-5">Choisir un  groupe</label>
+      <label for="groupeform" class="form-label fs-5">Choisir un groupe</label>
 
       <select name="groupeform" id="groupeform" class="form-select">
-      <option selected default></option>
+        <option selected default></option>
         <?php foreach ($groupeName as $newgroupe) : ?>
 
 
@@ -242,7 +242,7 @@ try {
   <a href="tavern_list.php" class="btn btn-primary edit-btn fs-3">Liste des Tavernes</a>
   <a href="town_list.php" class="btn btn-primary edit-btn fs-3">Liste des Villes</a>
   <a href="groupe_list.php" class="btn btn-primary edit-btn fs-3">Liste des Groupes</a>
-  
+
 
 </section>
 

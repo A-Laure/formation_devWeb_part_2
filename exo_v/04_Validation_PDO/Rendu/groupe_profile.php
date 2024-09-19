@@ -15,8 +15,8 @@ include 'inc/head.php';
 
 <?php
 
- # Connexion à la BDD
- $pdo = dbConnect();
+# Connexion à la BDD
+$pdo = dbConnect();
 
 
 # RECUP DE TOUTES LES INFOS LIEES A LA VILLE
@@ -43,7 +43,7 @@ GROUP BY g.g_id, ta.t_nom
 ';
 
 
-  
+
 
   # REQUETE PREPARE | On prepare la requete avant de l'éxécuter
   if (($request = $pdo->prepare($query)) !== false) {
@@ -64,10 +64,10 @@ GROUP BY g.g_id, ta.t_nom
       # On récupère et stocke le jeu de résultats au format tableau associatif
       $groupe = $request->fetch(PDO::FETCH_ASSOC);
 
-  //  echo '<pre>';
-  //     echo 'LOG $groupe ';
-  //     echo var_dump ($groupe) ;
-  //     echo '</pre>';
+      //  echo '<pre>';
+      //     echo 'LOG $groupe ';
+      //     echo var_dump ($groupe) ;
+      //     echo '</pre>';
 
       // $villearriveeId = $ville['t_villearrivee_fk'];
 
@@ -80,7 +80,6 @@ GROUP BY g.g_id, ta.t_nom
       $request->closeCursor();
     }
   }
-
 } catch (PDOException $e) {
 
   # On tue le processus (arrete la lecture du fichier) et affiche le message d'erreur
@@ -98,38 +97,38 @@ GROUP BY g.g_id, ta.t_nom
 
 <section class="n-container n-d-grid supplierList">
 
-  <!-- CARD USER -->        
- 
-  
-  <div class=" supplierCard n-col-4 <?=$color?>">
-   
+  <!-- CARD USER -->
 
-   
-      <h1>Groupe  . <?=$groupe['g_id'] ?></h1>
 
-      <h2 class="mt-5 fw-bold">Liste des Nains</h2>
-      <p><?=$groupe['listenain'] ?></p>
+  <div class=" supplierCard n-col-4 <?= $color ?>">
 
-      <h2 class="mt-3 fw-bold">Taverne :</h2>
-      <p><?=$groupe['t_nom'] ?></p>
 
-      <h2 class="mt-3 fw-bold">Horaires</h2>
-      <p><?='De ' . $groupe['g_debuttravail'] . " à " . $groupe['g_fintravail']?></p>
 
-      <h2 class="mt-3 fw-bold">Tunnel n° </h2>
-      <p><?=$groupe['t_id'] ?></p>
+    <h1>Groupe . <?= $groupe['g_id'] ?></h1>
 
-      <h2 class="mt-3 fw-bold">Départ</h2>
-      <p><?=$groupe['depart_nom'] ?></p>
+    <h2 class="mt-5 fw-bold">Liste des Nains</h2>
+    <p><?= $groupe['listenain'] ?></p>
 
-      <h2 class="mt-3 fw-bold">Arrivée</h2>
-      <p><?=$groupe['arrivee_nom'] ?></p>
+    <h2 class="mt-3 fw-bold">Taverne :</h2>
+    <p><?= $groupe['t_nom'] ?></p>
 
-      <h2 class="mt-3 fw-bold">Progression : </h2>
-      <p><?=$groupe['t_progres'] . ' %' ?></p>
+    <h2 class="mt-3 fw-bold">Horaires</h2>
+    <p><?= 'De ' . $groupe['g_debuttravail'] . " à " . $groupe['g_fintravail'] ?></p>
+
+    <h2 class="mt-3 fw-bold">Tunnel n° </h2>
+    <p><?= $groupe['t_id'] ?></p>
+
+    <h2 class="mt-3 fw-bold">Départ</h2>
+    <p><?= $groupe['depart_nom'] ?></p>
+
+    <h2 class="mt-3 fw-bold">Arrivée</h2>
+    <p><?= $groupe['arrivee_nom'] ?></p>
+
+    <h2 class="mt-3 fw-bold">Progression : </h2>
+    <p><?= $groupe['t_progres'] . ' %' ?></p>
   </div>
- 
-      
+
+
 
 </section>
 
