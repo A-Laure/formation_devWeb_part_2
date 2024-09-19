@@ -12,10 +12,15 @@
  * 
  */
 
+// 1 classe peut avoir une infinité d'enfant
+// 1 enfant hérite des propriétés et des méthodes de la mère
+// les methodes de l'enfant (si même nom) sont prioritaires
 class Evenement
 {
 
   // Propriété privée pour stocker
+  //seul le getX dans l'enfant permettra de l'appeler
+  // si on veut l'appeller dans l'enfant par $this-> name, il faut mettre la propriété en protected
   private string $titre;
   private string $date;
 

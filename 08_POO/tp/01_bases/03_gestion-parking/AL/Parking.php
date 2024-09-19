@@ -22,28 +22,30 @@
 class Park {
 
 # Propriétés de la classe
-private array $parking;
+private array $cars;
+// ou et ne pas le dénir ds le construct
+// private array $parking = [];
 
-public function __construct(array $parking = [])
+public function __construct(array $cars = [])
 {
-    $this->parking = $parking;
+    $this->cars = $cars;
 }
 
 
-#  Ajoutez une méthode pour ajouter une voiture au parking.
+#  Ajoutez une méthode pour ajouter une voiture au cars.
 public function addCar($car)
 {
-  $this->parking[] = $car;
+  $this->cars[] = $car;
 }
 
-# Ajoutez une méthode pour afficher toutes les voitures dans le parking.
+# Ajoutez une méthode pour afficher toutes les voitures dans le cars.
 
-public function displayParking(){
+public function displayCars(){
   echo 'Composition Parking : ';
   echo '<br>';
   echo '<br>';
-  foreach ($this->parking as $voiture) {
-    echo $voiture->detailsDisplay() ;
+  foreach ($this->cars as $car) {
+    echo $car->detailsDisplay() ;
     echo '<br><br>';
   }
 }
@@ -51,12 +53,12 @@ public function displayParking(){
  # Ajoutez une méthode pour rechercher une voiture par son immatriculation.
 
  public function searchCar($search){
-  foreach($this->parking as $park){
-    if($park->getImmat() === strtolower($search)){
+  foreach($this->cars as $car){
+    if($car->getImmat() === strtolower($search)){
       echo "Résultat de la recherche par immatriculation: "; 
       echo '<br>';
       echo '<br>';
-      echo $park->detailsDisplay();
+      echo $car->detailsDisplay();
       echo '<br>';
       echo '<hr>';
       return;
@@ -68,11 +70,11 @@ public function displayParking(){
  # Ajoutez une méthode pour supprimer une voiture du parking par son immatriculation.
 
  public function deleteCar($deleteImmat){
-foreach($this->parking  as $key => $value){
+foreach($this->cars  as $key => $value){
   if($value->getImmat() === trim(strtolower($deleteImmat))){
-    unset($this->parking[$key]);
+    unset($this->cars[$key]);
     echo "Produit {$deleteImmat} supprimé.<br><br>";
-    $this->displayParking();
+    $this->displayCars();
     return;
   }
 }

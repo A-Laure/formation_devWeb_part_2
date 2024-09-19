@@ -47,30 +47,30 @@ public function detailsDisplay (){
 
 # Getters
 
-  public function getImmat() : string{
+  public function getImmat() : string {
     return $this->immat;
   }
 
-  public function getBrand() : string{
+  public function getBrand() : string {
     return $this->brand;
   }
 
-  public function getColor() : string{
+  public function getColor() : string {
     return $this->color;
   }
 
 
 # Setters
 
-public function setImmat($newValue) : string{
+public function setImmat($newValue) : string {
     return $this->immat = $newValue;
   }
 
-  public function setBrand($newValue) : string{
+  public function setBrand($newValue) : string {
     return $this->brand = $newValue;
   }
 
-  public function setColor($newValue) : string{
+  public function setColor($newValue) : string {
     return $this->color = $newValue;
   }
 

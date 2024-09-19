@@ -1,10 +1,4 @@
-<?php 
-
-require 'Action.php';
-require 'Obligation.php';
-require 'Movement.php';
-require 'Portfolio.php';
-
+<?php
 
 # Exercice
 
@@ -19,6 +13,35 @@ require 'Portfolio.php';
  * 
  */
 
- 
+class Portfolio
+{
 
- $portfolio = new Portfolio()
+    # Propriétés de la classe
+    private array $portfolio;
+
+    
+
+    public function __construct(array $portfolio = [])
+    {
+        $this->portfolio = $portfolio;
+    }
+
+
+
+    
+    # GETTERS
+
+    public function getPortfolio(): array
+    {
+        return $this->portfolio;
+    }
+
+
+
+    # SETTERS
+
+    public function setPortfolio(array $portfolio): void
+    {
+        $this->portfolio = $portfolio;
+    }
+}

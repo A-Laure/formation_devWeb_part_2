@@ -25,12 +25,12 @@ $parking = new Park();
 $parking->addCar($voit1);
 $parking->addCar($voit2);
 
-$parking-> displayParking();
-echo '<hr>';
+$parking-> displayCars();
+
 
 $parking-> searchCar('3265 XY 48');
-echo '<hr>';
+// '<hr>';
 
 $parking-> deleteCar('3265 XY 48');
-echo '<hr>';
+// '<hr>';
 

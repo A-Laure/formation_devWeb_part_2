@@ -25,6 +25,10 @@
       $this->nationality = $nationality;
     }
 
+    # toString : converti la string mais plus pour tester, pas de plus value, défini le format d'affichage par défaut de l'objet . 
+
+
+
     # Destructeur : méthode magique que se lance automatiquement lors de la destruction d'un objet. Elle est chargée de libérer les ressources (espace mémoire) ou lancer une ou des actions finales avant que l'objet ne soit supprimé.
     public function __destruct()
     {
