@@ -13,55 +13,24 @@
  * 
  */
 
-class StockAction extends Movement
+class Action extends Actif
 {
-    private Movement $movement;
-    private int $qty;
-    private float $price;
+    private Actif $actif;
+    
+   
 
-    public function __construct(Movement $movement, int $qty, float $price)
-    {
-        $this->movement = $movement;
-        $this->qty = $qty;
-        $this->price = $price;
-    }
+    
+
+    
 
 
     # GETTERS
 
-    public function getMovement(): Movement
-    {
-        return $this->movement;
-    }
-
-    public function getQty(): int
-    {
-        return $this->qty;
-    }
-
-    public function getPrice(): float
-    {
-        return $this->price;
-    }
-
+  
 
 
 
 
     # SETTERS 
 
-    public function setMovement(Movement $movement): void
-    {
-        $this->movement = $movement;
-    }
-
-    public function setQty(int $qty): void
-    {
-        $this->qty = $qty;
-    }
-
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
 }

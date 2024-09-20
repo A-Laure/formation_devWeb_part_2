@@ -2,8 +2,8 @@
 
 require 'Action.php';
 require 'Obligation.php';
-require 'Movement.php';
-require 'Portfolio.php';
+require 'Actif.php';
+require 'Wallet.php';
 
 
 # Exercice
@@ -21,4 +21,5 @@ require 'Portfolio.php';
 
  
 
- $portfolio = new Portfolio()
+ $wallet = new Wallet();
+

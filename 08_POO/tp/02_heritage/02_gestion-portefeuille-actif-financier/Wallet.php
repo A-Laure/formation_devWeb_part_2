@@ -13,17 +13,17 @@
  * 
  */
 
-class Portfolio
+class Wallet
 {
 
     # Propriétés de la classe
-    private array $portfolio;
+    private array $wallet;
 
     
 
-    public function __construct(array $portfolio = [])
+    public function __construct(array $wallet = [])
     {
-        $this->portfolio = $portfolio;
+        $this->wallet = $wallet;
     }
 
 
@@ -31,17 +31,17 @@ class Portfolio
     
     # GETTERS
 
-    public function getPortfolio(): array
+    public function getWallet(): array
     {
-        return $this->portfolio;
+        return $this->wallet;
     }
 
 
 
     # SETTERS
 
-    public function setPortfolio(array $portfolio): void
+    public function setWallet(array $wallet): void
     {
-        $this->portfolio = $portfolio;
+        $this->wallet = $wallet;
     }
 }
