@@ -1,0 +1,10 @@
+.opened {
+  background-color: rgb(199, 235, 145)!important;
+  font-weight: 700;
+}
+
+.closed{
+  background-color:rgb(230, 107, 107)!important;
+  font-weight: 700;
+}
+

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 # Exercice
 
@@ -13,3 +13,25 @@
  * 
  * 
  */
+
+class Catalog
+{
+
+  private array $catalog;
+
+
+  public function __construct(array $catalog = [])
+  {
+    $this->catalog = $catalog;
+  }
+
+  public function getCatalog(): array
+  {
+    return $this->catalog;
+  }
+
+  public function setCatalog(array $catalog): void
+  {
+    $this->catalog = $catalog;
+  }
+}
