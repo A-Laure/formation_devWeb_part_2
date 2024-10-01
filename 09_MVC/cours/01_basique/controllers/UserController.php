@@ -108,7 +108,7 @@
 
     }
 
-    # TRAITEMENT DU UPDATE - Récupère le $_POST  et le $_GET['id'] pour le transmettre au modele, modifier les données et faire la redirection vers la liste des users
+    # TRAITEMENT DU DELETE - Récupère le $_POST  et le $_GET['id'] pour le transmettre au modele, modifier les données et faire la redirection vers la liste des users
     public function delete($id)
     {
 
