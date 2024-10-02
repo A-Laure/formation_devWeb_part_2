@@ -4,7 +4,7 @@
   class UserController 
   {
 
-    # READALL - Affichage des tous les users
+    # READALL - Affichage de tous les users
     public function index()
     {
 
