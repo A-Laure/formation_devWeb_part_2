@@ -72,7 +72,7 @@ class UserModel extends CoreModel
 
 
   
-  # Méthode pour créer un user
+  # Méthode pour créer un user (le $request = le $_POST)
   public function create($request)
   {
 
@@ -124,7 +124,7 @@ class UserModel extends CoreModel
     }
   }
 
-   # Méthode pour récupérer un user
+   # Méthode pour supprimer un user
    public function delete($id)
    {
  
