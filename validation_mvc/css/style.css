@@ -1,0 +1,762 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+
+
+/*!---- RESET NAVIGATOT AND PARAMETERS -------*/
+*,
+*::before,
+*::after {
+  /* to keep initial "section" size if padding */
+  box-sizing: border-box;
+}
+
+* {
+  /* each  margin and padding element initialized to 0 */
+  margin: 0;
+  padding: 0;
+}
+
+
+html,
+body {
+  /* html and body height element must be defined by 100% of is parent contenair*/
+  height: 100%;
+  font-size: 62.5%;
+  /*rem settings 20px*10=2rem*/
+  scroll-behavior: smooth;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  /* when the text reaches the end of the container, allows the navigator to break betwwen words and insert a break line */
+  overflow-wrap: break-word;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  /*By default, a link is blue or violet, so here we're telling him to be "color: #213442;" default parameter in body*/
+  color: inherit;
+}
+
+/*!----UTILITIES / TO BE CHANGE FOR MODEL INTEGRATION-------*/
+
+
+body {
+  /*usually used*/
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  /* for a cleaner and smoother font appareance  */
+  font-family: "inter", sans serif;
+  color: #213442;
+  background-color: var(--bkgrd-primary);
+
+}
+
+:root {
+  --bkgrd-primary: #e2dfdf;
+  --text-primaryColor: #000;
+  --text-secondaryColor: ;
+  --btn-primaryColor: #121e91;
+  --btn-secondaryColor: #27b8cc;
+  --btn-delete: #a40c20;
+  --primary-hover: #0494b4;
+  --bkgrd-header: #0f1125;
+
+}
+
+.n-container {
+  max-width: 132.5rem;
+  margin: 0 16rem 0 50rem;
+  padding: 0 2rem;
+}
+
+.n-d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.n-d-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: 2.4rem;
+}
+
+.start-col-1-5{
+  grid-column-start: 1.5;
+}
+
+.start-col-2{
+  grid-column-start: 2;
+}
+
+.start-col-3{
+  grid-column-start: 3;
+}
+
+.start-col-7{
+  grid-column-start: 7;
+}
+.start-col-12{
+  grid-column-start: 12;
+}
+
+
+.n-col-1-5 {
+  grid-column: span 1.5;
+}
+
+.n-col-2 {
+  grid-column: span 2;
+}
+
+.n-col-3 {
+  grid-column: span 3;
+}
+
+.n-col-4 {
+  grid-column: span 4;
+}
+
+.n-col-5 {
+  grid-column: span 5;
+}
+
+.n-col-6 {
+  grid-column: span 6;
+}
+
+.n-col-7 {
+  grid-column: span 7;
+}
+
+.n-col-10 {
+  grid-column: span 10;
+}
+
+.n-col-12 {
+  grid-column: span 10;
+}
+
+section {
+  /*unité à changer selon*/
+  /* padding: 10rem 4rem; */
+  text-align: center;
+}
+
+.title {
+  font-size: 4rem;
+  padding-top: 2rem;
+  font-weight: bold;
+  margin : 0 0 5rem 26.5rem;
+  text-transform: capitalize;
+  color: var(--text-primaryColor);
+}
+
+/* .subtitle {
+  font-size: 2rem;
+  margin-bottom: 8rem;
+} */
+
+.n-btn {
+  display: inline-block;
+  background-color: var(--btn-primaryColor);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  line-height: 3rem;
+  padding: 0 1.5rem;
+}
+
+.btn-delete {
+  display: inline-block;
+  background-color: var(--btn-delete);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  line-height: 3rem;
+  padding: 0 1.5rem;
+}
+
+.btn2 {
+  background-color: var(--btn-secondaryColor);
+}
+
+.n-btn-grid{
+  height: 40%;
+  padding: 1.2rem;
+  line-height: 1.7rem;
+  position: absolute;
+  bottom:0;
+  
+} 
+
+.btnDropDown{
+  color: var(--bkgrd-header);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.btn-create {
+  margin-left: 160rem;
+  margin-bottom: 3.5rem;
+}
+
+.btn:hover {
+  background-color: var(--primary-hover);
+  color:#fff;
+}
+
+.relative {
+  position: relative;
+}
+
+/* UTILITIES */
+
+h1 {
+  font-family: 'inter', sans-serif;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--text-primaryColor);
+}
+
+/* FONT_SIZE / FONT_WEIGHT */
+
+.fz10-fwb{
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.fz12{
+  font-size: 1.2rem;
+}
+
+.fz12-fwb{
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.fz12 {
+  font-size: 1.2rem;
+}
+
+.fz14-fwb {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.fz18-fwb {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.fz20-fwb {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.fz30-fwb {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+
+/* MARGIN */
+.m-r-2{
+  margin-right: 1rem;
+}
+
+.m-t-2{
+  margin-top: 2rem;
+}
+
+.m-b-5{
+  margin-bottom: 5;
+}
+
+.m-b-nav-menuList{
+  margin-bottom: 18rem;
+}
+
+.m-b-25{
+  margin-bottom: 25rem;
+}
+
+.m-t-3{
+  margin-top: 3rem;
+}
+
+.m-t-5 {
+  margin-top: 5rem;
+}
+
+.m-t-15 {
+  margin-top: 15rem;
+}
+
+.m-l-3 {
+  margin-left: 3rem;
+}
+
+.m-l-36 {
+  margin-left: 36rem;
+}
+
+.m-l-39 {
+  margin-left: 39rem;
+}
+
+.m-l-45 {
+  margin-left: 45rem;
+}
+
+.m-l-52 {
+  margin-left: 52rem;
+}
+
+.m-l-60 {
+  margin-left: 60rem;
+}
+
+.m-l-77 {
+  margin-left: 77rem;
+}
+
+.m-l-96 {
+  margin-left: 96rem;
+}
+
+/* PADDING */
+
+.p-t-mini{
+  padding-top: 0.5rem;
+}
+
+/* GAP */
+
+.n-gap-5{
+  gap : 5rem!important;
+}
+
+.link{
+  text-decoration: underline;
+  color: blue;
+}
+
+span{
+  color:#cc1818;
+}
+
+
+
+/* NAVBAR*/
+
+
+/* .navBar {
+  text-align: left; 
+  max-width: 26.5rem;
+  height: 108rem;
+  position: fixed;
+  z-index: 1 !important;
+  left: 0;
+  top:0;
+  background-color: var(--bkgrd-header);
+  color: #fff;
+  font-size: 2rem;
+  padding-top: 6.9rem;
+} */
+
+.navBar {
+  text-align: left; 
+  max-width: 26.5rem;
+  height: 100%;
+  position: fixed;
+  margin: 0;
+   /*fin rajout pour lateral*/
+  background-color: var(--bkgrd-header);
+  color: #fff;
+  overflow: auto;
+}
+
+.navBar .logo {
+  height: 10rem;
+  width: 100%;
+}
+
+.navBar li a:hover{
+  padding-bottom: 2.8rem;
+  font-weight: 700;
+  color: rgb(19, 154, 207);
+}
+
+.n-active
+{
+  font-weight: 700;
+  color: rgb(19, 154, 207);
+}
+
+.n-hover a:hover
+{
+  font-weight: 700;
+  color: rgb(19, 154, 207);
+}
+
+
+
+/* .navBar .menu {
+  margin: 14.3rem 0 13rem 4.5rem;
+
+}
+
+.navBar .menu li {
+  padding-bottom: 2.5rem;
+} */
+
+
+/* .navBar .navBarFooter {
+  text-align: left;
+  margin: 5rem 0 0 0;
+  border-top: solid 1px;
+  width: 100%;
+
+}
+
+.navBar .navBarFooter .userName {
+
+  margin: 0 0 3.6rem 3.2rem;
+  padding-top: 2.6rem;
+}
+
+.navBar .navBarFooter .flex-col {
+  flex-direction: column;
+}
+
+.navBar .navBarFooter div {
+  margin: 0 0 1.4rem 6.5rem;
+}
+
+.navBarFooter div a:hover {
+  font-weight: 700;
+  color: rgb(19, 154, 207);
+}
+
+.navBar .navBarFooter div a {
+  margin-bottom: 1rem;
+}
+
+.navBar .navBarFooter div i {
+  margin: 0 1rem 0 0;
+} */
+
+
+/* SUPPLIER_LIST */
+
+.supplierList h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  align-items: right;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.supplierList p {
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.supplierList .supplierCard .cpTown {
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.supplierList .supplierCard {
+
+  border-radius: 3rem;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+/*  ---- SUPPLIER CREATE ---- */
+
+
+.bout-on{
+  margin-top: -0.6rem;
+
+}
+
+
+
+/* DASHBOARD */
+
+.label .btn-card{
+  height: 3rem;
+  width: 10rem;
+  /* !marche dans inspecter mais pas là */
+  margin-left: 2rem; 
+}
+
+
+.label{
+  /* padding-left: 1rem; */
+  text-transform: uppercase ;
+  align-items: center;
+  
+}
+
+.item-card{
+  height: 7rem ;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 2px 0px grey ;
+  /* le + courant /* offset-x | offset-y | blur-radius | spread-radius | color */ 
+  align-items: center;
+  margin-top: 1.5rem;  
+  font-size: 1.4rem;
+  padding: 0 2rem 0 2rem; 
+}
+
+
+.count-card{
+  background-color: var(--bkgrd-header);
+  width :14rem;
+  height: 7rem;
+  border-radius: 0px 20px 0px;
+  color: #fff;
+  margin-right :3rem;
+  padding: 1rem;
+  font-size: 1.2rem;
+  text-decoration: underline;
+}
+
+.counter{
+  justify-content: center;
+}
+
+.cmd{
+  background-color: #fff;
+  border-radius: 0px 20px 0px;
+  color: #cc1818;
+  padding: 1rem;
+  text-decoration: underline;
+  border: 3px solid rgb(138, 14, 14);
+  font-weight: bold;
+}
+
+.decoration-none{ 
+  text-decoration: none;
+}
+
+.item-card img{
+ width: 5rem;
+ height: 5rem;
+ object-fit: cover;
+
+}
+
+/* FORM_CREATE */
+
+.formCreate{  
+  font-size: 1.6rem;
+  background-color: #fff;
+  text-align: start;
+  font-weight: bold;
+  margin-left:33rem; 
+  border-radius: 30px ;
+  padding: 5rem;
+  width: 50rem;
+  gap: 8rem;
+}
+
+
+.formCreate div input{
+
+  height : 4rem;
+  width: 40rem;
+  border-radius: 10px;
+}
+
+.formCreate div div input.radioFormat{
+  width: 35px;
+  height: 25px;
+  margin-right: 5px; 
+  vertical-align: middle; 
+}
+
+.formCreate div div label .form-label {
+  vertical-align: middle;
+}
+
+.formCreate button{
+  width:40rem;
+  height: 4rem;
+  font-size: 1.6rem;
+  margin-top: 2.5rem; 
+}
+
+/*  ---- USER_PROFILE ---- */
+.user{
+  display: flex;
+  justify-content: center;
+}
+
+.user .user-profile{
+  margin-top : 5rem;
+background-color: #fff;
+color: var(--text-primaryColor);
+width: 30rem;
+/* margin-left: 43rem; */
+padding: 3rem;
+border-radius: 20px;
+}
+
+.modal-dialog{
+  margin-top: 20rem;;
+}
+
+
+
+/*  ---- USER_EDIT--- */
+
+.edit-btn{
+  height: 4rem;
+  margin-top: 2rem;
+}
+
+/*  ---- USER_CREATE ---- */
+
+.userCreate{
+  font-size: 1.8rem;
+  text-align: start;
+  font-weight: bold;
+  margin-left: 77rem;
+  padding : 5rem;
+}
+
+.userCreate form{  
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 5rem;
+  max-width: 50rem;
+  gap: 1rem;
+}
+
+.userCreate label{  
+  margin: 0;
+}
+
+.userCreate form input{
+height: 5rem;
+}
+
+/*  ---- LOGIN PAGE ---- */
+
+.connexion{
+margin-left: 10rem;
+}
+
+
+
+.connexion h1{
+margin-left: 2rem;
+margin-right: 2rem;
+
+}
+
+.btnConnexion{
+  height: 4rem;
+}
+
+
+/*  ---- LAYOUT ITEM PROFILE ---- */
+
+.stockBanner{
+  background-color: var(--bkgrd-header);
+  color:#fff;
+  font-size: 3rem;
+  font-weight: 700;
+  height:12rem;
+  padding-top: 5rem;
+  padding-left: 3rem;
+
+ }
+
+ .offcanvas-header img{
+  height: 10rem;
+  width: 10rem; 
+}
+
+.offcanvas-body .divChamp{
+  margin-top: 2rem;
+}
+
+.offcanvas-body a{
+  margin-left: 16rem;
+  margin-top: 4rem;
+}
+
+
+/* MOUVEMENT STOCK */
+
+
+.mvtStock div img{
+margin-left: 12rem;;
+  height: 10rem;
+  width: 10rem; 
+}
+
+.mvtStock .divStock{
+  margin-top: 5rem;
+}
+
+.mvtStock .divAddOrSubstract form input {
+  height: 3rem;
+  width: 8rem;
+  margin-left: 2rem;
+  margin-left: 2rem;
+} 
+
+.mvtStock .divNewStock{
+  margin-top: 2rem;
+}
+

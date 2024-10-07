@@ -1,0 +1,151 @@
+/* POINT DE RUPTURE  */
+/* SMALL DEVICE ->  0 à 599px */
+/* MEDIUM DEVICE ->  600px à 899px */
+/* LARGE DEVICE ->  900px à 1199px */
+/* EXTRA LARGE DEVICE ->  1200px  */
+
+ @media (max-width: 599px) {
+
+.n-d-none{
+display: none;
+}
+
+	.btn{
+    line-height: 4.8rem;
+  }
+
+  .title{
+    margin-left: 1rem;
+    font-size:2rem;
+  }
+  
+  .sub-title{
+    font-size: 1.8rem;
+  }
+
+	/* -----NAVBAR -----*/
+  
+
+.navBar {
+  width: 100%;
+  height: auto;
+  position: relative;
+  margin-left: 0;
+}
+
+.navBar a {
+  float: left;
+}
+
+/* div {
+  margin-left: 0;
+} */
+
+
+/* -----CONTAINER -----*/
+
+.n-container {
+  /*  0 top and bottom margin = 0, auto : left and right margin  spaces are egally distributes*/
+  margin: 2rem;
+  padding: 0 2rem;
+}
+
+/* ----FORMCREATE -----*/
+
+.formCreate{
+  margin-left:2rem; 
+  padding: 2rem;
+  width: 30rem;
+}
+
+.formCreate div input{
+
+  height : 4rem;
+  width: 25rem;
+  border-radius: 10px;
+}
+
+.formCreate button{
+  width:25rem;
+  height: 4rem;
+  font-size: 1.6rem;
+  margin-top: 2.5rem; 
+}
+
+/* ------ SUPPLIERLIST ----- */
+
+.supplierList  {
+  grid-template-columns: repeat(1, 1fr);
+  margin-left: 10rem;
+  width : 25rem;
+}
+
+.supplierList .supplierCard {
+  padding: 1rem;
+  margin-left: 0;
+}
+
+.supplierList h2 {  
+  font-size: 1.4rem;
+}
+
+.supplierList p {
+  font-size: 1.2rem;
+}
+
+.resp-pagination{
+  display: none;
+}
+
+.btn-start{
+  text-align:left;
+  margin-left: 0;
+}
+
+/* ------ DASHBOARD ----- */
+
+.relative{
+ /* max-width: 35rem; */
+  background-color: aquamarine;
+  }
+
+
+.itemcard {
+  grid-column: span 3;
+  font-size: 1.2rem;
+  background-color: aquamarine;
+}
+
+
+
+
+/*  ---- CONNEXION PAGE ---- */
+
+.connexion{
+  margin-left: 5rem;
+ flex-direction: column;
+  }
+
+  .connexion h1{
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    
+    }
+
+.connexion i{
+  font-size: 5rem;
+  text-align: center;
+  }
+
+
+}
+
+
+
+
+
+
+@media (max-width: 899px) {
+  
+
+}
