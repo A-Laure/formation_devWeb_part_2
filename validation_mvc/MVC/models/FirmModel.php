@@ -1,6 +1,6 @@
 <?php
 
-class UserModel extends CoreModel
+class FirmModel extends CoreModel
 {
 
 

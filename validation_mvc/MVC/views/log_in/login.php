@@ -1,40 +1,38 @@
 <?php
 
-$title='Login';
+$title = 'Login';
 
-if (!empty($_GET['_err'])) {
-    $error = htmlspecialchars($_GET['_err']);
-    echo "<div class='error'>Erreur : {$error}</div>";
-}
 
- //! OK MARCHE
-/* dump($_POST); */
+
+//! OK MARCHE
+/* dump($_POST);  */
+
+
+
 ?>
 
 
-<!-- <nav class="navBar n-d-flex flex-column flex-shrink-0 p-3 text-white " style="width: 280px;">
-
-LOGO
-  <div class=" logo m-b-5">
-    <a href="../dashboards/dashboard.php"><img src="../../../img/logo.png" alt=""></a>
-  </div>
-
-  <hr class="m-t-5">     
-
-</nav>  -->
 
 <section class="n-container m-l-36">
 
-<h1 class="title ms-0 m-t-5">Bienvenue Sur Notre Plateforme</h1>   
+  <h1 class="title ms-0 m-t-5">Bienvenue Sur Notre Plateforme</h1>
 
-<!-- Bouton pour réinitialisé la liste A ENLEVER A LA FIN -->
-<a href="?reset" class="btn btn-primary my-5">Nouvelle Liste</a>
+  <!-- Bouton pour réinitialisé la liste A ENLEVER A LA FIN -->
+  <a href="?reset" class="btn btn-primary my-5">Nouvelle Liste</a>
+
+  <!-- BANNER MESSAGE ALERTE -->
+  <?php
+  if (!empty($_GET['_err'])) {
+    $error = htmlspecialchars($_GET['_err']);
+    echo "<div class='bg-warning fs-4 text'>{$error}</div>";
+  }
+  ?>
 
 
-<!-- REDIRECTION QD APPUI SUR CONNEXION -->
+  <!-- REDIRECTION QD APPUI SUR CONNEXION -->
 
-  <form action="index.php?ctrl=Login&action=login" method="post" class="formCreate m-t-5 "> 
-  <!-- index.php?ctrl=Login&action=login -->
+  <form action="index.php?ctrl=Login&action=login" method="post" class="formCreate m-t-5 ">
+    <!-- index.php?ctrl=Login&action=login -->
 
     <div class="mb-3 ">
 

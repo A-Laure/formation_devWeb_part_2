@@ -1,16 +1,13 @@
 <?php
-session_start();
 
 $title = "Liste des Users";
 $currentPage = "userList";
 
-
-dump($_SESSION[APP_TAG]['connected'], 'userConnected');
 /*  REMETTRE PAGINATION  */
 
 ?>
 
-<h1 class="text-align-center title">Liste des Users</h1>
+<h1 class="text-align-center title">Liste des Entreprises</h1>
 
 <div class="n-container text-end pt-5">
 

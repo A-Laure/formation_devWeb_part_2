@@ -2,8 +2,8 @@
 
 # CREATION DES CONSTANTES
 
-# APP TAG : CREATION $_SESSION['stock']
-define('APP_TAG', 'stock');
+# APP TAG : CREATION $_SESSION['name']
+define('APP_TAG', 'jobdtaing');
 
 # PAGINATION
 define('PAGINATION', 8);
@@ -12,13 +12,13 @@ define('PAGINATION', 8);
 
 define('DB_ENGINE', 'mysql');
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'gestionstocktwo');
+define('DB_NAME', 'jobdating');
 define('DB_CHARSET', 'utf8mb4');
 define('DB_USER', 'root');
 // WINDOW
-define('DB_PWD', ''); 
+//define('DB_PWD', ''); 
 // MAC
-// define('DB_PWD', 'root');  
+define('DB_PWD', 'root');  
 
 
 

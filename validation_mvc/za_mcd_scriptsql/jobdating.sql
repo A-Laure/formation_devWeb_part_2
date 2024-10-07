@@ -203,6 +203,7 @@ CREATE TABLE `users` (
   `user_userEnvrnt` varchar(100) DEFAULT NULL,
   `user_userPwd` varchar(150) DEFAULT NULL,
   `user_userFirstName` varchar(50) DEFAULT NULL,
+  `user_userEmail` varchar(50) DEFAULT NULL,
   `user_userTextaera` varchar(300) DEFAULT NULL,
   `user_userLastName` varchar(50) DEFAULT NULL,
   `user_userSpeciality` varchar(50) DEFAULT NULL,
@@ -219,7 +220,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_userId`, `user_userStatus`, `user_userEnvrnt`, `user_userPwd`, `user_userFirstName`, `user_userTextaera`, `user_userLastName`, `user_userSpeciality`, `user_userAdr1`, `user_userAdr2`, `user_userTown`, `user_userCp`) VALUES
 (1, 'etudiant', 'IT', '$2y$10$eRK2WiYxCIOR06pnX8nlFu.0q3kzcoRjLTAeMkzgeqE', 'Alice', 'Experienced in project management.', 'Smith', 'designer', '123 Main St', 'Apt 4', 'New York', 10001),
 (2, 'entreprise', 'IT', '$2y$10$sVHNIW2fDfjIWGHS0BEWJu9g834E9AJnPolq494si0kaEWWD78Wxq', 'Atos', 'Software engineer with a focus on backend.', '', 'designer', '456 Maple Ave', '', 'Los Angeles', 90001),
-(3, 'admin', 'Hybrid', '$2y$10$TJDxmd2Be0CFZy98iLtS9.omQ4O02a1DugIsnb6gNKDTOEwHvxpXG', 'Charlie', 'Frontend development expertise.', 'Brown', 'aministrateur', '789 Oak St', 'Suite 12', 'Chicago', 60601);
+(3, 'admin', 'Communication', '$2y$10$TJDxmd2Be0CFZy98iLtS9.omQ4O02a1DugIsnb6gNKDTOEwHvxpXG', 'Charlie', 'Frontend development expertise.', 'Brown', 'aministrateur', '789 Oak St', 'Suite 12', 'Chicago', 60601);
 
 -- --------------------------------------------------------
 

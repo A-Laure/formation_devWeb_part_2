@@ -90,9 +90,9 @@ die($e->getMessage());
     <div class="mb-3 ">
       <label for="roleSelect" class="form-label">Role<span> *</span></label>
       <select name="roleSelect" id="roleSelect" class="form-select">
-        <?php foreach ($recupAllRoles as $role) : ?>
+        <!-- <?php foreach ($recupAllRoles as $role) : ?>
           <option value="<?= $role['role_Id'] ?>"> <?= $role['role_label'] ?> </option>
-        <?php endforeach; ?>
+        <?php endforeach; ?> -->
       </select>
     </div>
 
