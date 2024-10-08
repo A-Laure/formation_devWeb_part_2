@@ -197,20 +197,21 @@ INSERT INTO `techskills` (`skill_skillId`, `skill_skillLabel`) VALUES
 -- Structure de la table `users`
 --
 
-CREATE TABLE `users` (
-  `user_userId` int(11) NOT NULL,
+CREATE TABLE `user` (
+  `user_userId` int(11) NOT NULL AUTO_INCREMENT,
   `user_userStatus` varchar(20) DEFAULT NULL,
   `user_userEnvrnt` varchar(100) DEFAULT NULL,
   `user_userPwd` varchar(150) DEFAULT NULL,
   `user_userFirstName` varchar(50) DEFAULT NULL,
-  `user_userEmail` varchar(50) DEFAULT NULL,
+  `user_userEmail` varchar(75) DEFAULT NULL,
   `user_userTextaera` varchar(300) DEFAULT NULL,
   `user_userLastName` varchar(50) DEFAULT NULL,
   `user_userSpeciality` varchar(50) DEFAULT NULL,
   `user_userAdr1` varchar(100) DEFAULT NULL,
   `user_userAdr2` varchar(100) DEFAULT NULL,
   `user_userTown` varchar(100) DEFAULT NULL,
-  `user_userCp` int(11) DEFAULT NULL
+  `user_userCp` int(11) DEFAULT NULL,
+  ` user_userLastMove` DATE DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

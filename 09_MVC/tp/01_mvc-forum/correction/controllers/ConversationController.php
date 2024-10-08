@@ -1,32 +1,22 @@
-<?php 
+<?php
 
-  class ConversationController 
+class ConversationController
+{
+  public function index()
   {
 
-    public function index()
-    {
+    try {
 
-      try
-      {
+      $convModel = new ConversationModel();
+      $datas = $convModel->readAll();
 
-        $convModel = new ConversationModel();
-        $datas = $convModel->readAll();
-
-        foreach($datas as $data)
-        {
-          $conversations[] = new Conversation($data);
-
-          
-        }
-
-        include 'views/index.php';
-      
-      }
-      catch(Exception $e)
-      {
-        throw new Exception($e->getMessage(), $e->getCode(), $e);
+      foreach ($datas as $data) {
+        $conversations[] = new Conversation($data);
       }
 
+      include 'views/index.php';
+    } catch (Exception $e) {
+      throw new Exception($e->getMessage(), $e->getCode(), $e);
     }
-
   }
+}

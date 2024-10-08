@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 
 class LoginController{
 
@@ -31,19 +31,19 @@ class LoginController{
           
           //header("Location: index.php?ctrl=Dashboard&action=index");
           // header("Location: index.php?ctrl=User&action=index&id=1");
-          if($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'etudiant')
+          if($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant')
           {
-            header("Location: index.php?ctrl=User&action=index");
+            header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
             exit; 
             
-          }elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'entreprise')
+          }elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise')
           {
-            header("Location: index.php?ctrl=Firm&action=index");
+            header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
             exit; 
           }
           elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'admin')
           {
-            header("Location: index.php?ctrl=User&action=index");
+            header("Location: index.php?ctrl=Dashboard&action=menu");
             exit; 
           }           
            

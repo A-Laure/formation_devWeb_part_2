@@ -4,13 +4,7 @@ session_start();
 $currentPage = 'connectedProfile';
 $title = "Votre Profil";
 
-// require '../data/data_user.php';
-require_once '../../../lib_vendor/utils_functions/db.php';
-require '../../../admin/config/config.php'; 
-require_once '../../../lib_vendor/helpers_debug/helpers.php';
-require_once '../../../lib_vendor/utils_functions/functions.php';
-include '../../../inc/navBarBootstrap.php';
-include '../../../inc/header.php';
+dump($_SESSION[APP_TAG]['connected']);
 ?>
 
 <h1 class="text-align-center title">Votre Profil </h1>
@@ -19,23 +13,43 @@ include '../../../inc/header.php';
 
   <div class="formCreate m-t-15">
 
-    <div class="card text-bg-light mb-3" style="max-width: 40rem">
+    <div class="card text-bg-light mb-3" style="max-width: 60rem">
 
-      <div class="card-header fz30-fwb"><?= $_SESSION[APP_TAG]['connected']['user_firstName'] . "  " . $_SESSION[APP_TAG]['connected']['user_lastName']  ?></div>
+      <div class="card-header fz30-fwb"><?= $_SESSION[APP_TAG]['connected']['user_userFirstname'] . "  " . $_SESSION[APP_TAG]['connected']['user_userlastname']?></div>
+      <div class="card-header fz20-fwb "><?= $_SESSION[APP_TAG]['connected']['user_userStatus'] ?></div>
+      <div class="card-header fz20-fwb text-capitalize "><?= $_SESSION[APP_TAG]['connected']['user_userSpeciality']  ?></div>
 
-        <div class="card-body">
-          <h5 class="card-title fz20-fwb"><?= 'statut  ' . ($_SESSION[APP_TAG]['connected']['role_label']) ?></h5>
-          <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_email'] ?></p>
-          <div class="d-flex justify-content-center gap-3"  >
-            <button type="button" class="n-btn">Modifier</button>
-            <button type="button" class="btn-delete">Supprimer</button>
-          </div>
+      <div class="card-body">
+
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userEmail'] ?></p>
+        <p class="card-text">Secteur : <?= $_SESSION[APP_TAG]['connected']['user_userEnvrnt'] ?></p>
+        <hr>
+        <p class="">Adresse : </p>
+
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userAdr1'] ?></p>
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userAdr2'] ?></p>
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userCp'] . '  ' . $_SESSION[APP_TAG]['connected']['user_userTown'] ?></p>
+        <hr>
+
+        <p class="">Compétences : </p>
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['skill_skillLabel'] ?></p>
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['netw_networkLabel'] ?></p>
+        <hr>
+        <p class="">Description : </p>
+
+        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userTextaera'] ?></p>
+        <hr>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="index.php?ctrl=User&action=edit&id=<?= $_SESSION[APP_TAG]['connected']['user_userId'] ?>" type=" button" class="n-btn">Modifier</a>
+          <a href="index.php?ctrl=User&action=delete&id=<?= $_SESSION[APP_TAG]['connected']['user_userId'] ?>" type=" button" class="btn-delete">Supprimer</a>         
         </div>
+        <hr>
+        <div>
+        <p>Mettre les annonces et leur statut</p>
+        </div>
+      </div>
 
     </div>
 
   </div>
 </section>
-
-
-<?php include '../../../inc/footer.php'; ?>

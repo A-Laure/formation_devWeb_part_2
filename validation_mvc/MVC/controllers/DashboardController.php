@@ -3,6 +3,15 @@
 class DashboardController{
 
 
+# ACCES AU MENU
+public function menu()
+{
+
+  include 'MVC/views/dashboards/menu.php'; 
+  }
+
+
+
 # ACCES A LA PAGE DASHBOARD
 public function index()
 {

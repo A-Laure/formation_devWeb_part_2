@@ -1,11 +1,16 @@
 <?php 
   $page = 'Conversations';
+  $urlPage = isset($_REQUEST['page']) ? "&page={$_REQUEST['page']}": "";
+  $urlPagination = isset($_REQUEST['pagination']) ? "&pagination={$_REQUEST['pagination']}": "";
+  $urlOrderBy = isset($_REQUEST['orderBy']) ? "&orderBy={$_REQUEST['orderBy']}": "";
+  $urlOrder = isset($_REQUEST['order']) ? "&order={$_REQUEST['order']}": "";
+  $url = "index.php?ctrl=message&action=index&conv={$_GET['conv']}{$urlPage}{$urlPagination}{$urlOrderBy}{$urlOrder}";
 ?>
 
   <div class="section">
   <a href="index.php" class="button is-dark my-5">Retour</a>
     <h1 class="title">Liste des messages de la conversation n° <?= $_GET['conv'] ?></h1>
-    <form action="" method="GET">
+    <form action="<?= $url ?>" method="POST">
       <div class="field is-horizontal">
 
         <div class="field-label is-normal">
@@ -14,7 +19,7 @@
 
         <div class="field">
           <div class="select">
-            <input type="hidden" name="conv" value="<?= $_GET['conv']  ?>">
+         
             <select name="pagination" >
               <option <?= $pagination == 10 ? 'selected' : '' ?> value="10">10</option>
               <option <?= $pagination == 20 ? 'selected' : '' ?> value="20">20</option>
@@ -81,9 +86,13 @@
           ?>
 
           <nav class="pagination is-centered">
-              <a <?= ($currentPage > 1) ? 'href="?ctrl=message&action=index&conv='. $_GET['conv'] .'&page='. $currentPage-1 .'"' : '' ?> class="pagination-previous" <?= ($currentPage > 1) ? '' : 'disabled' ?> >Page précedente</a>
+              <a <?= ($currentPage > 1) ? 'href="?ctrl=message&action=index&conv='. $_GET['conv'] .'&page='. $currentPage-1 .'&pagination='. $pagination.'&orderBy='.$orderBy.'&order='.$order.'"' : '' ?> class="pagination-previous" <?= ($currentPage > 1) ? '' : 'disabled' ?> >Page précedente</a>
 
-              <a <?= ($currentPage < $totalPages) ? 'href="?ctrl=message&action=index&conv='. $_GET['conv'] .'&page='. $currentPage+1 .'"' : '' ?> class="pagination-next" <?= ($currentPage < $totalPages) ? '' : 'disabled' ?>  >Page suivante</a>
+              <a <?= ($currentPage < $totalPages) ? 'href="?ctrl=message&action=index&conv='. $_GET['conv'] .'&page='. $currentPage+1 .'&pagination='. $pagination.'&orderBy='.$orderBy.'&order='.$order.'"' : '' ?> class="pagination-next" <?= ($currentPage < $totalPages) ? '' : 'disabled' ?>  >Page suivante</a>
+              
+
+              
+
               <ul class="pagination-list">
                 <?php 
                   # On génère les liens de chaque page (ajouter dans l'url le parametre  ?conv='. $_GET['conv'].'&page='.$i.' ) on garde dans l'url le parametre de la conversation et on ajoute le parametre du numero de la page
@@ -98,7 +107,7 @@
                 <?php
                   else:
                 ?>
-                  <li><a href="?ctrl=message&action=index&conv=<?= $_GET['conv'] ?>&page=<?= $i ?>" class="pagination-link"><?= $i ?></a></li>
+                  <li><a href="?ctrl=message&action=index&conv=<?= $_GET['conv'] ?>&page=<?= $i ?>&pagination=<?= $pagination ?>&orderBy=<?= $orderBy?>&order=<?= $order ?>" class="pagination-link"><?= $i ?></a></li>
                 <?php 
                   endif;
                   endfor;

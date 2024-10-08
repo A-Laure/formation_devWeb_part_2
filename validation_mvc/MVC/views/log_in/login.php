@@ -13,7 +13,7 @@ $title = 'Login';
 
 
 
-<section class="n-container m-l-36">
+<section class="container m-l-36">
 
   <h1 class="title ms-0 m-t-5">Bienvenue Sur Notre Plateforme</h1>
 

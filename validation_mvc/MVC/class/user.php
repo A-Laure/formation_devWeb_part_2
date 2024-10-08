@@ -5,8 +5,8 @@ class User extends CoreEntity
 
   # Propriétés
   private int $userId;
-  private string $userStatus;
-  private string $userEnvrnt;
+  private string $userStatus; // entreprise, étudiant, admin
+  private string $userEnvrnt; // Designer, 
   private string $userEmail;
   private string $userPwd;
   private string $userFirstName;
@@ -17,16 +17,16 @@ class User extends CoreEntity
   private string $userAdr2;
   private string $userTown;
   private int $userCp;
-  private int $skillId;
-  private string $skillLabel;
-  private int $networkId;
-  private string $networkLabel;
+  private array $skills = []; 
+  private array $networks = []; 
+
+
 
 
 
   # Getters
 
-  public function getUserId(): int {return $this->userId;}
+public function getUserId(): int {return $this->userId;}
 
 	public function getUserStatus(): string {return $this->userStatus;}
 
@@ -52,14 +52,19 @@ class User extends CoreEntity
 
 	public function getUserCp(): int {return $this->userCp;}
 
-	public function getSkillId(): int {return $this->skillId;}
+  public function setNetworks(array $networks)
+    {
+        $this->networks = $networks;
+    }
 
-	public function getSkillLabel(): string {return $this->skillLabel;}
+    public function setSkills(array $skills)
+    {
+        $this->skills = $skills;
+    }
 
-	public function getNetworkId(): int {return $this->networkId;}
+	
 
-	public function getNetworkLabel(): string {return $this->networkLabel;}
-
+	
 	
   # Setters
 public function setUserId(int $userId): void {$this->userId = $userId;}
@@ -88,13 +93,11 @@ public function setUserId(int $userId): void {$this->userId = $userId;}
 
 	public function setUserCp(int $userCp): void {$this->userCp = $userCp;}
 
-	public function setSkillId(int $skillId): void {$this->skillId = $skillId;}
+  public function getSkills(): array  {return $this->skills;  }
+  
+  public function getNetworks(): array  {return $this->networks;
+    }
 
-	public function setSkillLabel(string $skillLabel): void {$this->skillLabel = $skillLabel;}
-
-	public function setNetworkId(int $networkId): void {$this->networkId = $networkId;}
-
-	public function setNetworkLabel(string $networkLabel): void {$this->networkLabel = $networkLabel;}
-
+	
 	
 }

@@ -21,7 +21,7 @@ class LoginModel extends CoreModel
     echo '<br>Je suis rentré dans LoginModel - LoginProcessing</br><hr> '; 
 
     // MESSAGE ERREUR DANS URL SI UN 1 OU LES 2 CHAMPS VIDES
-    if (empty($_POST['email']) && empty($_POST['pwd'])) {
+    if (empty($_POST['email']) || empty($_POST['pwd'])) {
       $field = 'Email et Pwd';
       if (!empty($_POST['email'])) {
         $field = 'pwd';

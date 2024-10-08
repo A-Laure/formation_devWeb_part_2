@@ -22,7 +22,8 @@ require 'inc/header.php';
 // !---  VALEURS PAR DEFAUT POUR ALLER SUR PAGE CONNEXION AU LANCEMENT APP ----------- 
 
 # On donne a $ctrl une valeur par default (pour la premier ou on arrive sur l'app)
-$ctrl = 'HomeController';
+// $ctrl = 'HomeController';
+$ctrl = 'LoginController';
 /* $ctrl = 'LoginController'; */
 # Si on a un $_GET['ctrl'] (c'est a dire si on a dans l'url: index.php?ctrl=nomDuControleur&action=nomDeMethode )
 if (isset($_GET['ctrl'])) {
@@ -32,7 +33,7 @@ if (isset($_GET['ctrl'])) {
 
 
 # On donne a $method une valeur par default (pour la premier ou on arrive sur l'app)
-$method = 'index';
+$method = 'Login';
 if (isset($_GET['action'])) {
   # Alors on stock la valeur du $_GET['action'] dans $method' ( ex : si on a dans l'url index.php?ctrl=role&action=index alors on aura $method = 'index') 
   $method = $_GET['action'];
