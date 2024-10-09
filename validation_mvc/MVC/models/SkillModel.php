@@ -22,9 +22,9 @@ public function readAll(): array
   try {
     if (($this->_req = $this->getDb()->query($query)) !== false) {
       $skillsAll = $this->_req->fetchAll(PDO::FETCH_ASSOC); // Utilisez FETCH_ASSOC pour un tableau associatif
+      
       return $skillsAll;
     }
-    return [];
   } catch (PDOException $e) {
     die($e->getMessage());
   }

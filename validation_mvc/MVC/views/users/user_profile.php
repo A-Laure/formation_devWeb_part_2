@@ -11,6 +11,8 @@ dump($_SESSION[APP_TAG]['connected']);
 
 <section class="n-container">
 
+<a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">Menu</a>
+
   <div class="formCreate m-t-15">
 
     <div class="card text-bg-light mb-3" style="max-width: 60rem">

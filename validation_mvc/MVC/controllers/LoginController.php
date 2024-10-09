@@ -1,5 +1,5 @@
 <?php
-// session_start();
+
 
 class LoginController{
 
@@ -24,28 +24,29 @@ class LoginController{
         // loginProcessing = action dans LoginModel 
         $_SESSION[APP_TAG]['connected'] = $loginModel ->loginProcessing();
 
-        dump($_SESSION[APP_TAG]['connected'], 'Return sans le PWD de $_SESSION[APP_TAG][connected] dans LoginController - login');
+        // dump($_SESSION[APP_TAG]['connected'], 'Return sans le PWD de $_SESSION[APP_TAG][connected] dans LoginController - login');
 
         if (isset($_SESSION[APP_TAG]['connected']))
         {
-          
-          //header("Location: index.php?ctrl=Dashboard&action=index");
-          // header("Location: index.php?ctrl=User&action=index&id=1");
-          if($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant')
-          {
-            header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
+          header("Location: index.php?ctrl=Dashboard&action=menu");
             exit; 
+          // //header("Location: index.php?ctrl=Dashboard&action=index");
+          // // header("Location: index.php?ctrl=User&action=index&id=1");
+          // if($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant')
+          // {
+          //   header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
+          //   exit; 
             
-          }elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise')
-          {
-            header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
-            exit; 
-          }
-          elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'admin')
-          {
-            header("Location: index.php?ctrl=Dashboard&action=menu");
-            exit; 
-          }           
+          // }elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise')
+          // {
+          //   header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
+          //   exit; 
+          // }
+          // elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'admin')
+          // {
+          //   header("Location: index.php?ctrl=Dashboard&action=menu");
+          //   exit; 
+          // }           
            
          
           

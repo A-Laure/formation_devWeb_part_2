@@ -23,10 +23,9 @@ class SkillsController
             $skillList[] = new Skills($data);
             
           }
-         dump($skillList, 'UserCtrl - index - Foreach Object UserList'); 
+        //  dump($skillList, 'UserCtrl - index - Foreach Object UserList'); 
         }
   
-        // include 'MVC/views/users/user_list.php';
 
       }
     
@@ -48,58 +47,54 @@ class SkillsController
         return $skillList;
     }
 
-     # Affichage Formulaire CREATE User
-    public function create()
-    {
+    
 
-      
-      // include 'MVC/views/users/user_create.php';
-    }
+     # Affichage Formulaire CREATE skills
+     public function create()
+     {
+         $skillsController = new SkillsController();
+         $skillList = $skillsController->readAll(); // Récupère toutes les compétences
+         
+         include 'MVC/views/advert/advert_create.php';
+          // Inclut la vue en lui passant $skillList
+     }
 
 
 
       # TRAITEMENT DU CREATE - Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
-    public function store($request)
-    {
+    // public function store($request)
+    // {
 
-      # FAIRE VERIF DES DONNEES : droits, hmtl char, géré par validate static
-      # FAIRE ENCRYPTAGE MDP
+    //   # FAIRE VERIF DES DONNEES : droits, hmtl char, géré par validate static
+    //   # FAIRE ENCRYPTAGE MDP
 
-      $model = new UserModel;
-      $id = $model->create($request);
+    //   $model = new SkillModel();
+    //   $id = $model->create($request);
 
-      if($id)
-      {
-        header('Location: index.php?ctrl=Home&action=index&adduser=success');
-        exit;
-      }
-      else 
-      {
+    //   if($id)
+    //   {
+    //     header('Location: index.php?ctrl=Home&action=index&adduser=success');
+    //     exit;
+    //   }
+    //   else 
+    //   {
         
-        header('Location: index.php?ctrl=Home&action=index&adduser=error');
-      }
-      exit;
+    //     header('Location: index.php?ctrl=Home&action=index&adduser=error');
+    //   }
+    //   exit;
 
-    }
+    // }
 
      #  Affichage du formulaire - UPDATE -avec les données d'un utilisateur
-     public function edit($id)
-     {
+    //  public function edit($id)
+    //  {
  
-       $model = new UserModel();
-       $userEditDatas = $model->readOne($id);
-       dump($userEditDatas, 'UserCtrl - edit -  $userEditDatas');
+    //    $model = new SkillModel();
+      
  
-       if(count($userEditDatas) > 0)
-       {
-         $userData = new User($userEditDatas);
-         dump($userEditDatas, 'UserCtrl - edit -  $userData');
-
-       }
+    //    include "MVC/views/skills/skills_edit.php";
  
-       include "MVC/views/users/user_edit.php";
- 
-     }
+    //  }
 
 
      # TRAITEMENT DU UPDATE - Récupère le $_POST  et le $_GET['id'] pour le transmettre au modèle, modifier les données et faire la redirection 

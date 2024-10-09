@@ -27,7 +27,7 @@ $currentPage = "userCreate";
 
 
 ?>
-
+<a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">Menu</a>
 
 <h1 class="text-align-center title">Création d'un Compte Utilisateur</h1>
 

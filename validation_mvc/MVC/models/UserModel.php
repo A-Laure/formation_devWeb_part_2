@@ -85,14 +85,16 @@ class UserModel extends CoreModel
       LEFT JOIN techskills t on t.skill_skillId = h.skill_skillId
       LEFT JOIN display d ON d.user_userId = u.user_userId
       LEFT JOIN socialnetwork s on s.netw_networkId = d.netw_networkId
-    WHERE user_IuserId = :id';
+    WHERE u.user_userId = :id';
 
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
         if (($this->_req->bindValue(':id', $id, PDO::PARAM_INT))) {
           if ($this->_req->execute()) {
             $datas = $this->_req->fetch(PDO::FETCH_ASSOC);
             return $datas;
-          }
+          }else {
+            echo "Aucune donnée trouvée pour l'utilisateur avec l'ID $id.";
+        }
         }
       }
     } catch (PDOException $e) {
@@ -116,7 +118,7 @@ class UserModel extends CoreModel
           $checkStmt->execute();
   
           if ($checkStmt->fetchColumn() > 0) {
-              // Si l'email existe déjà, renvoyer un message ou `false`
+              // Si l'email existe déjà, renvoyer un message ou false`
               echo 'Email déjà existant, insertion annulée';
               return false;
           }
@@ -201,59 +203,64 @@ class UserModel extends CoreModel
   }
 
  # UPDATE d'un USER
- public function update($id, $request)
- {
-   echo '<br>UserModel, je suis rentré ds update</br><h
-r>';
-   dump($_POST, '$_post dans usermodel - update');
-   echo 'UserModel - Update GET Id : ' . $_GET['id'];
-   try {
-     $query = "UPDATE user
-    SET
-    user_firstName = :firstName,
-    user_lastName = :lastName,
-    user_email = :email, 
-    user_pwd = :pwd, 
-    role_id = :roleId
-   WHERE user_Id = :id";
+ public function update($id, $request) {
+  echo '<br>UserModel, je suis rentré dans update</br><hr>';
+  dump($request, '$_POST dans UserModel - update');
+  echo 'UserModel - Update ID : ' . htmlspecialchars($id);
 
+  try {
+      // Correction de la requête SQL
+      $query = "UPDATE user SET
+                  user_userStatus = :status,
+                  user_userEnvrnt = :envrnt,
+                  user_userEmail = :email,
+                  user_userPwd = :pwd,
+                  user_userFirstName = :firstName,
+                  user_userTextaera = :textaera,
+                  user_userLastName = :lastName,
+                  user_userSpeciality = :speciality,
+                  user_userAdr1 = :userAdr1,
+                  user_userAdr2 = :userAdr2,
+                  user_userTown = :userTown,
+                  user_userCp = :userCp,
+                  user_userLastMov = NOW()
+                WHERE user_userId = :id";
 
-     if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+      // Préparation de la requête
+      if ($this->_req = $this->getDb()->prepare($query)) {
+          echo '<br>UserModel, je suis rentré dans prepare</br><hr>';
 
-       echo '<br>UserModel, je suis rentré ds prepare</br><hr>';
+          // Liaison des valeurs avec `bindValue`
+          if (
+              $this->_req->bindValue(':status', $request['status']) &&
+              $this->_req->bindValue(':envrnt', $request['envrnt']) &&
+              $this->_req->bindValue(':email', $request['email']) &&
+              $this->_req->bindValue(':pwd', password_hash($request['pwd'], PASSWORD_BCRYPT)) &&  // Hachage du mot de passe
+              $this->_req->bindValue(':firstName', $request['firstName']) &&
+              $this->_req->bindValue(':lastName', $request['lastName']) &&
+              $this->_req->bindValue(':textaera', $request['textaera']) &&
+              $this->_req->bindValue(':speciality', $request['speciality']) &&
+              $this->_req->bindValue(':userAdr1', $request['userAdr1']) &&
+              $this->_req->bindValue(':userAdr2', $request['userAdr2']) &&
+              $this->_req->bindValue(':userTown', $request['userTown']) &&
+              $this->_req->bindValue(':userCp', $request['userCp']) &&
+              $this->_req->bindValue(':id', $id, PDO::PARAM_INT)
+          ) {
+              // Exécution de la requête
+              if ($this->_req->execute()) {
+                  echo '<br>UserModel, je suis rentré dans execute</br><hr>';
+                  $res = $this->_req->rowCount();
+                  echo '<br>UserModel, nombre de lignes affectées : </br><hr>' . $res;
+                  dump($res, 'UserModel, Update $res');
+                  return $res;
+              }
+          }
+      }
+  } catch (PDOException $e) {
+      die('Erreur SQL : ' . $e->getMessage());
+  }
+}
 
-
-
-       if ((
-         $this->_req->bindValue(':firstName', $request['firstName'])
-         &&
-         $this->_req->bindValue(':lastName', $request['lastName'])
-         &&
-         $this->_req->bindValue(':email', $request['email'])
-         &&
-         $this->_req->bindValue(':pwd', $request['pwd'])
-         /* &&
-       $this->_req->bindValue(':lastMove', $request['lastMove']) */
-         &&
-         $this->_req->bindValue(':roleId', $request['roleId'])
-         &&
-         $this->_req->bindValue(':id', $id)
-       )) {
-         if ($this->_req->execute()) {
-           echo '<br>UserModel, je suis rentré ds execute</br><hr>';
-           // Compte le nombre de lignes affectées par la requête, renvoi le nombre de lignes modfiées, si 0 -> pb, peut servir pour un renvoi de message
-           echo '<br>UserModel, je suis avant le rowCount</br><hr>';
-           $res = $this->_req->rowCount();
-           echo '<br>UserModel, je suis après le rowCount</br><hr>' . $res;
-           dump($res, 'UserModel, Update $res');
-           return $res;
-         }
-       }
-     }
-   } catch (PDOException $e) {
-     die($e->getMessage());
-   }
- }
 
 
 
@@ -263,11 +270,14 @@ r>';
   public function delete($id)
   {
     try {
-      $query = "DELETE FROM user WHERE user_Id = :id";
-
+      $query = "DELETE FROM user WHERE user_userId = :id";
+      echo '0';
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+        echo '1';
         if (($this->_req->bindValue(':id', $id, PDO::PARAM_INT))) {
+          echo '2';
           if ($this->_req->execute()) {
+            echo '3';
 
             $res = $this->_req->rowCount();
             return $res;

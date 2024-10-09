@@ -18,13 +18,24 @@
 }
 
 
-html,
+html{
+  font-size: 62.5%;
+}
+
 body {
   /* html and body height element must be defined by 100% of is parent contenair*/
   height: 100%;
-  font-size: 62.5%;
+
   /*rem settings 20px*10=2rem*/
+  font-size: 1.6rem;
   scroll-behavior: smooth;
+   /*usually used*/
+   line-height: 1.5;
+   -webkit-font-smoothing: antialiased;
+   /* for a cleaner and smoother font appareance  */
+   font-family: "inter", sans serif;
+   color: #213442;
+   background-color: var(--bkgrd-primary);
 }
 
 img,
@@ -68,16 +79,7 @@ a {
 /*!----UTILITIES / TO BE CHANGE FOR MODEL INTEGRATION-------*/
 
 
-body {
-  /*usually used*/
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  /* for a cleaner and smoother font appareance  */
-  font-family: "inter", sans serif;
-  color: #213442;
-  background-color: var(--bkgrd-primary);
 
-}
 
 :root {
   --bkgrd-primary: #e2dfdf;

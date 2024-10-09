@@ -13,7 +13,7 @@ $currentPage = "userList";
 <h1 class="text-align-center title">Liste des Etudiants</h1>
 
 <div class="n-container text-end pt-5">
-
+<a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">Menu</a>
    
 </div>
 

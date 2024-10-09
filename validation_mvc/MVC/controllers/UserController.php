@@ -176,7 +176,9 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
     if (count($userEditDatas) > 0) {
       $userData = new User($userEditDatas);
       dump($userEditDatas, 'UserCtrl - edit -  $userData');
-    }
+    } else {
+      echo "Aucune donnée trouvée pour l'utilisateur avec l'ID $id.";
+  }
 
     include "MVC/views/users/user_edit.php";
   }
@@ -200,17 +202,13 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
     }
   }
 
-  # TRAITEMENT DELETE - Récupère le $_POST  et le $_GET['id'] 
+  # TRAITEMENT DELETE - Récupère le $_POST et le $_GET['id'] pour le transmettre au modele, modifier les données et faire la redirection vers la liste des users
   public function delete($id)
   {
 
     $model = new UserModel;
     $del = $model->delete($id);
+    dump($del);
 
-    if ($del) {
-      header('Location: ./user_list.php?deleteuser=success');
-    } else {
-      header('Location: ./user_list.php?deleteuser=error');
-    }
   }
 }
