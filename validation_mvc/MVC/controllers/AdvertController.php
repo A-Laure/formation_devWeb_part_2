@@ -1,5 +1,6 @@
 <?php
 
+
 class AdvertController
 {
 
@@ -26,15 +27,16 @@ class AdvertController
     $pagination = (int) $_GET['pagination'];
   }
 
-  # On initialise la valeur du trie,  
-  $orderBy = 'joba_jobContractType';
+   # Tri par défaut
+   $orderBy = 'joba_jobContractType';
+   if (!empty($_GET['orderBy'])) {
+       $orderBy = htmlspecialchars($_GET['orderBy']);
+   }
 
-  # Si il y a un parametre dans l'url (?orderBy=trie-id-date-auteur => $_GET['orderBy'])
-  # IF : si $_GET['orderBy'] n'est pas vide et que sa valeur est de type numérique alors on stocke la valeur de $_GET['pagnination'] dans $orderBy
-  if(!empty($_GET['orderBy']))
-  {
-    $orderBy = htmlspecialchars($_GET['orderBy']);
-  }
+   $order = 'DESC';
+   if (!empty($_GET['order'])) {
+       $order = strtoupper($_GET['order']);
+   }
 
   # On initialise la valeur du trie,  
   $order = 'DESC';
@@ -47,28 +49,56 @@ class AdvertController
   }
 
 try {
+ 
+        $advertModel = new AdvertModel();
+        $skillModel = new SkillModel();
 
-        $model = new AdvertModel();
-        $datas = $model->readAll($pagination, $pagination * ($currentPage - 1), $orderBy, $order);
-        // dump($datas,'Userctrl - Index - $datas'); 
-  
-        $advertList = [];
-        // dump($advertList, 'AdvertCtrl - index - avant Foreach Object AdvertList'); 
-  
-        // /* echo 'AdvertCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); *
+         # Récupération du nombre total d'annonces
+         $totalAdverts = $advertModel->countAll();
+        //  echo '<br>Nbre d annonces : ' . $totalAdverts . '<br><hr>';
+
+         # Calcul du nombre total de pages
+         $totalPages = ceil($totalAdverts / $pagination);
+        //  echo  '<br>Nbre pages total : ' . $totalPages  . '<br><hr>';
+
+          # Validation de la page courante
+          if ($currentPage > $totalPages) {
+            $currentPage = $totalPages;
+            // echo '<br>Page courante : ' . $currentPage  . '<br><hr>';
+        } elseif ($currentPage < 1) {
+            $currentPage = 1;
+            // echo '<br>Page courante : ' . $currentPage  . '<br><hr>';
+        }
+
+        # Récupération des annonces pour la page actuelle
+        $datas = $advertModel->readAll($pagination, $pagination * ($currentPage - 1), $orderBy, $order);
   
         
-        if(count($datas) > 0)
-        {
-          
-          foreach($datas as $data)
-          {
-            $advert = new Advert($data);
-            $advert->setSkills(explode(',', $data['skills'])); // Décompose la chaîne en tableau
-            $advert->setNetworks(explode(',', $data['networks']));
-            $advertList[] = $advert;        
-          }       
+        // Récupération de toutes les compétences
+        $allSkills = $skillModel->readAll();
+
+        $advertList = [];
+
+        if (!empty($datas)) {
+            foreach ($datas as $data) {
+                $advert = new Advert($data);
+                
+                // Créez une liste de Skills en fonction des données
+                $skillsArray = [];
+
+                foreach (explode(',', $data['skills']) as $skillLabel) {
+                    $skill = new Skills($data);
+                    $skill->setSkillLabel(trim($skillLabel)); // Définir le label de compétence
+                    $skillsArray[] = $skill;
+                }
+
+                // Associez la liste de compétences à l'annonce
+                $advert->setSkills($skillsArray);
+                $advertList[] = $advert;
+            }
         }
+
+
         // dump($advertList, 'AdvertCtrl - index - Foreach Object AdvertList'); 
   
         include 'MVC/views/advert/advert_list.php';
@@ -89,17 +119,54 @@ try {
         // Si $datas contient des données, créez des objets Adverts
         if (!empty($datas)) {
             foreach ($datas as $data) {
-                $advertList[] = new Advert($data);
+               // Création d'un objet Advert pour chaque annonce
+            $advert = new Advert($data); 
                 // dump($advertList, "AdvertList");
+                 // Transformation des champs `skills` et `networks` en tableaux
+            $skills = isset($data['skills']) ? explode(',', $data['skills']) : [];
+            // $networks = isset($data['networks']) ? explode(',', $data['networks']) : [];
+
+            // Attribution des compétences et des réseaux à l'objet Advert
+            $advert->setSkills($skills);
+            // $advert->setNetworks($networks);
+
+            // Ajout de l'objet complet à la liste
+            $advertList[] = $advert;
+            dump($advertList, 'AdvertCtrl -ReadAll'); 
+                
             }
         }
         return $advertList;
     }
 
-     # Affichage Formulaire CREATE User
+     # Affichage Formulaire CREATE Advert
     public function create()
     {
-     
+      $model = new SkillModel();
+        $datas = $model->readAll();
+        dump($datas,'Advertctrl - Create - $datas'); 
+          
+        $advertList = [];      
+  
+        
+        if(count($datas) > 0)
+        {
+          
+          foreach($datas as $data)
+          {
+            $advert = new Advert($data); 
+           
+            $skills = isset($data['skills']) ? explode(',', $data['skills']) : [];
+            // $networks = isset($data['networks']) ? explode(',', $data['networks']) : [];
+
+            // Assigne les compétences et réseaux à l'objet Advert
+            $advert->setSkills($skills);
+            // $advert->setNetworks($networks);
+            $advertList[] = $advert;
+            
+          }
+         dump($advertList, 'AdvertCtrl - Create - $advertList' ); 
+        }
 
       
       include 'MVC/views/advert/advert_create.php';
@@ -110,6 +177,7 @@ try {
       # TRAITEMENT DU CREATE - Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
     public function store($request)
     {
+      echo '<br>Je rentre dans store de AdvertCtrl</br><hr>';
 
       # FAIRE VERIF DES DONNEES : droits, hmtl char, géré par validate static
       # FAIRE ENCRYPTAGE MDP
@@ -119,13 +187,13 @@ try {
 
       if($id)
       {
-        header('Location: index.php?ctrl=Advert&action=index&adduser=success');
+        header('Location: index.php?ctrl=Advert&action=index&Création Advert avec Succés');
         exit;
       }
       else 
       {
         
-        header('Location: index.php?ctrl=Advert&action=index&adduser=error');
+        header('Location: index.php?ctrl=Advert&action=index&Création Advert a échoué');
       }
       exit;
 

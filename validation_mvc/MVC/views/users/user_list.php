@@ -33,8 +33,20 @@ $currentPage = "userList";
 
       <a href="index.php?ctrl=User&action=edit&id=<?=$user->getUserId()?>" class="n-btn m-t-2">Modifier</a>
       <a href="index.php?ctrl=User&action=delete&id=<?=$user->getUserId()?>" class="n-btn m-t-2 bg-danger">Supprimer</a>
+
+      <ul>
+    <?php foreach ($user->getSkills() as $skill): ?>
+      <li><?= $skill->getSkillLabel() ?></li>
+    <?php endforeach; ?>
+  </ul>
+
+
+
     </div>
     <?php endif; ?>
+
+
+
 
   <?php endforeach ?>
 

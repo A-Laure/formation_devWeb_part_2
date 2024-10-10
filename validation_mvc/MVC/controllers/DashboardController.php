@@ -64,28 +64,14 @@ try{
   $pagination*($currentPage-1), $orderBy, $order);
 /*   dump($datas, 'DashboardCtrl'); */
 
-  // Comptage du nombre total d'items
-  $nbItem = $dashModel->countNbItem();
- /*  echo '<br>Count item ds DashboardCtrl: ' . $nbItem. '</br><hr>';  */
+  
 
-  // Comptage du nombre total users
-  $nbUser = $dashModel->countNbUser();
-  /* echo '<br>Count User ds DashboardCtrl: ' . $nbUser. '</br><hr>';  */
-
-  //Comptage du nombre total supliers
-  $nbSppl = $dashModel->countNbSppl();
-  /* echo '<br>Count Sppl ds DashboardCtrl: ' . $nbSppl. '</br><hr>';  */
-
-  foreach($datas as $data){
-    $items[] = new Item($data);
-    
   }
   /* dump($items, 'DashboardCtrl - Foreach Items'); */
 
-  include 'MVC/views/dashboards/dashboard.php';
       
 
-}
+
 catch(Exception $e)
 {
   // Redirection vers une page d'erreur en cas de problème

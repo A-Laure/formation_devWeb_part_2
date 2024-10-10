@@ -8,27 +8,27 @@ class UserController
   # READALL - Affichage de tous les étudiants
   public function indexEtudiantList()
   {
-
     $model = new UserModel();
     $datas = $model->readAll();
-    /*   dump($datas,'Userctrl - Index - $datas'); */
 
     $userList = [];
-    /* echo 'UserCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
-
 
     if (count($datas) > 0) {
-
       foreach ($datas as $data) {
-        // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
         $user = new User($data);
-        $user->setSkills(explode(',', $data['skills'])); // Décompose la chaîne en tableau
-        $user->setNetworks(explode(',', $data['networks']));
+
+        // Créez une liste de Skills en fonction des données
+        $skillsArray = [];
+        foreach (explode(',', $data['skills']) as $skillLabel) {
+          $skill = new Skills($data);
+          $skill->setSkillLabel(trim($skillLabel)); // Définir le label de compétence
+          $skillsArray[] = $skill;
+        }
+
+        // Associez la liste de compétences à l'utilisateur
+        $user->setSkills($skillsArray);
         $userList[] = $user;
       }
-
-      /*  dump($userList, 'UserCtrl - index - Foreach Object UserList'); */
-
 
       include 'MVC/views/users/user_list.php';
     }
@@ -160,7 +160,7 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
       exit;
     } else {
 
-      header('Location: index.php?ctrl=Home&action=index&aCréation User a échoué');
+      header('Location: index.php?ctrl=Home&action=index&Création User a échoué');
     }
     exit;
   }

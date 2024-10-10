@@ -7,6 +7,7 @@ class Advert extends CoreEntity
   # Propriétés
 
   private int $jobAdvertId;
+  private int $userId;
   private string $jobLabel;
   private string $jobEmail;
   private string $jobContractType;
@@ -14,14 +15,17 @@ class Advert extends CoreEntity
   private string $jobAdvantages;
   private string $jobTown;
   private string $jobStatus;
-  private array $skills = []; 
-  private array $networks = []; 
+  private array $skills = []; // Ajout de la liste de compétences
+  private array $networks = []; // Ajout de la liste de compétences
+ 
 
 
 
   # GETTERS
 
  public function getJobAdvertId(): int {return $this->jobAdvertId;}
+
+	public function getUserId(): int {return $this->userId;}
 
 	public function getJobLabel(): string {return $this->jobLabel;}
 
@@ -36,18 +40,12 @@ class Advert extends CoreEntity
 	public function getJobTown(): string {return $this->jobTown;}
 
 	public function getJobStatus(): string {return $this->jobStatus;}
+  public function getSkills(): array { return $this->skills; } 
+  public function getNetworks(): array { return $this->networks; } 
 
 	
-  public function setNetworks(array $networks)
-  {
-      $this->networks = $networks;
-  }
 
-  public function setSkills(array $skills)
-  {
-      $this->skills = $skills;
-  }
-
+	
 	
 	
 
@@ -55,6 +53,8 @@ class Advert extends CoreEntity
   # SETTERS
 
 public function setJobAdvertId(int $jobAdvertId): void {$this->jobAdvertId = $jobAdvertId;}
+
+	public function setUserId(int $userId): void {$this->userId = $userId;}
 
 	public function setJobLabel(string $jobLabel): void {$this->jobLabel = $jobLabel;}
 
@@ -69,16 +69,17 @@ public function setJobAdvertId(int $jobAdvertId): void {$this->jobAdvertId = $jo
 	public function setJobTown(string $jobTown): void {$this->jobTown = $jobTown;}
 
 	public function setJobStatus(string $jobStatus): void {$this->jobStatus = $jobStatus;}
-	
 
-  public function getSkills(): array  {return $this->skills;  }
-  
-  public function getNetworks(): array  {return $this->networks;
+    // Setter pour ajouter des compétences
+    public function setSkills(array $skills): void {
+      $this->skills = $skills;
     }
+   
+    public function setNetworks(array $networks): void {
+      $this->networks = $networks;
+    }
+  }
 
 
-	
-	
 
 
-}

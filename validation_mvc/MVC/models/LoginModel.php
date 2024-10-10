@@ -50,15 +50,19 @@ class LoginModel extends CoreModel
        u.user_userAdr1, 
        u.user_userAdr2, 
        u.user_userTown, 
-       u.user_userCp, 
-       t.skill_skillLabel, 
-       s.netw_networkLabel
-      FROM user u 
+       u.user_userCp,
+        GROUP_CONCAT(DISTINCT t.skill_skillLabel) AS skills,
+       GROUP_CONCAT(DISTINCT j.joba_jobLabel, j.joba_jobAdvertId) AS adverts,
+      GROUP_CONCAT(DISTINCT s.netw_networkLabel) AS networks
+        FROM user u 
       LEFT JOIN has h ON h.user_userId = u.user_userId
       LEFT JOIN techskills t on t.skill_skillId = h.skill_skillId
-      LEFT JOIN display d ON d.user_userId = u.user_userId
+      LEFT JOIN apply a ON a.user_userId = u.user_userId
+      LEFT JOIN jobadvert j ON a.joba_jobAdvertId = j.joba_jobAdvertId
+      LEFT JOIN display d ON d.user_userId = u.user_userId      
       LEFT JOIN socialnetwork s on s.netw_networkId = d.netw_networkId
       WHERE u.user_userEmail = :email
+      GROUP BY u.user_userId
       ';
 
     
@@ -81,6 +85,7 @@ class LoginModel extends CoreModel
           
           // Fetch des données utilisateur
           $userConnected = $this->_req->fetch(PDO::FETCH_ASSOC);
+     
                         
           // Vérification du résultat du fetch
           if (!$userConnected) {
@@ -98,7 +103,10 @@ class LoginModel extends CoreModel
               // Vérification du mot de passe
               if (password_verify($pwd, $userConnected['user_userPwd'])) {
                   echo '<br>Mot de passe correct</br><hr>'; 
-          
+           // Conversion des compétences et réseaux en tableaux
+           $userConnected['skills'] = isset($userConnected['skills']) ? explode(',', $userConnected['skills']) : [];
+           $userConnected['networks'] = isset($userConnected['networks']) ? explode(',', $userConnected['networks']) : [];    
+           $userConnected['adverts'] = isset($userConnected['adverts']) ? explode(',', $userConnected['adverts']) : [];
 
                   // Suppression du mot de passe avant stockage en session
                   unset($userConnected['user_UserPwd']);                  
@@ -111,8 +119,8 @@ class LoginModel extends CoreModel
                  
                   /* header("Location: MVC/views/log_in/login.php?_err=invalid_password ou email"); */
                   header("Location: index.php?ctrl=Home&action=index&_err=Password ou Email non valide");
-                  var_dump($userConnected['user_Userpwd']);  // Affichage du hash du mot de passe stocké
-                  var_dump($pwd);   // Affichage du mot de passe fourni
+                  // var_dump($userConnected['user_Userpwd']);  // Affichage du hash du mot de passe stocké
+                  // var_dump($pwd);   // Affichage du mot de passe fourni
                   exit;
               }
           }

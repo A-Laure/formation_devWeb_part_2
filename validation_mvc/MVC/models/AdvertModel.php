@@ -14,6 +14,23 @@ class AdvertModel extends CoreModel
     }
   }
 
+// Méthode pour compter tous les enregistrements dans la table `jobadvert`
+public function countAll(): int
+{
+    $query = 'SELECT COUNT(*) as total FROM jobadvert';
+
+    try {
+        $stmt = $this->getDb()->prepare($query);
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return (int) $result['total'];
+        }
+    } catch (PDOException $e) {
+        die($e->getMessage());
+    }
+    return 0;
+}
+
 
   # READALL : Méthode pour récupérer tous les users 
   public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC') : array
@@ -110,24 +127,27 @@ if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
   # CREATE, le $request = le $_POST
   public function create($request)
   {
-
+echo '<br>1</br><hr>';
     try {
+      echo '<br>2</br><hr>';
 
-      $query = "INSERT INTO jobadvert
-      joba_jobAdvertId, 
-      joba_jobLabel, 
-      joba_jobEmail,
-      joba_jobContractType, 
-      joba_jobDescription, 
-      joba_jobAdvantages, 
-      joba_jobTown, 
-      user_userId, 
-      joba_jobstatus      
-      VALUES (:jobLabel, :jobContractType,:jobDescription, :jobAdavantages, :jobTown, :userIdId, jobstatus)";
-
+      $query = "INSERT INTO jobadvert (
+        joba_jobLabel, 
+        joba_jobEmail,
+        joba_jobContractType, 
+        joba_jobDescription, 
+        joba_jobAdvantages, 
+        joba_jobTown, 
+        joba_jobStatus,
+        user_userId
+    ) VALUES (
+        :jobLabel, :jobEmail, :jobContractType, :jobDescription, :jobAdvantages, :jobTown, :jobStatus, :userId
+        )";
+      
+      
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
         if ((
-
+       
           $this->_req->bindValue(':jobLabel', $request['jobLabel'])
           &&
           $this->_req->bindValue(':jobContractType', $request['jobContractType'])
@@ -136,13 +156,19 @@ if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
           &&
           $this->_req->bindValue(':jobDescription', $request['jobDescription'])
           &&
-          $this->_req->bindValue(':jobAdavantages', $request['jobAdavantages'])
+          $this->_req->bindValue(':jobAdvantages', $request['jobAdvantages'])
           &&
-          $this->_req->bindValue(':jobstatus', $request['jobstatus'])
+          $this->_req->bindValue(':jobTown', $request['jobTown'])
+          &&
+          $this->_req->bindValue(':jobStatus', $request['jobStatus'])
+          &&
+          $this->_req->bindValue(':userId', $request['userId'])
         )) {
           if ($this->_req->execute()) {
+            echo '<br>3</br><hr>';
             // lastInsertId : Retourne l'identifiant de la dernière ligne insérée, on peut du coup l'utiliser pour afficher un message, 'le user intel a bien été créé' ou autre utilisation
             $res = $this->getDb()->lastInsertId();
+            echo '<br>4</br><hr>';
             return $res;
           }
         }

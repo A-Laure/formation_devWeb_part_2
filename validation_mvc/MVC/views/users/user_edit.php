@@ -6,14 +6,14 @@ dump($_POST, 'User_Edit -> Post du edit user');
 // value=<?= $userData->getPwd()
  ?>
 
-<a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">Menu</a>
+
 <!-- PENSER A LA REDIRECTION VERS LIST USER SI SUPER_ADMIN OU PROFIL SI USER -->
 
 <h1 class="text-align-center title">Modification du profil de : <?= $_SESSION[APP_TAG]['connected']['user_userFirstname'] . "  " . $_SESSION[APP_TAG]['connected']['user_userlastname']?></h1> 
 
 <section class="userCreate ">
 
-
+<a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn mb-5">Menu</a>
 <!-- Mettre la fonction haspower voir esapce_admin Damien-->
 
 <!-- /index.php?ctrl=User&action=update&id= -->

@@ -27,12 +27,15 @@ $currentPage = "AdvertCreate";
 
 
 ?>
-<a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">Menu</a>
+
 
 <h1 class="text-align-center title">Création d'une Annonce</h1>
 
 
+
+
 <section class="container m-l-45">
+<a href="index.php?ctrl=Dashboard&action=index" type="button" class="n-btn mt-2 mb-3">Menu</a>
 
   <?php
 
@@ -44,57 +47,69 @@ $currentPage = "AdvertCreate";
   ?>
 
 
-  <form action="index.php?ctrl=Advertr&action=store" method="post" class="formCreate ">
+  <form action="index.php?ctrl=Advert&action=store" method="post" class="formCreate ">
 
     <div class="mb-3 ">
-      <label for="title" class="form-label">Titre de l'annonce<span> *</span></label>
-      <input type="text" name="title" id="title" class="form-control">
+    <label for="userId" class="form-label"></label>
+      <input type="text" name="userId" id="userId" class="form-control"   value = "<?= $_SESSION[APP_TAG]['connected']['user_userId']?>" >
     </div>
 
-    <label for="typecontrat" class="form-label mb-3">Type de contrat :<span> *</span></label>
+    <div class="mb-3 ">
+      <label for="jobLabel" class="form-label">Titre de l'annonce<span> *</span></label>
+      <input type="text" name="jobLabel" id="jobLabel" class="form-control">
+    </div>
+
+
+
+    <label for="jobStatus" class="form-label mb-3">Statut de l'annonce :<span> *</span></label>
     <div class="d-flex flex-row">
 
-      <label class="form--check-label" for="typecontrat">CDD</label>
-      <input class="" type="radio" id="typecontrat" value="CDD" name="typecontrat">
+      <label class="form--check-label" for="jobStatus">Ouverte</label>
+      <input class="" type="radio" id="jobStatus" value="CDD" name="jobStatus">
 
-      <label class="form-check-label" for="typecontrat">CDI</label>
-      <input class="" type="radio" id="typecontrat" value="CDI" name="typecontrat">
+      <label class="form-check-label" for="jobStatus">Pourvue</label>
+      <input class="" type="radio" id="jobStatus" value="CDI" name="jobStatus">  
 
-      <label class="form-check-label" for="typecontrat">Alternance</label>
-      <input class="" type="radio" id="typecontrat" value="Alternance" name="typecontrat">
+    </div>
 
-      <label class="form-check-label" for="typecontrat">Freelance</label>
-      <input class="" type="radio" id="typecontrat" value="Freelance" name="typecontrat">
+    <label for="jobContractType" class="form-label mb-3">Type de contrat :<span> *</span></label>
+    <div class="d-flex flex-row">
+
+      <label class="form--check-label" for="jobContractType">CDD</label>
+      <input class="" type="radio" id="jobContractType" value="CDD" name="jobContractType">
+
+      <label class="form-check-label" for="jobContractType">CDI</label>
+      <input class="" type="radio" id="jobContractType" value="CDI" name="jobContractType">
+
+      <label class="form-check-label" for="jobContractType">Alternance</label>
+      <input class="" type="radio" id="jobContractType" value="Alternance" name="jobContractType">
+
+      <label class="form-check-label" for="jobContractType">Freelance</label>
+      <input class="" type="radio" id="jobContractType" value="Freelance" name="jobContractType">
 
     </div>
 
     <div class="mt-3 ">
-      <label for="email" class="form-label">Email<span> *</span></label>
-      <input type="email" name="email" id="email" class="form-control" value ="<?= $_SESSION[APP_TAG]['connected']['user_userEmail'] . '    ' . 'Vous pouvez la modifier'?>">
+      <label for="jobEmail" class="form-label">Email<span> *</span></label>
+      <input type="email" name="jobEmail" id="jobEmail" class="form-control" value ="<?= $_SESSION[APP_TAG]['connected']['user_userEmail'] ?>">
     </div>
 
     <div class="mb-3 ">
-      <label for="loc" class="form-label">Localisation<span> *</span></label>
-      <input type="text" name="loc" id="loc" class="form-control">
+      <label for="jobTown" class="form-label">Localisation<span> *</span></label>
+      <input type="text" name="jobTown" id="jobTown" class="form-control">
     </div>
 
-
+    <div class="mb-3 ">
+      <label for="jobAdvantages" class="form-label">Avantages<span>*</span></label>
+      <textarea type="text" name="jobAdvantages" id="jobAdvantages" class="form-control"></textarea>
+    </div>
 
     <div class="mb-3">
-      <label for="textaera" class="form-label">Présentez-vous : <span> *</span></label>
-      <textarea name="textaera" id="textaera" class="form-control" rows="4" placeholder="Votre description ici..."></textarea>
+      <label for="jobDescription" class="form-label">Présentez-vous : <span> *</span></label>
+      <textarea name="jobDescription" id="jobDescription" class="form-control" rows="4" placeholder="Votre description ici..."></textarea>
     </div>
 
 
-
-    <div class="d-flex flex-wrap gap-2">
-    <?php foreach($skillsAll as $index => $skill) : ?>
-        <div class="form-check">
-            <input type="radio" name="skills" id="skill<?= $index ?>" class="form-check-input" value="<?= htmlspecialchars($skill->getSkillLabel()) ?>">
-            <label for="skill<?= $index ?>" class="form-check-label"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
-        </div>
-    <?php endforeach; ?>
-</div>
 
   
 

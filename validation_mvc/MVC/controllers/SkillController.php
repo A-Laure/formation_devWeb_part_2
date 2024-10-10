@@ -21,9 +21,10 @@ class SkillsController
           foreach($datas as $data)
           {
             $skillList[] = new Skills($data);
-            
+            dump($skillList, 'skillCtrl - index'); 
           }
-        //  dump($skillList, 'UserCtrl - index - Foreach Object UserList'); 
+          return $skillList;
+         
         }
   
 
@@ -32,9 +33,10 @@ class SkillsController
     # Recup de toutles compétences
     public function readAll()
     {
+      
         $model = new SkillModel();
         $datas = $model->readAll();
-        
+        echo 'je rentre bien la';
         $skillList = [];
         
         // Si $datas contient des données, créez des objets Skills

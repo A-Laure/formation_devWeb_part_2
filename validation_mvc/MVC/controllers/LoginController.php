@@ -29,24 +29,7 @@ class LoginController{
         if (isset($_SESSION[APP_TAG]['connected']))
         {
           header("Location: index.php?ctrl=Dashboard&action=menu");
-            exit; 
-          // //header("Location: index.php?ctrl=Dashboard&action=index");
-          // // header("Location: index.php?ctrl=User&action=index&id=1");
-          // if($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant')
-          // {
-          //   header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
-          //   exit; 
-            
-          // }elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise')
-          // {
-          //   header("Location: index.php?ctrl=User&action=indexEtudiantProfile&id=" . $_SESSION[APP_TAG]['connected']['user_userId']);
-          //   exit; 
-          // }
-          // elseif ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'admin')
-          // {
-          //   header("Location: index.php?ctrl=Dashboard&action=menu");
-          //   exit; 
-          // }           
+            exit;           
            
          
           
