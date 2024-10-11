@@ -20,12 +20,20 @@ if (isset($_GET['logOut'])) {
 }
 ?>
 
-<div class="justify-content-center mt-5">
+<div class="justify-content-center mt-5 mb-5">
       <a href="?logOut" method="get" type="button" class="n-btn">
         <i class="fa-solid fa-power-off"></i>
         <p class="align-items-center"> Log Out</p>
       </a>
     </div>
+
+     <!-- BANNER MESSAGE ALERTE -->
+  <?php
+  if (!empty($_GET['_err'])) {
+    $error = htmlspecialchars($_GET['_err']);
+    echo "<div class='bg-warning fs-4 text'>{$error}</div>";
+  }
+  ?>
 
   <div class="list-group fs-2 text">
 

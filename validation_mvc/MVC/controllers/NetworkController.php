@@ -1,18 +1,18 @@
 <?php
 
-class SkillsController
+class NetworksController
 {
 
-    # READALL - Affichage de tous les skills
+    # READALL - Affichage de tous les Networks
     public function index()  
     {
 
-        $model = new SkillModel();
+        $model = new NetworkModel();
         $datas = $model->readAll();
-      /*   dump($datas,'Userctrl - Index - $datas'); */
+      /*   dump($datas,'Networkctrl - Index - $datas'); */
   
-        $skillList = [];
-        /* echo 'skillCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
+        $networkList = [];
+        /* echo 'networkCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
   
         
         if(count($datas) > 0)
@@ -20,10 +20,10 @@ class SkillsController
           
           foreach($datas as $data)
           {
-            $skillList[] = new Skills($data);
-            dump($skillList, 'skillCtrl - index'); 
+            $networkList[] = new Networks($data);
+            dump($networkList, 'networkCtrl - index'); 
           }
-          return $skillList;
+          return $networkList;
          
         }
   
@@ -34,19 +34,19 @@ class SkillsController
     public function readAll()
     {
       
-        $model = new SkillModel();
+        $model = new NetworkModel();
         $datas = $model->readAll();
         echo 'je rentre bien la';
-        $skillList = [];
+        $networkList = [];
         
-        // Si $datas contient des données, créez des objets Skills
+        // Si $datas contient des données, créez des objets networks
         if (!empty($datas)) {
             foreach ($datas as $data) {
-                $skillList[] = new Skills($data);
-                dump($skillList, "skillList");
+                $networkList[] = new Networks($data);
+                dump($networkList, "networkList");
             }
         }
-        return $skillList;
+        return $networkList;
     }
 
     
@@ -54,11 +54,11 @@ class SkillsController
      # Affichage Formulaire CREATE skills
      public function create()
      {
-         $skillsController = new SkillsController();
-         $skillList = $skillsController->readAll(); // Récupère toutes les compétences
+         $networksController = new NetworksController();
+         $networkList = $networksController->readAll(); // Récupère toutes les compétences
          
          include 'MVC/views/advert/advert_create.php';
-          // Inclut la vue en lui passant $skillList
+          // Inclut la vue en lui passant $networkList
      }
 
 

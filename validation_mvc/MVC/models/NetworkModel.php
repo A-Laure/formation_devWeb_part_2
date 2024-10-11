@@ -1,6 +1,6 @@
 <?php
 
-class SkillModel extends CoreModel
+class NetworkModel extends CoreModel
 {
 
   private $_req;
@@ -17,13 +17,13 @@ class SkillModel extends CoreModel
 # READAll
 public function readAll(): array
 {
-  $query = 'SELECT * FROM techskills';
+  $query = 'SELECT * FROM socialnetwork';
 
   try {
     if (($this->_req = $this->getDb()->query($query)) !== false) {
-      $skillsAll = $this->_req->fetchAll(PDO::FETCH_ASSOC); // Utilisez FETCH_ASSOC pour un tableau associatif
+      $networksAll = $this->_req->fetchAll(PDO::FETCH_ASSOC); // Utilisez FETCH_ASSOC pour un tableau associatif
       
-      return $skillsAll;
+      return $networksAll;
     }
   } catch (PDOException $e) {
     die($e->getMessage());
@@ -38,8 +38,8 @@ public function readAll(): array
      {
  
        if(($this->_req = $this->getDb()->prepare('SELECT *
-        FROM techskills
-        WHERE skill_skillId = :id')) !== false)
+        FROM socialnetwork
+        WHERE netw_networkId = :id')) !== false)
        {
          if(($this->_req->bindValue(':id', $id, PDO::PARAM_INT)))
          {

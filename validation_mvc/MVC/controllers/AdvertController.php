@@ -204,16 +204,11 @@ try {
      {
  
        $model = new AdvertModel();
-       $AdvertEditDatas = $model->readOne($id);
-       dump($AdvertEditDatas, 'AdvertCtrl - edit -  $AdvertEditDatas');
+       $advertEditDatas = $model->readOne($id);
+       $advert = new Advert($advertEditDatas);
+       dump($advertEditDatas, 'AdvertCtrl - edit -  $advertEditDatas');
  
-       if(count($AdvertEditDatas) > 0)
-       {
-         $AdvertData = new Advert($AdvertEditDatas);
-         dump($AdvertEditDatas, 'AdvertCtrl - edit -  $AdvertData');
-
-       }
- 
+       
        include "MVC/views/advert/advert_edit.php";
  
      }
@@ -232,11 +227,11 @@ try {
 
       if($upd)
       {
-        header('Location: index.php?ctrl=Advert&action=index&editAdvert=success');
+        header('Location: index.php?ctrl=Advert&action=index&_err=Modif Réalisée avec succés');
       }
       else 
       {
-        header('Location: MVC/views/Adverts/Advert_list.php?editAdvert=error');
+        header('Location: index.php?ctrl=Advert&action=index&_err=Modiféchouée');
       }
 
     }
@@ -248,14 +243,11 @@ try {
       $model = new AdvertModel;
       $del = $model->delete($id);
 
-      if($del)
-      {
-        header('Location: MVC/views/Adverts/Advert_list.phpdeleteuser=success');
-      }
-      else 
-      {
-        header('Location: MVC/views/Adverts/Advert_list.phpdeleteuser=error');
-      }
+      if ($del) {
+        header('Location: index.php?ctrl=Dashboard&action=index&_err=Votre annonce a bien été supprimé');
+    } else {
+        header('Location: index.php?ctrl=Dashboard&action=menu&_err= Suppression annonce a échoué');
+    }
 
     }
   }

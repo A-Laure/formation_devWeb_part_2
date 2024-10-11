@@ -183,41 +183,50 @@ echo '<br>1</br><hr>';
   # UPDATE d'un USER
   public function update($id, $request)
   {
-    echo '<br>UserModel, je suis rentré ds update</br><h
- r>';
-    dump($_POST, '$_post dans usermodel - update');
-    echo 'UserModel - Update GET Id : ' . $_GET['id'];
+    // echo '<br>AdvertModel, je suis rentré ds update</br><hr>';
+    dump($_POST, '$_post dans Advertmodel - update');
+    // echo 'AdvertModel - Update GET Id : ' . $_GET['id'];
     try {
-      $query = "UPDATE user
-     SET
-     user_firstName = :firstName,
-     user_lastName = :lastName,
-     user_email = :email, 
-     user_pwd = :pwd, 
-     role_id = :roleId
-    WHERE user_Id = :id";
+      $query = "UPDATE jobadvert
+     SET   
+     joba_jobLabel = :joblabel,
+     joba_jobEmail = :jobemail,
+     joba_jobContractType = :jobcontracttype,
+     joba_jobDescription = :jobdescription,
+     joba_jobAdvantages = :jobadvantages,
+     joba_jobStatus = :jobstatus,
+     joba_jobTown = :jobtown,
+    user_userId = :userid
+     WHERE joba_jobAdvertId = :id";
 
 
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
 
-        echo '<br>UserModel, je suis rentré ds prepare</br><hr>';
+        // echo '<br>AvertModel - update, je suis rentré ds prepare</br><hr>';
 
 
 
         if (($this->_req = $this->getDb()->prepare($query)) !== false) {
           if ((
   
-            $this->_req->bindValue(':jobLabel', $request['jobLabel'])
+            $this->_req->bindValue(':joblabel', $request['joblabel'])
             &&
-            $this->_req->bindValue(':jobContractType', $request['jobContractType'])
+            $this->_req->bindValue(':jobemail', $request['jobemail'])
             &&
-            $this->_req->bindValue(':jobDescription', $request['jobDescription'])
+            $this->_req->bindValue(':jobcontracttype', $request['jobcontracttype'])
             &&
-            $this->_req->bindValue(':jobAdavantages', $request['jobAdavantages'])
+            $this->_req->bindValue(':jobdescription', $request['jobdescription'])
+            &&
+            $this->_req->bindValue(':jobadvantages', $request['jobadvantages'])
+            &&
+            $this->_req->bindValue(':jobtown', $request['jobtown'])
+            &&
+            $this->_req->bindValue(':userid', $request['userid'])
             &&
             $this->_req->bindValue(':jobstatus', $request['jobstatus'])
             &&
-           $this->_req->bindValue(':id', $id)
+        $this->_req->bindValue(':id', $id)
+          
         )) 
           if ($this->_req->execute()) {
             echo '<br>AdvertModel, je suis rentré ds execute</br><hr>';
@@ -239,7 +248,7 @@ echo '<br>1</br><hr>';
   public function delete($id)
   {
     try {
-      $query = "DELETE FROM user WHERE user_Id = :id";
+      $query = "DELETE FROM jobadvert WHERE joba_jobAdvertId = :id";
 
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
         if (($this->_req->bindValue(':id', $id, PDO::PARAM_INT))) {

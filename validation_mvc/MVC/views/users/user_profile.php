@@ -47,10 +47,26 @@ dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
         <?php endif; ?>
         <hr>
 
+        <?php if ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant') : ?> 
+        <p class="">Réseaux Sociaux : </p>
+        <ul class="card-text">
+          <?php if (!empty($_SESSION[APP_TAG]['connected']['networks'])): ?>
+            <?php foreach ($_SESSION[APP_TAG]['connected']['networks'] as $network): ?>
+              <li><?= htmlspecialchars($network) ?></li>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <li>****</li>
+          <?php endif; ?>
+        </ul>
+        <?php endif; ?>
+        <hr>
+
         <p class="">Description : </p>
 
         <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userTextaera'] ?></p>
         <hr>
+
+        
         <div class="d-flex justify-content-center gap-3">
           <a href="index.php?ctrl=User&action=edit&id=<?= $_SESSION[APP_TAG]['connected']['user_userId'] ?>" type=" button" class="n-btn">Modifier</a>
           <a href="index.php?ctrl=User&action=delete&id=<?= $_SESSION[APP_TAG]['connected']['user_userId'] ?>" type=" button" class="btn-delete">Supprimer</a>

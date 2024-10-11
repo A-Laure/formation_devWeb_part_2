@@ -1,5 +1,6 @@
 <?php
 
+
 class UserController
 {
 
@@ -27,6 +28,17 @@ class UserController
 
         // Associez la liste de compétences à l'utilisateur
         $user->setSkills($skillsArray);
+
+          // Créez une liste de Skills en fonction des données
+          $networksArray = [];
+          foreach (explode(',', $data['networks']) as $networkLabel) {
+            $network = new Networks($data);
+            $network->setnetworkLabel(trim($networkLabel)); // Définir le label de compétence
+            $networksArray[] = $network;
+          }
+  
+          // Associez la liste de compétences à l'utilisateur
+          $user->setSkills($skillsArray);
         $userList[] = $user;
       }
 
@@ -168,38 +180,63 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
   #  Affichage du formulaire - UPDATE -avec les données d'un utilisateur
   public function edit($id)
   {
+    // DONNEES USER
+      $model = new UserModel();
+      $userEditDatas = $model->readOne($id);
+      
+      // dump($userEditDatas, 'UserCtrl - edit - $userEditDatas');
 
-    $model = new UserModel();
-    $userEditDatas = $model->readOne($id);
-    dump($userEditDatas, 'UserCtrl - edit -  $userEditDatas');
+      if (empty($userEditDatas)) {
+        echo "Aucune donnée trouvée pour l'utilisateur avec l'ID $id.";
+        return;
+    }
+  
+     // Array skills User
+      // Extraire les labels des compétences de l'utilisateur
+      $userSkills = explode(',', $userEditDatas['skills']);
+      // dump($userSkills, 'UserCtrl - edit - $userSkills');
+     
+      // Récupérer toutes les compétences disponibles pour affichage
+      $skillModel = new SkillModel();
+      $allSkills = $skillModel->readAll();
+      // dump($allSkills, 'UserCtrl-Edit-$allSkills');
 
-    if (count($userEditDatas) > 0) {
-      $userData = new User($userEditDatas);
-      dump($userEditDatas, 'UserCtrl - edit -  $userData');
-    } else {
-      echo "Aucune donnée trouvée pour l'utilisateur avec l'ID $id.";
-  }
+      // Array network User
+      // Extraire les labels des compétences de l'utilisateur
+      $userNetworks = explode(',', $userEditDatas['networks']);
+      // dump($userNetworks, 'UserCtrl - edit -$userNetworks');
+     
+      // Récupérer toutes les compétences disponibles pour affichage
+      $networkModel = new NetworkModel();
+      $allNetworks = $networkModel->readAll();
+      // dump($allNetworks, 'UserCtrl-Edit-$allSkills');
+  
+      
 
-    include "MVC/views/users/user_edit.php";
+  
+      include "MVC/views/users/user_edit.php";
   }
 
 
   # TRAITEMENT DU UPDATE - Récupère le $_POST  et le $_GET['id'] pour le transmettre au modèle, modifier les données et faire la redirection 
   public function update($id, $request)
   {
-    echo 'UserCtrl, je suis rentré ds update';
-    # FAIRE VERIF DES DONNEES
-    # FAIRE ENCRYPTAGE MDP
+      echo 'UserCtrl, je suis rentré dans update';
+      
+      // Vérification des données et encryptage du mot de passe (à implémenter)
+  
+      $model = new UserModel();
+      $upd = $model->update($id, $request);
 
-    $model = new UserModel;
-    $upd = $model->update($id, $request);
-    echo 'UserCtrl - Update step 1';
 
-    if ($upd) {
-      header('Location: index.php?ctrl=User&action=index&edituser=success');
-    } else {
-      header('Location: MVC/views/users/user_list.php?edituser=error');
-    }
+      
+      echo 'UserCtrl - Update step 1';
+  
+      if ($upd) {
+          header('Location: index.php?ctrl=Dashboard&action=menu&_err=Votre  profil a bien été modifié');
+      } else {
+          header('Location: index.php?ctrl=Dashboard&action=edit&error');
+      }
   }
 
   # TRAITEMENT DELETE - Récupère le $_POST et le $_GET['id'] pour le transmettre au modele, modifier les données et faire la redirection vers la liste des users
@@ -208,7 +245,12 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
 
     $model = new UserModel;
     $del = $model->delete($id);
-    dump($del);
+   
+    if ($del) {
+      header('Location: index.php?ctrl=Home&action=index&_err=Votre profil a bien été supprimé');
+  } else {
+      header('Location: index.php?ctrl=Dashboard&action=menu&_err= Suppression profil a échoué');
+  }
 
   }
 }

@@ -124,7 +124,7 @@ $currentPage = "userCreate";
 
 
     <div class="d-flex form-check">
-      <?php foreach ($techskills as $skill) : ?>
+      <?php foreach ($skillsAll as $skill) : ?>
         <label for="skills" class="form-radio"><?= $skill->getSkillLabel() ?></label>
         <input type="radio" name="skills" id="skill" class="radioFormat" value="<?= $skill->getSkillLabel() ?>">
       <?php endforeach; ?>

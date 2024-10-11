@@ -223,7 +223,7 @@ class UserModel extends CoreModel
                   user_userAdr2 = :userAdr2,
                   user_userTown = :userTown,
                   user_userCp = :userCp,
-                  user_userLastMov = NOW()
+                  user_userLastMove = NOW()
                 WHERE user_userId = :id";
 
       // Préparation de la requête
@@ -235,7 +235,7 @@ class UserModel extends CoreModel
               $this->_req->bindValue(':status', $request['status']) &&
               $this->_req->bindValue(':envrnt', $request['envrnt']) &&
               $this->_req->bindValue(':email', $request['email']) &&
-              $this->_req->bindValue(':pwd', password_hash($request['pwd'], PASSWORD_BCRYPT)) &&  // Hachage du mot de passe
+              $this->_req->bindValue(':pwd',($request['pwd'])) &&  // Hachage du mot de passe
               $this->_req->bindValue(':firstName', $request['firstName']) &&
               $this->_req->bindValue(':lastName', $request['lastName']) &&
               $this->_req->bindValue(':textaera', $request['textaera']) &&

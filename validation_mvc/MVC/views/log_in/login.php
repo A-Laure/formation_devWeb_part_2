@@ -18,7 +18,7 @@ $title = 'Login';
   <h1 class="title ms-0 m-t-5">Bienvenue Sur Notre Plateforme</h1>
 
   <!-- Bouton pour réinitialisé la liste A ENLEVER A LA FIN -->
-  <a href="?reset" class="btn btn-primary my-5">Nouvelle Liste</a>
+  <a href="?reset" class="btn btn-primary my-5">Reset</a>
 
   <!-- BANNER MESSAGE ALERTE -->
   <?php
