@@ -4,21 +4,15 @@ $title = 'Login';
 
 
 
-//! OK MARCHE
-/* dump($_POST);  */
-
-
+/* dump($_POST, '$_POST de $userConnected');
+ */
 
 ?>
 
 
+<h1 class="title ms-0 m-t-5">Bienvenue Sur Notre Plateforme</h1>
 
-<section class="container m-l-36">
-
-  <h1 class="title ms-0 m-t-5">Bienvenue Sur Notre Plateforme</h1>
-
-  <!-- Bouton pour réinitialisé la liste A ENLEVER A LA FIN -->
-  <a href="?reset" class="btn btn-primary my-5">Reset</a>
+<section class="container">
 
   <!-- BANNER MESSAGE ALERTE -->
   <?php
@@ -31,8 +25,7 @@ $title = 'Login';
 
   <!-- REDIRECTION QD APPUI SUR CONNEXION -->
 
-  <form action="index.php?ctrl=Login&action=login" method="post" class="formCreate m-t-5 ">
-    <!-- index.php?ctrl=Login&action=login -->
+  <form action="index.php?ctrl=Login&action=login" method="post" class="formCreate m-t-5 ml-36">
 
     <div class="mb-3 ">
 
@@ -54,4 +47,7 @@ $title = 'Login';
 
     </div>
   </form>
+
+  <!-- Bouton pour réinitialisé la liste A ENLEVER A LA FIN -->
+  <a href="?reset" class="btn btn-primary mt-5 ">Reset</a>
 </section>

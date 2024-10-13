@@ -1,42 +1,40 @@
 <?php
 
 
-  class DashboardModel extends CoreModel
+class DashboardModel extends CoreModel
+{
+
+
+  private $_req;
+
+
+  public function __destruct()
   {
-    
-    
-    private $_req;
+    if (!empty($this->_req)) {
+      $this->_req->closeCursor();
+    }
+  }
 
 
-    public function __destruct()
-    {
-      if(!empty($this->_req))
-      {
-        $this->_req->closeCursor();
-      }
+
+  public function readAll(int $pagination, int $start = 0, string $orderBy = 'item_label', string $order = 'DESC'): array
+  {
+
+
+    // Sécurisation des valeurs de tri : Au cas ou quelqu'un modifierait la value dans le HTML
+    $order = strtoupper($order);
+    if ($order != 'ASC' && $order != 'DESC') {
+      $order = 'DESC';
     }
 
+    // Ajout d'autres colonnes autorisées
+    // $allowedOrderBy = ['item_label', 'item_ref', 'item_puht']; 
+    // if (!in_array($orderBy, $allowedOrderBy)) {
+    //     $orderBy = 'item_label';
+    // }
 
-
-    public function readAll(int $pagination, int $start = 0, string $orderBy = 'item_label', string $order = 'DESC') : array
-    {
-
-
-      // Sécurisation des valeurs de tri : Au cas ou quelqu'un modifierait la value dans le HTML
-      $order = strtoupper($order);      
-      if($order != 'ASC' && $order != 'DESC' )
-      {
-        $order = 'DESC';
-      }
-
-      // Ajout d'autres colonnes autorisées
-      // $allowedOrderBy = ['item_label', 'item_ref', 'item_puht']; 
-      // if (!in_array($orderBy, $allowedOrderBy)) {
-      //     $orderBy = 'item_label';
-      // }
-
-  // Requête SQL avec tri et pagination
-      $query = "SELECT  
+    // Requête SQL avec tri et pagination
+    $query = "SELECT  
       i.item_Id AS item_idItem, i.item_label AS item_labelItem, i.item_ref, i.item_puht, i.item_cdt, 
       t.tvas_label AS tvas_labelTva ,
       r.stor_qty AS stor_storeQty, r.stor_stockSecurity,
@@ -54,119 +52,77 @@
       LIMIT :start, :pagination
       ";
 
-      try{
-        if(($this->_req = $this->getDb()->prepare($query)) !== false)
-        {
-          // if($this->_req->bindValue(':idItem', $idItem, PDO::PARAM_INT) 
-         // && 
-          if($this->_req->bindValue(':start', $start, PDO::PARAM_INT)
+    try {
+      if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+        // if($this->_req->bindValue(':idItem', $idItem, PDO::PARAM_INT) 
+        // && 
+        if (
+          $this->_req->bindValue(':start', $start, PDO::PARAM_INT)
           && $this->_req->bindValue(':pagination', $pagination, PDO::PARAM_INT)
-          )
-          {
-            if($this->_req->execute())
-            {
-              $datas = $this->_req->fetchAll();
-              /* dump($datas, 'FetchAll DashboardModel'); */
-              return $datas;
-            
-            }
+        ) {
+          if ($this->_req->execute()) {
+            $datas = $this->_req->fetchAll();
+            /* dump($datas, 'FetchAll DashboardModel'); */
+            return $datas;
           }
         }
-        // Retourner un tableau vide en cas d'échec
-        return [];
-      } 
-      catch(PDOException $e)
-      {
-        throw new Exception('Erreur lors de la récupération des données : ' . $e->getMessage());
-      }             
-
+      }
+      // Retourner un tableau vide en cas d'échec
+      return [];
+    } catch (PDOException $e) {
+      throw new Exception('Erreur lors de la récupération des données : ' . $e->getMessage());
     }
-
-
-    public function countNbItem()
-    {
-        $query = 'SELECT COUNT(item_Id) AS nbItem FROM item'; // Requête pour compter les items
-    
-        try {
-            // Préparation de la requête
-            if(($this->_req = $this->getDb()->prepare($query)) !== false) {
-                
-                // Exécution de la requête
-                if($this->_req->execute()) {
-                  // Récupère les résultats
-                    $datas = $this->_req->fetch(PDO::FETCH_ASSOC); 
-                    // Retourne le nombre d'items
-                   /*  echo '<br>Count item dans DashboardModel: ' . $datas['nbItem'] . '</br><hr>';  */
-                }
-                    return $datas['nbItem'];
-                    
-            }
-            // Si la requête échoue
-            return false; 
-        } 
-        catch(PDOException $e) {
-           // Gestion de l'erreur
-           throw new Exception('Erreur lors du comptage des items : ' . $e->getMessage());
-        }
-    }
-
-
-    public function countNbUser()
-    {
-        $query = 'SELECT COUNT(user_Id) AS nbuser FROM user'; // Requête pour compter les users
-    
-        try {
-            // Préparation de la requête
-            if(($this->_req = $this->getDb()->prepare($query)) !== false) {
-                
-                // Exécution de la requête
-                if($this->_req->execute()) {
-                  // Récupère les résultats
-                    $datas = $this->_req->fetch(PDO::FETCH_ASSOC); 
-                    // Retourne le nombre d'users
-                   /*  echo '<br>Count user dans DashboardModel: ' . $datas['nbuser'] . '</br><hr>'; */ 
-                }
-                    return $datas['nbuser'];
-                    
-            }
-            // Si la requête échoue
-            return false; 
-        } 
-        catch(PDOException $e) {
-           // Gestion de l'erreur
-           throw new Exception('Erreur lors du comptage des users : ' . $e->getMessage());
-        }
-    }
-
-
-    public function countNbSppl()
-    {
-        $query = 'SELECT COUNT(sppl_Id) AS nbsppl FROM supplier'; // Requête pour compter les sppls
-    
-        try {
-            // Préparation de la requête
-            if(($this->_req = $this->getDb()->prepare($query)) !== false) {
-                
-                // Exécution de la requête
-                if($this->_req->execute()) {
-                  // Récupère les résultats
-                    $datas = $this->_req->fetch(PDO::FETCH_ASSOC); 
-                    // Retourne le nombre d'sppls
-                    /* echo '<br>Count sppl dans DashboardModel: ' . $datas['nbsppl'] . '</br><hr>';  */
-                }
-                    return $datas['nbsppl'];
-                    
-            }
-            // Si la requête échoue
-            return false; 
-        } 
-        catch(PDOException $e) {
-           // Gestion de l'erreur
-           throw new Exception('Erreur lors du comptage des sppls : ' . $e->getMessage());
-        }
-    }
-    
-
-
-
   }
+
+
+  public function countNbItem()
+  {
+    $query = 'SELECT COUNT(item_Id) AS nbItem FROM item'; // Requête pour compter les items
+
+    try {
+      // Préparation de la requête
+      if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+
+        // Exécution de la requête
+        if ($this->_req->execute()) {
+          // Récupère les résultats
+          $datas = $this->_req->fetch(PDO::FETCH_ASSOC);
+          // Retourne le nombre d'items
+          /*  echo '<br>Count item dans DashboardModel: ' . $datas['nbItem'] . '</br><hr>';  */
+        }
+        return $datas['nbItem'];
+      }
+      // Si la requête échoue
+      return false;
+    } catch (PDOException $e) {
+      // Gestion de l'erreur
+      throw new Exception('Erreur lors du comptage des items : ' . $e->getMessage());
+    }
+  }
+
+
+  public function countNbUser()
+  {
+    $query = 'SELECT COUNT(user_user_Id) AS nbuser FROM user'; // Requête pour compter les users
+
+    try {
+      // Préparation de la requête
+      if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+
+        // Exécution de la requête
+        if ($this->_req->execute()) {
+          // Récupère les résultats
+          $datas = $this->_req->fetch(PDO::FETCH_ASSOC);
+          // Retourne le nombre d'users
+          /*  echo '<br>Count user dans DashboardModel: ' . $datas['nbuser'] . '</br><hr>'; */
+        }
+        return $datas['nbuser'];
+      }
+      // Si la requête échoue
+      return false;
+    } catch (PDOException $e) {
+      // Gestion de l'erreur
+      throw new Exception('Erreur lors du comptage des users : ' . $e->getMessage());
+    }
+  }
+}

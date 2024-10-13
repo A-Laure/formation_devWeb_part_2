@@ -1,6 +1,6 @@
 <?php
 
-class networks extends CoreEntity
+class Networks extends CoreEntity
 {
 
 

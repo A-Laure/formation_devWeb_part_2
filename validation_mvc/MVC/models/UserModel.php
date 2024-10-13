@@ -215,14 +215,14 @@ class UserModel extends CoreModel
                   user_userEnvrnt = :envrnt,
                   user_userEmail = :email,
                   user_userPwd = :pwd,
-                  user_userFirstName = :firstName,
-                  user_userTextaera = :textaera,
-                  user_userLastName = :lastName,
+                  user_userFirstName = :firstname,
+                  user_userLastName = :lastname,
+                  user_userTextaera = :textaera,                  
                   user_userSpeciality = :speciality,
-                  user_userAdr1 = :userAdr1,
-                  user_userAdr2 = :userAdr2,
-                  user_userTown = :userTown,
-                  user_userCp = :userCp,
+                  user_userAdr1 = :adr1,
+                  user_userAdr2 = :adr2,
+                  user_userTown = :town,
+                  user_userCp = :cp,
                   user_userLastMove = NOW()
                 WHERE user_userId = :id";
 
@@ -235,15 +235,15 @@ class UserModel extends CoreModel
               $this->_req->bindValue(':status', $request['status']) &&
               $this->_req->bindValue(':envrnt', $request['envrnt']) &&
               $this->_req->bindValue(':email', $request['email']) &&
-              $this->_req->bindValue(':pwd',($request['pwd'])) &&  // Hachage du mot de passe
-              $this->_req->bindValue(':firstName', $request['firstName']) &&
-              $this->_req->bindValue(':lastName', $request['lastName']) &&
+              $this->_req->bindValue(':pwd',($request['pwd'])) &&  
+              $this->_req->bindValue(':firstname', $request['firstname']) &&
+              $this->_req->bindValue(':lastname', $request['lastname']) &&
               $this->_req->bindValue(':textaera', $request['textaera']) &&
               $this->_req->bindValue(':speciality', $request['speciality']) &&
-              $this->_req->bindValue(':userAdr1', $request['userAdr1']) &&
-              $this->_req->bindValue(':userAdr2', $request['userAdr2']) &&
-              $this->_req->bindValue(':userTown', $request['userTown']) &&
-              $this->_req->bindValue(':userCp', $request['userCp']) &&
+              $this->_req->bindValue(':adr1', $request['adr1']) &&
+              $this->_req->bindValue(':adr2', $request['adr2']) &&
+              $this->_req->bindValue(':town', $request['town']) &&
+              $this->_req->bindValue(':cp', $request['cp']) &&
               $this->_req->bindValue(':id', $id, PDO::PARAM_INT)
           ) {
               // Exécution de la requête

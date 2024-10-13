@@ -14,37 +14,37 @@ class AdvertModel extends CoreModel
     }
   }
 
-// Méthode pour compter tous les enregistrements dans la table `jobadvert`
-public function countAll(): int
-{
+  // Méthode pour compter tous les enregistrements dans la table `jobadvert`
+  public function countAll(): int
+  {
     $query = 'SELECT COUNT(*) as total FROM jobadvert';
 
     try {
-        $stmt = $this->getDb()->prepare($query);
-        if ($stmt->execute()) {
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return (int) $result['total'];
-        }
+      $stmt = $this->getDb()->prepare($query);
+      if ($stmt->execute()) {
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int) $result['total'];
+      }
     } catch (PDOException $e) {
-        die($e->getMessage());
+      die($e->getMessage());
     }
     return 0;
-}
+  }
 
 
   # READALL : Méthode pour récupérer tous les users 
-  public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC') : array
+  public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC'): array
   {
-// Vérifier que les valeurs pour ORDER BY sont valides
-$validOrderBys = ['joba_jobAdvertId', 'joba_jobEmail', 'joba_jobLabel', 'joba_jobContractType', 'joba_jobDescription', 'joba_jobAdvantages', 'joba_jobTown'];
-$validOrders = ['ASC', 'DESC'];
+    // Vérifier que les valeurs pour ORDER BY sont valides
+    $validOrderBys = ['joba_jobAdvertId', 'joba_jobEmail', 'joba_jobLabel', 'joba_jobContractType', 'joba_jobDescription', 'joba_jobAdvantages', 'joba_jobTown'];
+    $validOrders = ['ASC', 'DESC'];
 
-if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
-    throw new InvalidArgumentException('Invalid order parameters');
-}
+    if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
+      throw new InvalidArgumentException('Invalid order parameters');
+    }
 
 
-    /*  echo 'Je rentre dans la fonction readAll de UserModel '; */
+    /*  echo 'Je rentre dans la fonction readAll de AdvertModel '; */
     $query = 'SELECT
        j.joba_jobAdvertId,
        j.joba_jobEmail,
@@ -52,8 +52,7 @@ if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
        j.joba_jobContractType,
        j.joba_jobDescription, 
        j.joba_jobAdvantages, 
-       j.joba_jobTown, 
-       t.skill_skillLabel,
+       j.joba_jobTown,
       GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
       GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks
       FROM jobadvert j
@@ -62,21 +61,23 @@ if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
       LEFT JOIN needs n ON n.joba_jobAdvertId =  j.joba_jobAdvertId
       LEFT JOIN socialnetwork s on s.netw_networkId = n.netw_networkId   
       GROUP BY  j.joba_jobAdvertId
-      ORDER BY ' . $orderBy .' '. $order .'
+      ORDER BY ' . $orderBy . ' ' . $order . '
       LIMIT :start, :pagination
      
       ';
 
     try {
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
-        if($this->_req->bindValue(':start', $start, PDO::PARAM_INT)
-        && $this->_req->bindValue(':pagination', $pagination, PDO::PARAM_INT))
+        if (
+          $this->_req->bindValue(':start', $start, PDO::PARAM_INT)
+          && $this->_req->bindValue(':pagination', $pagination, PDO::PARAM_INT)
+        )
 
-        if ($this->_req->execute()) {
-          $datas = $this->_req->fetchAll(PDO::FETCH_ASSOC);
-          /* dump($datas,'UserModel Fetchall User ReadAll -> $datas return'); */
-          return $datas;
-        }
+          if ($this->_req->execute()) {
+            $datas = $this->_req->fetchAll(PDO::FETCH_ASSOC);
+            /* dump($datas,'AdvertModel Fetchall User ReadAll -> $datas return'); */
+            return $datas;
+          }
       }
 
       return false;
@@ -127,7 +128,7 @@ if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
   # CREATE, le $request = le $_POST
   public function create($request)
   {
-echo '<br>1</br><hr>';
+    echo '<br>1</br><hr>';
     try {
       echo '<br>2</br><hr>';
 
@@ -143,11 +144,11 @@ echo '<br>1</br><hr>';
     ) VALUES (
         :jobLabel, :jobEmail, :jobContractType, :jobDescription, :jobAdvantages, :jobTown, :jobStatus, :userId
         )";
-      
-      
+
+
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
         if ((
-       
+
           $this->_req->bindValue(':jobLabel', $request['jobLabel'])
           &&
           $this->_req->bindValue(':jobContractType', $request['jobContractType'])
@@ -208,7 +209,7 @@ echo '<br>1</br><hr>';
 
         if (($this->_req = $this->getDb()->prepare($query)) !== false) {
           if ((
-  
+
             $this->_req->bindValue(':joblabel', $request['joblabel'])
             &&
             $this->_req->bindValue(':jobemail', $request['jobemail'])
@@ -225,18 +226,18 @@ echo '<br>1</br><hr>';
             &&
             $this->_req->bindValue(':jobstatus', $request['jobstatus'])
             &&
-        $this->_req->bindValue(':id', $id)
-          
-        )) 
-          if ($this->_req->execute()) {
-            echo '<br>AdvertModel, je suis rentré ds execute</br><hr>';
-            // Compte le nombre de lignes affectées par la requête, renvoi le nombre de lignes modfiées, si 0 -> pb, peut servir pour un renvoi de message
-            echo '<br>AdvertModel, je suis avant le rowCount</br><hr>';
-            $res = $this->_req->rowCount();
-            echo '<br>AdvertModel, je suis après le rowCount</br><hr>' . $res;
-            dump($res, 'AdvertModel, Update $res');
-            return $res;
-          }
+            $this->_req->bindValue(':id', $id)
+
+          ))
+            if ($this->_req->execute()) {
+              echo '<br>AdvertModel, je suis rentré ds execute</br><hr>';
+              // Compte le nombre de lignes affectées par la requête, renvoi le nombre de lignes modfiées, si 0 -> pb, peut servir pour un renvoi de message
+              echo '<br>AdvertModel, je suis avant le rowCount</br><hr>';
+              $res = $this->_req->rowCount();
+              echo '<br>AdvertModel, je suis après le rowCount</br><hr>' . $res;
+              dump($res, 'AdvertModel, Update $res');
+              return $res;
+            }
         }
       }
     } catch (PDOException $e) {

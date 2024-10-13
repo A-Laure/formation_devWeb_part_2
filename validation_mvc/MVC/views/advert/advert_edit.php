@@ -14,7 +14,11 @@ $currentPage = "AdvertCreate";
 
 <h1 class="text-align-center title">Modifictaion d'une Annonce</h1>
 
-
+<div class="d-flex flex-row">
+    <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">
+    <i class="fa-solid fa-home"></i>
+    <p class="align-items-center"> Menu</p>
+    </a>
 
 
 <section class="container m-l-45">

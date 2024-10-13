@@ -4,9 +4,7 @@
 class UserController
 {
 
-
-
-  # READALL - Affichage de tous les étudiants
+  # READALL - LISTE DES ETUDIANTS
   public function indexEtudiantList()
   {
     $model = new UserModel();
@@ -16,66 +14,45 @@ class UserController
 
     if (count($datas) > 0) {
       foreach ($datas as $data) {
+        // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
         $user = new User($data);
 
-        // Créez une liste de Skills en fonction des données
-        $skillsArray = [];
-        foreach (explode(',', $data['skills']) as $skillLabel) {
-          $skill = new Skills($data);
-          $skill->setSkillLabel(trim($skillLabel)); // Définir le label de compétence
-          $skillsArray[] = $skill;
-        }
+        // Vérifier si 'skills' n'est pas null avant d'utiliser explode()
+        $skills = isset($data['skills']) && $data['skills'] !== null ? explode(',', $data['skills']) : [];
+        $user->setSkills($skills);
 
-        // Associez la liste de compétences à l'utilisateur
-        $user->setSkills($skillsArray);
+        // Vérifier si 'networks' n'est pas null avant d'utiliser explode()
+        $networks = isset($data['networks']) && $data['networks'] !== null ? explode(',', $data['networks']) : [];
+        $user->setNetworks($networks);
 
-          // Créez une liste de Skills en fonction des données
-          $networksArray = [];
-          foreach (explode(',', $data['networks']) as $networkLabel) {
-            $network = new Networks($data);
-            $network->setnetworkLabel(trim($networkLabel)); // Définir le label de compétence
-            $networksArray[] = $network;
-          }
-  
-          // Associez la liste de compétences à l'utilisateur
-          $user->setSkills($skillsArray);
         $userList[] = $user;
       }
-
-      include 'MVC/views/users/user_list.php';
     }
+
+    include 'MVC/views/users/user_list.php';
   }
 
   # READALL - Affichage de tous les étudiants
   public function indexEtudiantProfile()
   {
-
     $model = new UserModel();
     $datas = $model->readAll();
-    /*   dump($datas,'Userctrl - Index - $datas'); */
 
     $userList = [];
-    /* echo 'UserCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
-
 
     if (count($datas) > 0) {
-
       foreach ($datas as $data) {
-        // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
         $user = new User($data);
-        $user->setSkills(explode(',', $data['skills'])); // Décompose la chaîne en tableau
-        $user->setNetworks(explode(',', $data['networks']));
+        $user->setSkills(isset($data['skills']) ? explode(',', $data['skills']) : []);
+        $user->setNetworks(isset($data['networks']) ? explode(',', $data['networks']) : []);
         $userList[] = $user;
       }
-
-      /*  dump($userList, 'UserCtrl - index - Foreach Object UserList'); */
-
-
-      include 'MVC/views/users/user_profile.php';
     }
+
+    include 'MVC/views/users/user_profile.php';
   }
 
-  # READALL - Affichage de toutes les entreprises
+  # READALL - LISTE DES ENTREPRISES
   public function indexEntrepriseList()
   {
 
@@ -91,7 +68,7 @@ class UserController
 
       foreach ($datas as $data) {
         // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
-        $user = new User($data);        
+        $user = new User($data);
         $userList[] = $user;
       }
 
@@ -102,32 +79,32 @@ class UserController
     }
   }
 
-# READALL - Affichage de toutes les entreprises
-public function indexEntrepriseProfile()
-{
+  # READALL - PROFILE DES ENTREPRISES
+  public function indexEntrepriseProfile()
+  {
 
-  $model = new UserModel();
-  $datas = $model->readAll();
-  /*   dump($datas,'Userctrl - Index - $datas'); */
+    $model = new UserModel();
+    $datas = $model->readAll();
+    /*   dump($datas,'Userctrl - Index - $datas'); */
 
-  $userList = [];
-  /* echo 'UserCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
+    $userList = [];
+    /* echo 'UserCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
 
 
-  if (count($datas) > 0) {
+    if (count($datas) > 0) {
 
-    foreach ($datas as $data) {
-      // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
-      $user = new User($data);
-      $userList[] = $user;
+      foreach ($datas as $data) {
+        // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
+        $user = new User($data);
+        $userList[] = $user;
+      }
+
+      /*  dump($userList, 'UserCtrl - index - Foreach Object UserList'); */
+
+
+      include 'MVC/views/users/user_profile.php';
     }
-
-    /*  dump($userList, 'UserCtrl - index - Foreach Object UserList'); */
-
-
-    include 'MVC/views/users/user_profile.php';
   }
-}
 
 
 
@@ -145,22 +122,29 @@ public function indexEntrepriseProfile()
     include "../views/users/user_profile.php";
   }
 
-  # Affichage Formulaire CREATE User
+
   public function create()
   {
-    $skillsController = new SkillsController();
+    // Récupération des compétences techniques
+    $skillsController = new SkillModel();
     $techskills = $skillsController->readAll();
-    
 
+    // Récupération des réseaux sociaux
+    $networksController = new NetworkModel();
+    $networks = $networksController->readAll();
+
+    // Inclusion de la vue
     include 'MVC/views/users/user_create.php';
   }
+
+
 
 
 
   # TRAITEMENT DU CREATE - Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
   public function store($request)
   {
-echo '<br>Je rentre dans store de UserCtrl</br><hr>';
+    echo '<br>Je rentre dans store de UserCtrl</br><hr>';
     # FAIRE VERIF DES DONNEES : droits, hmtl char, géré par validate static
     # FAIRE ENCRYPTAGE MDP
 
@@ -181,62 +165,61 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
   public function edit($id)
   {
     // DONNEES USER
-      $model = new UserModel();
-      $userEditDatas = $model->readOne($id);
-      
-      // dump($userEditDatas, 'UserCtrl - edit - $userEditDatas');
+    $model = new UserModel();
+    $userEditDatas = $model->readOne($id);
 
-      if (empty($userEditDatas)) {
-        echo "Aucune donnée trouvée pour l'utilisateur avec l'ID $id.";
-        return;
+    // Vérifie si l'utilisateur existe avant de créer l'objet
+    if (empty($userEditDatas)) {
+      // Redirection si l'utilisateur n'existe pas
+      header('Location: index.php?ctrl=Error&action=notFound&message=' . urlencode("Utilisateur non trouvé"));
+      exit;
     }
-  
-     // Array skills User
-      // Extraire les labels des compétences de l'utilisateur
-      $userSkills = explode(',', $userEditDatas['skills']);
-      // dump($userSkills, 'UserCtrl - edit - $userSkills');
-     
-      // Récupérer toutes les compétences disponibles pour affichage
-      $skillModel = new SkillModel();
-      $allSkills = $skillModel->readAll();
-      // dump($allSkills, 'UserCtrl-Edit-$allSkills');
 
-      // Array network User
-      // Extraire les labels des compétences de l'utilisateur
-      $userNetworks = explode(',', $userEditDatas['networks']);
-      // dump($userNetworks, 'UserCtrl - edit -$userNetworks');
-     
-      // Récupérer toutes les compétences disponibles pour affichage
-      $networkModel = new NetworkModel();
-      $allNetworks = $networkModel->readAll();
-      // dump($allNetworks, 'UserCtrl-Edit-$allSkills');
-  
-      
+    // Instancie l'objet User avec les données récupérées
+    $user = new User($userEditDatas);
 
-  
-      include "MVC/views/users/user_edit.php";
+    // Array skills User
+    // Extraire les IDs des compétences de l'utilisateur
+    $userSkills = !empty($userEditDatas['skills']) ? array_map('trim', explode(',', $userEditDatas['skills'])) : [];
+
+    // Récupérer toutes les compétences disponibles pour affichage
+    $skillModel = new SkillModel();
+    $allSkills = $skillModel->readAll();
+
+    // Array network User
+    // Extraire les IDs des réseaux de l'utilisateur
+    $userNetworks = !empty($userEditDatas['networks']) ? array_map('trim', explode(',', $userEditDatas['networks'])) : [];
+
+    // Récupérer tous les réseaux disponibles pour affichage
+    $networkModel = new NetworkModel();
+    $allNetworks = $networkModel->readAll();
+
+    // Inclure la vue et transmettre les données nécessaires
+    include "MVC/views/users/user_edit.php";
   }
+
+
 
 
   # TRAITEMENT DU UPDATE - Récupère le $_POST  et le $_GET['id'] pour le transmettre au modèle, modifier les données et faire la redirection 
   public function update($id, $request)
   {
-      echo 'UserCtrl, je suis rentré dans update';
-      
-      // Vérification des données et encryptage du mot de passe (à implémenter)
-  
-      $model = new UserModel();
-      $upd = $model->update($id, $request);
+    echo 'UserCtrl, je suis rentré dans update';
+
+    // Vérification des données et encryptage du mot de passe (à implémenter)
+
+    $model = new UserModel();
+    $upd = $model->update($id, $request);
 
 
-      
-      echo 'UserCtrl - Update step 1';
-  
-      if ($upd) {
-          header('Location: index.php?ctrl=Dashboard&action=menu&_err=Votre  profil a bien été modifié');
-      } else {
-          header('Location: index.php?ctrl=Dashboard&action=edit&error');
-      }
+
+    echo 'UserCtrl - Update step 1';
+
+    if ($upd) {
+      header('Location: index.php?ctrl=Dashboard&action=menu&_err=Votre  profil a bien été modifié');
+    } else {
+      header('Location: index.php?ctrl=Dashboard&action=edit&error');
+    }
   }
 
   # TRAITEMENT DELETE - Récupère le $_POST et le $_GET['id'] pour le transmettre au modele, modifier les données et faire la redirection vers la liste des users
@@ -245,12 +228,11 @@ echo '<br>Je rentre dans store de UserCtrl</br><hr>';
 
     $model = new UserModel;
     $del = $model->delete($id);
-   
+
     if ($del) {
       header('Location: index.php?ctrl=Home&action=index&_err=Votre profil a bien été supprimé');
-  } else {
+    } else {
       header('Location: index.php?ctrl=Dashboard&action=menu&_err= Suppression profil a échoué');
-  }
-
+    }
   }
 }

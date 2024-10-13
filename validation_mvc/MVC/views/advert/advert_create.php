@@ -28,14 +28,14 @@ $currentPage = "AdvertCreate";
 
 ?>
 
-
+<section class="container ">
 <h1 class="text-align-center title">Création d'une Annonce</h1>
 
-
-
-
-<section class="container m-l-45">
-<a href="index.php?ctrl=Dashboard&action=index" type="button" class="n-btn mt-2 mb-3">Menu</a>
+<div class="d-flex flex-row">
+    <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">
+    <i class="fa-solid fa-home"></i>
+    <p class="align-items-center"> Menu</p>
+    </a>
 
   <?php
 
@@ -46,12 +46,16 @@ $currentPage = "AdvertCreate";
   }
   ?>
 
+</section>
 
+
+
+<section class="container">
   <form action="index.php?ctrl=Advert&action=store" method="post" class="formCreate ">
 
     <div class="mb-3 ">
     <label for="userId" class="form-label"></label>
-      <input type="text" name="userId" id="userId" class="form-control"   value = "<?= $_SESSION[APP_TAG]['connected']['user_userId']?>" >
+      <input type="hidden" name="userId" id="userId" class="form-control"   value = "<?= $_SESSION[APP_TAG]['connected']['user_userId']?>" >
     </div>
 
     <div class="mb-3 ">

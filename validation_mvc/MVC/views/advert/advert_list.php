@@ -9,26 +9,33 @@ $currentPage = "advertList";
 
 <h1 class="text-align-center title">Liste des Annonces</h1>
 
-<section class="container ">
+<section class="container m-l-45 ">
 
 
-  <!-- DIV BUTTON -->
-  <div class="d-flex flex-row">
-    <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">Menu</a>
+  <!-- DIV BUTTON MENU ET CREER UNE ANNONCE-->
+  <div class="d-flex flex-row justify-content-center" >
+    <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">
+      <i class="fa-solid fa-home"></i>
+      <p class="align-items-center"> Menu</p>
+    </a>
 
     <a href="index.php?ctrl=Advert&action=create" method="get" type="button" class="mx-5 n-btn">
+      <i class="fa-regular fa-address-card"></i>
       <p class="align-items-center"> Ajouter une annonce</p>
     </a>
   </div>
+
+</section>
 
 
 
   <!-- PAGINATION -->
 
+  <section class="container m-l-52 ">
 
 
   <!-- Tri -->
-  <div class="mt-5 m-l-52 ">
+  <div class="mt-5 m-l-30 ">
     <nav aria-label="Page navigation example">
 
       <form action="" method="GET" class="d-flex flex-row">
@@ -83,14 +90,13 @@ $currentPage = "advertList";
     </nav>
 
     <!-- Par Page -->
-    <div class="mt-5">
+    <div class="mt-5 ">
       <?php if ($totalPages >= 1): ?>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
+        <nav aria-label="Page navigation example justify-content-right">
+          <ul class="pagination ">
             <?php for ($page = 1; $page <= $totalPages; $page++): ?>
               <li class="page-item <?php if ($page == $currentPage) echo 'active'; ?>">
-                <a class="page-link" href="?ctrl=Advert&action=index&page=<?= $page ?>&pagination=<?= $pagination ?>&orderBy=<?= $orderBy ?>&order=<?= $order ?>">
-                  <?= $page ?>
+                <a class="page-link" href="?ctrl=Advert&action=index&page=<?= $page ?>&pagination=<?= $pagination ?>&orderBy=<?= $orderBy ?>&order=<?= $order ?>"><?= $page ?>
                 </a>
               </li>
             <?php endfor; ?>
@@ -101,106 +107,101 @@ $currentPage = "advertList";
 
   </div>
 
-  <div class=">
-  <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+   <!-- SEARCH BAR-->
 
-  </div>
-
-
-  <!-- FIN PAGINATION AND CO -->
-
-
-
-  <section class="d-flex flex-row ">
-
-
-
-    <?php foreach ($advertList as $advert) : ?>
-      <form for="" class="row col-5">
-        <div class="mt-5 mb-3">
-          <div class="card mx-2  mx-2">
-            <div class="card-body ">
-              <h1 class="card-title"><?= $advert->getJobLabel() ?></h1>
-              <p class="card-text"><?= htmlspecialchars($advert->getJobEmail()) ?></p>
-              <p class="card-text"><?= $advert->getJobContractType() ?></p>
-              <p class="card-text"><strong>Avantages : </strong> <?= $advert->getJobAdvantages() ?></p>
-              <p class="card-text"><strong>Localisation : </strong><?= $advert->getJobTown() ?></p>
-              <hr>
-              <strong>Description du poste</strong>
-              <p class="card-text" ><?= $advert->getJobDescription() ?></p>
-              <hr>
-              <strong>Compétences:</strong>
-              <ul>
-                <?php
-                $skills = $advert->getSkills();
-                if (is_array($skills) || $skills instanceof Traversable):
-                  foreach ($skills as $skill):
-                    if (is_object($skill) && method_exists($skill, 'getSkillLabel')):
-                ?>
-                      <li><?= htmlspecialchars($skill->getSkillLabel()) ?></li>
-                    <?php
-                    elseif (is_string($skill)):
-                    ?>
-                      <li><?= htmlspecialchars($skill) ?></li>
-                  <?php
-                    endif;
-                  endforeach;
-                elseif (is_string($skills)):
-                  ?>
-                  <li><?= htmlspecialchars($skills) ?></li>
-                <?php else: ?>
-                  <li>****</li>
-                <?php endif; ?>
-              </ul>
-
-              <strong>Réseaux sociaux:</strong>
-              <?php if ($advert->getNetworks() && is_array($advert->getNetworks())): ?>
-                <ul>
-                  <?php foreach ($advert->getNetworks() as $network): ?>
-                    <li><?= htmlspecialchars($network) ?></li>
-                  <?php endforeach; ?>
-                </ul>
-              <?php else: ?>
-                <p>*****</p>
-              <?php endif; ?>
-
-              <div class="d-flex justify-content-center gap-3">
-
-                <?php if (
-                  $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise'
-                  ||
-                  $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Administrateur'
-                ) : ?>
-                  <a href="index.php?ctrl=Advert&action=edit&id=<?= $advert->getJobAdvertId() ?>" type=" button" class="n-btn">Modifier</a>
-                  <a href="index.php?ctrl=Advert&action=delete&id=<?= $advert->getJobAdvertId() ?>" type=" button" class="btn-delete">Supprimer</a>
-                <?php endif; ?>
-
-
-                <?php if ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant') : ?>
-                  <a href="mailto:<?= htmlspecialchars($advert->getJobEmail()) ?>" class="n-btn">Postuler</a>
-                <?php endif; ?>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </form>
-    <?php endforeach; ?>
-    <?php
-    // include '../suppliers/layout_supplier_profile.php';
-    // include '../items/layout_item_profile.php';
-    ?>
-
-  </section>
-
-
-
-
-  <!-- NAV PAGINATION A FINIR-->
-
-
+   <div class="mb-5 ">
+  <form class="d-flex align-items-center">
+    <div class="input-group input-group-sm">
+      <input class="form-control form-control-sm" type="search" placeholder="Tapez votre Recherche" aria-label="Search" style="max-width: 200px;">
+      <div class="input-group-append">
+        <button class="btn btn-outline-success btn-sm" type="submit">Go</button>
+      </div>
+    </div>
+  </form>
+</div>
 
 </section>
+<!-- FIN PAGINATION AND CO -->
+
+
+
+<section class="n-container n-d-grid supplierList">
+
+
+  <?php foreach ($advertList as $advert) : ?>
+
+    <div class=" supplierCard n-col-3">
+      <h1 class="card-title"><?= $advert->getJobLabel() ?></h1>
+      <p class="card-text"><?= htmlspecialchars($advert->getJobEmail()) ?></p>
+      <p class="card-text"><?= $advert->getJobContractType() ?></p>
+      <p class="card-text"><strong>Avantages : </strong> <?= $advert->getJobAdvantages() ?></p>
+      <p class="card-text"><strong>Localisation : </strong><?= $advert->getJobTown() ?></p>
+      <hr>
+      <strong>Description du poste</strong>
+      <p class="card-text"><?= $advert->getJobDescription() ?></p>
+      <hr>
+      <strong>Compétences:</strong>
+      <ul>
+        <?php
+        $skills = $advert->getSkills();
+        if (is_array($skills) || $skills instanceof Traversable):
+          foreach ($skills as $skill):
+            if (is_object($skill) && method_exists($skill, 'getSkillLabel')):
+        ?>
+              <li><?= htmlspecialchars($skill->getSkillLabel()) ?></li>
+            <?php
+            elseif (is_string($skill)):
+            ?>
+              <li><?= htmlspecialchars($skill) ?></li>
+          <?php
+            endif;
+          endforeach;
+        elseif (is_string($skills)):
+          ?>
+          <li><?= htmlspecialchars($skills) ?></li>
+        <?php else: ?>
+          <li>****</li>
+        <?php endif; ?>
+      </ul>
+
+      <strong>Réseaux sociaux:</strong>
+      <?php if ($advert->getNetworks() && is_array($advert->getNetworks())): ?>
+        <ul>
+          <?php foreach ($advert->getNetworks() as $network): ?>
+            <li><?= htmlspecialchars($network) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php else: ?>
+        <p>*****</p>
+      <?php endif; ?>
+
+      <div class="d-flex justify-content-center gap-3">
+
+        <?php if (
+          $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise'
+          ||
+          $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Administrateur'
+        ) : ?>
+          <a href="index.php?ctrl=Advert&action=edit&id=<?= $advert->getJobAdvertId() ?>" type=" button" class="n-btn">Modifier</a>
+          <a href="index.php?ctrl=Advert&action=delete&id=<?= $advert->getJobAdvertId() ?>" type=" button" class="btn-delete">Supprimer</a>
+        <?php endif; ?>
+
+
+        <?php if ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant') : ?>
+          <a href="mailto:<?= htmlspecialchars($advert->getJobEmail()) ?>" class="n-btn">Postuler</a>
+        <?php endif; ?>
+      </div>
+
+    </div>
+  <?php endforeach; ?>
+  <?php
+  // include '../suppliers/layout_supplier_profile.php';
+  // include '../items/layout_item_profile.php';
+  ?>
+
+</section>
+
+
+
+
+<!-- NAV PAGINATION A FINIR-->
