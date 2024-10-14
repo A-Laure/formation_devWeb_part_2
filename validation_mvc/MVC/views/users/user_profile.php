@@ -4,7 +4,7 @@ session_start();
 $currentPage = 'yourProfile';
 $title = "Votre Profil";
 
-dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
+// dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
 ?>
 
 <h1 class="container text-align-center title">Votre Profil </h1>

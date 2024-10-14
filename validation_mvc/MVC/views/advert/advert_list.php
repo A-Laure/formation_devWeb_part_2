@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 
 $title = "Liste des Annonces";
 $currentPage = "advertList";
@@ -13,17 +13,25 @@ $currentPage = "advertList";
 
 
   <!-- DIV BUTTON MENU ET CREER UNE ANNONCE-->
-  <div class="d-flex flex-row justify-content-center" >
+  <div class="d-flex flex-row justify-content-center " >
     <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">
       <i class="fa-solid fa-home"></i>
       <p class="align-items-center"> Menu</p>
     </a>
+  </div>
 
-    <a href="index.php?ctrl=Advert&action=create" method="get" type="button" class="mx-5 n-btn">
+    <?php if (
+      
+      $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Administrateur'
+      ||
+      $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Entreprise'
+    ) : ?>
+    <a href="index.php?ctrl=Advert&action=create" method="get" type="button" class="mx-5 n-btn mt-5">
       <i class="fa-regular fa-address-card"></i>
       <p class="align-items-center"> Ajouter une annonce</p>
     </a>
   </div>
+  <?php endif ?>
 
 </section>
 
@@ -34,61 +42,7 @@ $currentPage = "advertList";
   <section class="container m-l-52 ">
 
 
-  <!-- Tri -->
-  <div class="mt-5 m-l-30 ">
-    <nav aria-label="Page navigation example">
-
-      <form action="" method="GET" class="d-flex flex-row">
-        <div class="">
-
-          <div class="">
-            <label for="" class="label">Afficher</label>
-          </div>
-
-          <!-- PAGINATION -->
-          <div class="fiels">
-            <div class="select">
-              <input type="hidden" name="item" value="<?= $nbItem  ?>">
-              <select name="pagination">
-                <option <?= $pagination == 8 ? 'selected' : '' ?> value="8">8</option>
-                <option <?= $pagination == 16 ? 'selected' : '' ?> value="16">16</option>
-                <option <?= $pagination == 24 ? 'selected' : '' ?> value="24">24</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- ORDER BY -->
-
-          <div class="field">
-            <div class="select">
-              <select name="orderBy">
-                <option <?= $orderBy == 'joba_jobContractType' ? 'selected' : '' ?> value="joba_jobContractType">Type de contrat</option>
-              </select>
-            </div>
-          </div>
-
-
-          <!-- CROISSANT / DECROISSANT -->
-
-          <div class="">
-            <div class="select">
-              <select name="order">
-                <option <?= $order == 'ASC' ? 'selected' : '' ?> value="ASC">Croissant</option>
-                <option <?= $order == 'DESC' ? 'selected' : '' ?> value="DESC">Décroissant</option>
-              </select>
-            </div>
-          </div>
-
-
-          <!-- BOUTON TRIER -->
-
-          <div class="ml-3 control">
-            <button class="button is-dark" type="submit">Trier</button>
-          </div>
-        </div>
-      </form>
-    </nav>
-
+ 
     <!-- Par Page -->
     <div class="mt-5 ">
       <?php if ($totalPages >= 1): ?>
@@ -109,23 +63,32 @@ $currentPage = "advertList";
 
    <!-- SEARCH BAR-->
 
-   <div class="mb-5 ">
-  <form class="d-flex align-items-center">
-    <div class="input-group input-group-sm">
-      <input class="form-control form-control-sm" type="search" placeholder="Tapez votre Recherche" aria-label="Search" style="max-width: 200px;">
-      <div class="input-group-append">
-        <button class="btn btn-outline-success btn-sm" type="submit">Go</button>
-      </div>
+<section class="container flew flex-row col-6 ms-0 ">
+  <form action="index.php?ctrl=Advert&action=search" method="get" class="search-bar d-flex flex-column mb-4">
+    <!-- Champ pour le titre de l'annonce -->
+    <div class="mb-3">
+      <input type="text" name="jobLabel" id="jobLabel" class="form-control" placeholder="Rechercher par titre d'annonce... ">
     </div>
-  </form>
-</div>
 
+    <!-- Champ pour le type de contrat -->
+    <div class="mb-3">
+        <select name="jobContractType" id="jobContractType" class="form-control">
+        <option value="">Recherche part type de contrats -> Choisir dans la liste</option>
+        <option value="CDI">CDI</option>
+        <option value="CDD">CDD</option>
+        <option value="Alternance">Alternance</option>
+        <option value="Freelance">Freelance</option>
+      </select>
+    </div>
+
+    <button type="submit" class="n-btn">Rechercher</button>
+  </form>
 </section>
 <!-- FIN PAGINATION AND CO -->
 
 
 
-<section class="n-container n-d-grid supplierList">
+<section class="container n-d-grid supplierList">
 
 
   <?php foreach ($advertList as $advert) : ?>

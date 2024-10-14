@@ -1,5 +1,5 @@
 <?php
-dump($firmList, '$firmList, ReadAll Entreprise');
+// dump($firmList, '$firmList, ReadAll Entreprise');
 
 $title = "Liste des Entreprises";
 $currentPage = "firmList";

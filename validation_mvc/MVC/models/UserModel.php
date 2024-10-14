@@ -119,7 +119,7 @@ class UserModel extends CoreModel
   
           if ($checkStmt->fetchColumn() > 0) {
               // Si l'email existe déjà, renvoyer un message ou false`
-              echo 'Email déjà existant, insertion annulée';
+              header('Location: index.php?ctrl=Home&action=index&_err=email existe déjà');
               return false;
           }
   
@@ -154,18 +154,18 @@ class UserModel extends CoreModel
   
   // rajouter htmlspecialchars($request['firstName']);
           $stmt = $this->getDb()->prepare($query);
-          $stmt->bindValue(':status', $request['status']);
-          $stmt->bindValue(':envrnt', $request['envrnt']);
-          $stmt->bindValue(':email', $request['email']);
-          $stmt->bindValue(':pwd', password_hash($request['pwd'], PASSWORD_BCRYPT));  // Hachage du mot de passe
-          $stmt->bindValue(':firstName', $request['firstName']);
-          $stmt->bindValue(':lastName', $request['lastName']);
-          $stmt->bindValue(':textaera', $request['textaera']);
-          $stmt->bindValue(':speciality', $request['speciality']);
-          $stmt->bindValue(':userAdr1', $request['userAdr1']);
-          $stmt->bindValue(':userAdr2', $request['userAdr2']);
-          $stmt->bindValue(':userTown', $request['userTown']);
-          $stmt->bindValue(':userCp', $request['userCp']);
+          $stmt->bindValue(':status', htmlspecialchars($request['status']));
+          $stmt->bindValue(':envrnt', htmlspecialchars($request['envrnt']));
+          $stmt->bindValue(':email', htmlspecialchars($request['email']));
+          $stmt->bindValue(':pwd', password_hash(htmlspecialchars($request['pwd']), PASSWORD_BCRYPT));  // Hachage du mot de passe
+          $stmt->bindValue(':firstName', htmlspecialchars($request['firstName']));
+          $stmt->bindValue(':lastName', htmlspecialchars($request['lastName']));
+          $stmt->bindValue(':textaera', htmlspecialchars($request['textaera']));
+          $stmt->bindValue(':speciality', htmlspecialchars($request['speciality']));
+          $stmt->bindValue(':userAdr1', htmlspecialchars($request['userAdr1']));
+          $stmt->bindValue(':userAdr2', htmlspecialchars($request['userAdr2']));
+          $stmt->bindValue(':userTown', htmlspecialchars($request['userTown']));
+          $stmt->bindValue(':userCp', htmlspecialchars($request['userCp']));
   
           if ($stmt->execute()) {
               $userId = $this->getDb()->lastInsertId();
@@ -209,56 +209,89 @@ class UserModel extends CoreModel
   echo 'UserModel - Update ID : ' . htmlspecialchars($id);
 
   try {
-      // Correction de la requête SQL
+      // Requête pour mettre à jour les informations utilisateur
       $query = "UPDATE user SET
-                  user_userStatus = :status,
-                  user_userEnvrnt = :envrnt,
-                  user_userEmail = :email,
-                  user_userPwd = :pwd,
-                  user_userFirstName = :firstname,
-                  user_userLastName = :lastname,
-                  user_userTextaera = :textaera,                  
-                  user_userSpeciality = :speciality,
-                  user_userAdr1 = :adr1,
-                  user_userAdr2 = :adr2,
-                  user_userTown = :town,
-                  user_userCp = :cp,
-                  user_userLastMove = NOW()
-                WHERE user_userId = :id";
+                    user_userStatus = :status,
+                    user_userEnvrnt = :envrnt,
+                    user_userEmail = :email,
+                    user_userPwd = :pwd,
+                    user_userFirstName = :firstname,
+                    user_userLastName = :lastname,
+                    user_userTextaera = :textaera,                  
+                    user_userSpeciality = :speciality,
+                    user_userAdr1 = :adr1,
+                    user_userAdr2 = :adr2,
+                    user_userTown = :town,
+                    user_userCp = :cp,
+                    user_userLastMove = NOW()
+                  WHERE user_userId = :id";
 
-      // Préparation de la requête
+      // Préparation et exécution de la requête pour l'utilisateur
       if ($this->_req = $this->getDb()->prepare($query)) {
           echo '<br>UserModel, je suis rentré dans prepare</br><hr>';
 
-          // Liaison des valeurs avec `bindValue`
-          if (
-              $this->_req->bindValue(':status', $request['status']) &&
-              $this->_req->bindValue(':envrnt', $request['envrnt']) &&
-              $this->_req->bindValue(':email', $request['email']) &&
-              $this->_req->bindValue(':pwd',($request['pwd'])) &&  
-              $this->_req->bindValue(':firstname', $request['firstname']) &&
-              $this->_req->bindValue(':lastname', $request['lastname']) &&
-              $this->_req->bindValue(':textaera', $request['textaera']) &&
-              $this->_req->bindValue(':speciality', $request['speciality']) &&
-              $this->_req->bindValue(':adr1', $request['adr1']) &&
-              $this->_req->bindValue(':adr2', $request['adr2']) &&
-              $this->_req->bindValue(':town', $request['town']) &&
-              $this->_req->bindValue(':cp', $request['cp']) &&
-              $this->_req->bindValue(':id', $id, PDO::PARAM_INT)
-          ) {
-              // Exécution de la requête
-              if ($this->_req->execute()) {
-                  echo '<br>UserModel, je suis rentré dans execute</br><hr>';
-                  $res = $this->_req->rowCount();
-                  echo '<br>UserModel, nombre de lignes affectées : </br><hr>' . $res;
-                  dump($res, 'UserModel, Update $res');
-                  return $res;
+          // Liaison des valeurs
+          $this->_req->bindValue(':status', $request['status']);
+          $this->_req->bindValue(':envrnt', $request['envrnt']);
+          $this->_req->bindValue(':email', $request['email']);
+          $this->_req->bindValue(':pwd', $request['pwd']);  
+          $this->_req->bindValue(':firstname', $request['firstname']);
+          $this->_req->bindValue(':lastname', $request['lastname']);
+          $this->_req->bindValue(':textaera', $request['textaera']);
+          $this->_req->bindValue(':speciality', $request['speciality']);
+          $this->_req->bindValue(':adr1', $request['adr1']);
+          $this->_req->bindValue(':adr2', $request['adr2']);
+          $this->_req->bindValue(':town', $request['town']);
+          $this->_req->bindValue(':cp', $request['cp']);
+          $this->_req->bindValue(':id', $id, PDO::PARAM_INT);
+
+          if ($this->_req->execute()) {
+              echo '<br>UserModel, utilisateur mis à jour</br><hr>';
+              
+              // Suppression des compétences actuelles de l'utilisateur
+              $queryDeleteSkills = "DELETE FROM has WHERE user_userId = :id";
+              $stmtDeleteSkills = $this->getDb()->prepare($queryDeleteSkills);
+              $stmtDeleteSkills->bindValue(':id', $id, PDO::PARAM_INT);
+              $stmtDeleteSkills->execute();
+
+              // Insertion des nouvelles compétences
+              if (!empty($request['skills'])) {
+                  $queryInsertSkills = "INSERT INTO has (user_userId, skill_skillId) VALUES (:userId, :skillId)";
+                  $stmtInsertSkills = $this->getDb()->prepare($queryInsertSkills);
+
+                  foreach ($request['skills'] as $skillId) {
+                      $stmtInsertSkills->bindValue(':userId', $id, PDO::PARAM_INT);
+                      $stmtInsertSkills->bindValue(':skillId', $skillId, PDO::PARAM_INT);
+                      $stmtInsertSkills->execute();
+                  }
               }
+
+              // Suppression des réseaux sociaux actuels de l'utilisateur
+              $queryDeleteNetworks = "DELETE FROM display WHERE user_userId = :id";
+              $stmtDeleteNetworks = $this->getDb()->prepare($queryDeleteNetworks);
+              $stmtDeleteNetworks->bindValue(':id', $id, PDO::PARAM_INT);
+              $stmtDeleteNetworks->execute();
+
+              // Insertion des nouveaux réseaux sociaux
+              if (!empty($request['networks'])) {
+                  $queryInsertNetworks = "INSERT INTO display (user_userId, netw_networkId) VALUES (:userId, :networkId)";
+                  $stmtInsertNetworks = $this->getDb()->prepare($queryInsertNetworks);
+
+                  foreach ($request['networks'] as $networkId) {
+                      $stmtInsertNetworks->bindValue(':userId', $id, PDO::PARAM_INT);
+                      $stmtInsertNetworks->bindValue(':networkId', $networkId, PDO::PARAM_INT);
+                      $stmtInsertNetworks->execute();
+                  }
+              }
+
+              echo '<br>UserModel, compétences et réseaux mis à jour</br><hr>';
+              return true;
           }
       }
   } catch (PDOException $e) {
       die('Erreur SQL : ' . $e->getMessage());
   }
+  return false;
 }
 
 

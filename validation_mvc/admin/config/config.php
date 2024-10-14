@@ -16,9 +16,9 @@ define('DB_NAME', 'jobdating');
 define('DB_CHARSET', 'utf8mb4');
 define('DB_USER', 'root');
 // WINDOW
-//define('DB_PWD', ''); 
+define('DB_PWD', ''); 
 // MAC
-define('DB_PWD', 'root');  
+//define('DB_PWD', 'root');  
 
 
 

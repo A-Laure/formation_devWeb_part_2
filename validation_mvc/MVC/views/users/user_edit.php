@@ -57,17 +57,72 @@ session_start();
     </div>
 
     <hr>
-    <?php
+ 
+   
+    <!-- NETWORKS -->
+    <div class="d-flex flex-wrap">
+      <?php foreach ($networkList as $network) : ?>
+        <?php
+        // Vérifier que l'attribut `networks` est bien défini et qu'il s'agit d'un tableau
+        $networks = $network->getNetworkLabel();
+        
+        
+        ?>
+
+<label for="userTown" class="form-label">Réseaux  </label>
+        <?php foreach ($networks as $network) : ?>
+          <div class="me-3  align-items-center small-checkbox">
+
+            <label for="network[]" class="form-check-label ms-1"><?= htmlspecialchars($network->getNetworkLabel()) ?> (Saisir lien )  </label>
+            <input
+              type="text"
+              name="network[]"
+              id="network[]"
+              class="form-check-input"
+              value="">
+          </div>
+
+        <?php endforeach; ?>
+      <?php endforeach; ?>
+    </div>
+    <hr>
+
+    <!-- SKILLS -->
+    <label for="userTown" class="form-label">Compétences </label>
+    <div class="d-flex flex-row" width="20px">
+      <?php foreach ($skillList as $user) : ?>
+        <?php
+        // Vérifier que l'attribut `networks` est bien défini et qu'il s'agit d'un tableau
+        $skills = $user->getskills();
+        if (!is_array($skills)) {
+          continue;
+        }
+        ?>
+
+        <?php foreach ($skills as $index => $skill) : ?>
+         
+
+            <label for="skill[]" class="form-check-label ms-1"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
+            <input
+              type="checkbox"
+              name="skill[]"
+              id="skill[]"
+              class="form-check-input"
+              value="">
+       
+
+        <?php endforeach; ?>
+      <?php endforeach; ?>
+    </div>
 
 
-
+<!-- /* ----------------------- */ -->
+<?php
 $isAdmin = ($_SESSION[APP_TAG]['connected']['user_userStatus'] ?? '') === 'Administrateur';
 $isEditingStudent = ($userToEdit['user_userStatus'] ?? '') === 'Etudiant';
 $isSelfEdit = ($_SESSION[APP_TAG]['connected']['user_userId'] ?? '') === ($userToEdit['user_userId'] ?? '');
 
-// Afficher les champs de compétences et de réseaux sociaux si :
-// 1. L'utilisateur édite son propre profil et est un étudiant, OU
-// 2. L'administrateur édite le profil d'un étudiant
+
 if (($isSelfEdit && $isEditingStudent) || ($isAdmin && $isEditingStudent)) : 
 ?>
     <label for="skills[]" class="form-label">Compétences</label>
@@ -120,6 +175,7 @@ if (($isSelfEdit && $isEditingStudent) || ($isAdmin && $isEditingStudent)) :
     </ul>
 <?php endif; ?>
     <hr>
+    
 
     <label for="pwd" class="form-label">Mot de Passe</label>
     <input type="password" name="pwd" id="pwd" class="form-control" placeholder="Si aucun changement, laisser vide" value="<?= htmlspecialchars($user->getUserPwd() ?? '') ?>">

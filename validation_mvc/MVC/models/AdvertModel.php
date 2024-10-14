@@ -169,7 +169,27 @@ class AdvertModel extends CoreModel
             echo '<br>3</br><hr>';
             // lastInsertId : Retourne l'identifiant de la dernière ligne insérée, on peut du coup l'utiliser pour afficher un message, 'le user intel a bien été créé' ou autre utilisation
             $res = $this->getDb()->lastInsertId();
-            echo '<br>4</br><hr>';
+           
+            if (!empty($request['skills'])) {
+              $skillQuery = "INSERT INTO techskills (user_userId, skill_skillLabel) VALUES (:userId, :skill)";
+              $skillStmt = $this->getDb()->prepare($skillQuery);
+              foreach ($request['skills'] as $skill) {
+                 
+                  $skillStmt->bindValue(':skill', $skill);
+                  $skillStmt->execute();
+              }
+          }
+
+          // Étape 4 : Insertion dans la table `networks` (si des réseaux sont fournis)
+          if (!empty($request['networks'])) {
+              $networkQuery = "INSERT INTO network (user_userId, netw_networkLabel) VALUES (:userId, :network)";
+              $networkStmt = $this->getDb()->prepare($networkQuery);
+              foreach ($request['networks'] as $network) {
+                
+                  $networkStmt->bindValue(':network', $network);
+                  $networkStmt->execute();
+              }
+          }
             return $res;
           }
         }
@@ -245,6 +265,8 @@ class AdvertModel extends CoreModel
     }
   }
 
+
+
   # DELETE
   public function delete($id)
   {
@@ -264,4 +286,79 @@ class AdvertModel extends CoreModel
       die($e->getMessage());
     }
   }
+
+  public function search($jobLabel = '', $jobContractType = '', $pagination = 10, $start = 0)
+
+
+{
+   
+  $query = 'SELECT
+  j.joba_jobAdvertId,
+  j.joba_jobEmail,
+  j.joba_jobLabel, 
+  j.joba_jobContractType,
+  j.joba_jobDescription, 
+  j.joba_jobAdvantages, 
+  j.joba_jobTown,
+ GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
+ GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks
+ FROM jobadvert j
+ LEFT JOIN want w  ON w.joba_jobAdvertId =  j.joba_jobAdvertId
+ LEFT JOIN techskills t on t.skill_skillId = w.skill_skillId
+ LEFT JOIN needs n ON n.joba_jobAdvertId =  j.joba_jobAdvertId
+ LEFT JOIN socialnetwork s on s.netw_networkId = n.netw_networkId   
+ WHERE 1=1'; // Ajout d'une clause WHERE pour faciliter l'ajout des filtres
+
+ 
+
+    // Tableau pour les paramètres
+    $params = [];
+
+     // Ajout des paramètres de pagination
+     $params[':start'] = (int)$start;
+     $params[':pagination'] = (int)$pagination;
+
+    // Application des filtres de recherche
+    if (!empty($jobLabel)) {
+        $query .= " AND j.joba_jobLabel LIKE :jobLabel";
+        $params[':jobLabel'] = '%' . $jobLabel . '%';
+    }
+    if (!empty($jobContractType)) {
+        $query .= " AND j.joba_jobContractType = :jobContractType";
+        $params[':jobContractType'] = $jobContractType;
+    }
+
+     // Ajout de la clause GROUP BY
+     $query .= ' GROUP BY j.joba_jobAdvertId';
+
+     // Ajout des limites de pagination
+     $query .= ' LIMIT :start, :pagination';
+ 
+     // Ajout des paramètres de pagination
+     $params[':start'] = (int)$start;
+     $params[':pagination'] = (int)$pagination;
+
+    try {
+        // Préparation de la requête
+        if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+            // Exécution de la requête avec les paramètres
+            if ($this->_req->execute($params)) {
+                // Récupération des résultats
+                return $this->_req->fetchAll(PDO::FETCH_ASSOC);
+                
+            }
+            }
+        
+
+        } catch (PDOException $e) {
+        die($e->getMessage());
+    }
+    return [];
 }
+
+
+}
+
+
+  
+

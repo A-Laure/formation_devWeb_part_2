@@ -80,8 +80,7 @@ $title = "Menu";
  <!-- BOUTON LISTE DES ETUDIANTS -->
 
     <?php if (
-      $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant'
-      ||
+   
       $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Administrateur'
     ) : ?>
 
@@ -98,8 +97,7 @@ $title = "Menu";
  <!-- BOUTON LISTE DES ENTREPRISES -->
 
  <?php if (
-      $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant'
-      ||
+      
       $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Administrateur'
     ) : ?>
 

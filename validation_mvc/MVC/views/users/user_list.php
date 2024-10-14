@@ -12,11 +12,12 @@ $currentPage = "userList";
 
 <h1 class="text-align-center title">Liste des Etudiants</h1>
 
-<div class="d-flex flex-row">
+<div class="container d-flex flex-row">
   <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">
     <i class="fa-solid fa-home"></i>
     <p class="align-items-center"> Menu</p>
   </a>
+</div>
 
   <section class="n-container n-d-grid supplierList">
 

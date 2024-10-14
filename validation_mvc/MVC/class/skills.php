@@ -9,7 +9,12 @@ class Skills extends CoreEntity
   private int $skillId;
   private string $skillLabel;
 
-
+  public function __construct(array $data = [])
+  {
+      $this->skillId = $data['skillId'] ?? 0;
+      $this->skillLabel = $data['skillLabel'] ?? '';
+  
+  }
 
   # GETTERS
 

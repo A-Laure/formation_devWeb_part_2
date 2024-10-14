@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 
 class AdvertController
 {
@@ -105,6 +105,44 @@ class AdvertController
     }
   }
 
+  public function search($jobLabel = '', $jobContractType = '')
+  {
+    try {
+      $advertModel = new AdvertModel();
+      $skillModel = new SkillModel();
+
+// Récupération des paramètres de pagination depuis l'URL
+$currentPage = !empty($_GET['page']) && ctype_digit($_GET['page']) ? (int)$_GET['page'] : 1;
+$pagination = !empty($_GET['pagination']) && ctype_digit($_GET['pagination']) ? (int)$_GET['pagination'] : 10;
+$start = ($currentPage - 1) * $pagination;
+
+
+      # Application des filtres de recherche
+      $datas = $advertModel->search($jobLabel, $jobContractType, $pagination, $start);
+
+      $advertList = [];
+      if (!empty($datas)) {
+        foreach ($datas as $data) {
+          $advert = new Advert($data);
+          $skillsArray = [];
+
+          foreach (explode(',', $data['skills']) as $skillLabel) {
+            $skill = new Skills($data);
+            $skill->setSkillLabel(trim($skillLabel)); 
+            $skillsArray[] = $skill;
+          }
+
+          $advert->setSkills($skillsArray);
+          $advertList[] = $advert;
+        }
+      }
+
+      include 'MVC/views/advert/advert_search.php'; 
+    } catch (Exception $e) {
+      die($e->getMessage());
+    }
+  }
+
   # Recup de toutles compétences
   public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC')
   {
@@ -138,28 +176,58 @@ class AdvertController
   # Affichage Formulaire CREATE Advert
   public function create()
   {
-    $model = new SkillModel();
-    $datas = $model->readAll();
-    dump($datas, 'Advertctrl - Create - $datas');
+    $networkModel = new NetworkModel();
+    $networkDatas = $networkModel->readAll();
+    // dump($networkDatas, 'AdvertCtrl - Create - $networkDatas');
 
-    $advertList = [];
+    $skillModel = new SkillModel();
+    $skillDatas = $skillModel->readAll();
+    // dump($skillDatas, 'AdvertCtrl - Create - $skillDatas');
+
+    $networkList = [];
+    $skillList = [];
 
 
-    if (count($datas) > 0) {
+  // Traitement des réseaux
+  foreach ($networkDatas as $data) {
+    $networkId = $data['netw_networkId'] ?? null;
+    $networkLabel = $data['netw_networkLabel'] ?? null;
+    $networkLink = $data['netw_networkLink'] ?? null;
 
-      foreach ($datas as $data) {
-        $advert = new Advert($data);
-
-        $skills = isset($data['skills']) ? explode(',', $data['skills']) : [];
-        // $networks = isset($data['networks']) ? explode(',', $data['networks']) : [];
-
-        // Assigne les compétences et réseaux à l'objet Advert
-        $advert->setSkills($skills);
-        // $advert->setNetworks($networks);
-        $advertList[] = $advert;
-      }
-      dump($advertList, 'AdvertCtrl - Create - $advertList');
+    if ($networkId !== null && $networkLabel !== null) {
+        $network = new Networks([
+            'networkId' => (int)$networkId,
+            'networkLabel' => $networkLabel,
+            'networkLink' => $networkLink
+        ]);
+        $networkList[] = $network;
     }
+}
+// dump($networkList, 'AdvertCtrl - Create - $networkList');
+
+// Traitement des compétences
+foreach ($skillDatas as $data) {
+    $skillId = $data['skill_skillId'] ?? null;
+    $skillLabel = $data['skill_skillLabel'] ?? null;
+
+    if ($skillId !== null && $skillLabel !== null) {
+        $skill = new Skills([
+            'skillId' => (int)$skillId,
+            'skillLabel' => $skillLabel
+        ]);
+        $skillList[] = $skill;
+    }
+}
+// dump($skillList, 'AdvertCtrl - Create - $skillList');
+
+// Création de l'utilisateur avec réseaux et compétences
+$advert = new Advert([]);
+$advert->setNetworks($networkList);
+$advert->setSkills($skillList);
+
+$advertList = [$advert];
+// dump($advertList, 'AdvertCtrl - Create - $advertList');
+    
 
 
     include 'MVC/views/advert/advert_create.php';
@@ -226,11 +294,14 @@ class AdvertController
 
     $model = new AdvertModel;
     $del = $model->delete($id);
+    // dump($del);
 
-    if ($del) {
-      header('Location: index.php?ctrl=Dashboard&action=index&_err=Votre annonce a bien été supprimé');
-    } else {
-      header('Location: index.php?ctrl=Dashboard&action=menu&_err= Suppression annonce a échoué');
-    }
+    // if ($del) {
+    //   header('Location: index.php?ctrl=Dashboard&action=index&_err=Votre annonce a bien été supprimée');
+    //   exit;
+    // } else {
+    //   header('Location: index.php?ctrl=Dashboard&action=menu&_err= Suppression annonce a échoué');
+    //   exit;
+    // }
   }
 }

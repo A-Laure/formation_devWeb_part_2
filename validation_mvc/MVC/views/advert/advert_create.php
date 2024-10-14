@@ -3,27 +3,11 @@ session_start();
 
 // unset($_POST);
 
-dump($_POST, 'Create USER');
+// dump($_POST, 'Create Advert');
+// dump( $_SESSION[APP_TAG]['connected'], 'UserConnected');
 
 $title = "Creation Annonce";
 $currentPage = "AdvertCreate";
-
-
-// 1 = autorisation d'ajout, si différent de 1 dans la fiche userConnected => redirection
-// redirectNotAllowed($_SESSION[APP_TAG]['connected']['autorisations'], 1);
-
-
-
-// if (hasPower($pdo, (int) $roleId, $_SESSION[APP_TAG]['connected']['role_Id'])) {
-
-//   $hashedPassword = password_hash($_POST['pwd'], PASSWORD_DEFAULT, ['cost' => 12]);
-
-//   echo '<pre>';
-//   echo 'LOG du $hashedPassword pwd : ';
-//   echo $hashedPassword;
-//   echo '<pre>';
-
-// }
 
 
 ?>
@@ -79,7 +63,7 @@ $currentPage = "AdvertCreate";
     <label for="jobContractType" class="form-label mb-3">Type de contrat :<span> *</span></label>
     <div class="d-flex flex-row">
 
-      <label class="form--check-label" for="jobContractType">CDD</label>
+      <label class="form-check-label" for="jobContractType">CDD</label>
       <input class="" type="radio" id="jobContractType" value="CDD" name="jobContractType">
 
       <label class="form-check-label" for="jobContractType">CDI</label>
@@ -113,7 +97,33 @@ $currentPage = "AdvertCreate";
       <textarea name="jobDescription" id="jobDescription" class="form-control" rows="4" placeholder="Votre description ici..."></textarea>
     </div>
 
-
+<!-- SKILLS -->
+<div class="d-flex flex-wrap" >
+    <label class="form-label mb-3">Compétences :<span> *</span></label>
+    <?php foreach ($advertList as $user) : ?>
+        <?php
+        // Get the skills array and check if it's defined and an array
+        $skills = $user->getskills();
+        if (!is_array($skills)) {
+            continue;
+        }
+        ?>
+        <?php foreach ($skills as $skill) : ?>
+            <div class="form-check ms-1">
+            <label for="skill-<?= htmlspecialchars($skill->getSkillId()) ?>" class="form-check-label">
+                    <?= htmlspecialchars($skill->getSkillLabel()) ?> - Cocher Case -
+                </label>
+                <input
+                    type="checkbox"
+                    name="skills[]"
+                    id="skill-<?= htmlspecialchars($skill->getSkillId()) ?>"
+                    class="form-check-input"
+                    value="<?= htmlspecialchars($skill->getSkillId()) ?>">
+               
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+</div>
 
   
 

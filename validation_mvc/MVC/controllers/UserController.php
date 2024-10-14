@@ -114,28 +114,116 @@ class UserController
 
     $model = new UserModel();
     $datas = $model->readOne($id);
+    $networkModel = new NetworkModel();
+    $networkDatas = $networkModel->readAll();
+    dump($networkDatas, 'UserCtrl - Create - $networkDatas');
 
-    if (count($datas) > 0) {
-      $user = new User($datas);
+    $skillModel = new SkillModel();
+    $skillDatas = $skillModel->readAll();
+    dump($skillDatas, 'UserCtrl - Create - $skillDatas');
+
+    $networkList = [];
+    $skillList = [];
+
+    // Traitement des réseaux
+    foreach ($networkDatas as $data) {
+        $networkId = $data['netw_networkId'] ?? null;
+        $networkLabel = $data['netw_networkLabel'] ?? null;
+        $networkLink = $data['netw_networkLink'] ?? null;
+
+        if ($networkId !== null && $networkLabel !== null) {
+            $network = new Networks([
+                'networkId' => (int)$networkId,
+                'networkLabel' => $networkLabel,
+                'networkLink' => $networkLink
+            ]);
+            $networkList[] = $network;
+        }
     }
+    dump($networkList, 'UserCtrl - Create - $networkList');
+
+    // Traitement des compétences
+    foreach ($skillDatas as $data) {
+        $skillId = $data['skill_skillId'] ?? null;
+        $skillLabel = $data['skill_skillLabel'] ?? null;
+
+        if ($skillId !== null && $skillLabel !== null) {
+            $skill = new Skills([
+                'skillId' => (int)$skillId,
+                'skillLabel' => $skillLabel
+            ]);
+            $skillList[] = $skill;
+        }
+    }
+    dump($skillList, 'UserCtrl - Create - $skillList');
+
+    // Création de l'utilisateur avec réseaux et compétences
+    $user = new User([]);
+    $user->setNetworks($networkList);
+    $user->setSkills($skillList);
+
+    $userList = [$user];
+    dump($userList, 'UserCtrl - Create - $userList');
 
     include "../views/users/user_profile.php";
   }
 
 
   public function create()
-  {
-    // Récupération des compétences techniques
-    $skillsController = new SkillModel();
-    $techskills = $skillsController->readAll();
+{
+    $networkModel = new NetworkModel();
+    $networkDatas = $networkModel->readAll();
+    // dump($networkDatas, 'UserCtrl - Create - $networkDatas');
 
-    // Récupération des réseaux sociaux
-    $networksController = new NetworkModel();
-    $networks = $networksController->readAll();
+    $skillModel = new SkillModel();
+    $skillDatas = $skillModel->readAll();
+    // dump($skillDatas, 'UserCtrl - Create - $skillDatas');
 
-    // Inclusion de la vue
+    $networkList = [];
+    $skillList = [];
+
+    // Traitement des réseaux
+    foreach ($networkDatas as $data) {
+        $networkId = $data['netw_networkId'] ?? null;
+        $networkLabel = $data['netw_networkLabel'] ?? null;
+        $networkLink = $data['netw_networkLink'] ?? null;
+
+        if ($networkId !== null && $networkLabel !== null) {
+            $network = new Networks([
+                'networkId' => (int)$networkId,
+                'networkLabel' => $networkLabel,
+                'networkLink' => $networkLink
+            ]);
+            $networkList[] = $network;
+        }
+    }
+    // dump($networkList, 'UserCtrl - Create - $networkList');
+
+    // Traitement des compétences
+    foreach ($skillDatas as $data) {
+        $skillId = $data['skill_skillId'] ?? null;
+        $skillLabel = $data['skill_skillLabel'] ?? null;
+
+        if ($skillId !== null && $skillLabel !== null) {
+            $skill = new Skills([
+                'skillId' => (int)$skillId,
+                'skillLabel' => $skillLabel
+            ]);
+            $skillList[] = $skill;
+        }
+    }
+    // dump($skillList, 'UserCtrl - Create - $skillList');
+
+    // Création de l'utilisateur avec réseaux et compétences
+    $user = new User([]);
+    $user->setNetworks($networkList);
+    $user->setSkills($skillList);
+
+    $userList = [$user];
+    // dump($userList, 'UserCtrl - Create - $userList');
+
     include 'MVC/views/users/user_create.php';
-  }
+}
 
 
 
@@ -152,11 +240,11 @@ class UserController
     $id = $model->create($request);
 
     if ($id) {
-      header('Location: index.php?ctrl=Home&action=index&Création User avec Succés');
+      header('Location: index.php?ctrl=Dashboard&action=menu&_err=Création User avec Succés');
       exit;
     } else {
 
-      header('Location: index.php?ctrl=Home&action=index&Création User a échoué');
+      header('Location: index.php?ctrl=Dashboard&action=menu&_err=Création User a échoué');
     }
     exit;
   }
