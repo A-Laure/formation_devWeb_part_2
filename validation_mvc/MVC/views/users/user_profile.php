@@ -4,7 +4,7 @@ session_start();
 $currentPage = 'yourProfile';
 $title = "Votre Profil";
 
-// dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
+dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
 ?>
 
 <h1 class="container text-align-center title">Votre Profil </h1>
@@ -41,7 +41,7 @@ $title = "Votre Profil";
         <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userCp'] . '  ' . $_SESSION[APP_TAG]['connected']['user_userTown'] ?></p>
         <hr>
 
-        <?php if ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant') : ?>
+        
           <p class="">Compétences : </p>
           <ul class="card-text">
             <?php if (!empty($_SESSION[APP_TAG]['connected']['skills'])): ?>
@@ -52,21 +52,21 @@ $title = "Votre Profil";
               <li>****</li>
             <?php endif; ?>
           </ul>
-        <?php endif; ?>
+       
         <hr>
 
-        <?php if ($_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant') : ?>
+    
           <p class="">Réseaux Sociaux : </p>
           <ul class="card-text">
-            <?php if (!empty($_SESSION[APP_TAG]['connected']['networks'])): ?>
-              <?php foreach ($_SESSION[APP_TAG]['connected']['networks'] as $network): ?>
+            <?php if (!empty($_SESSION[APP_TAG]['connected']['links'])): ?>
+              <?php foreach ($_SESSION[APP_TAG]['connected']['links'] as $network): ?>
                 <li><?= htmlspecialchars($network) ?></li>
               <?php endforeach; ?>
             <?php else: ?>
               <li>****</li>
             <?php endif; ?>
           </ul>
-        <?php endif; ?>
+       
         <hr>
 
         <p class="">Description : </p>

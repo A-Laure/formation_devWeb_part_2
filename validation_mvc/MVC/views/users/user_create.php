@@ -65,7 +65,7 @@ $currentPage = "userCreate";
       <input type="text" name="firstName" id="firstname" class="form-control">
     </div>
 
-
+<hr>
     <div class="d-flex flex-row">
       <label class="form-check-label" for="envrnt">IT</label>
       <input class="" type="radio" id="envrnt" value="IT" name="envrnt">
@@ -73,10 +73,17 @@ $currentPage = "userCreate";
       <label class="form-check-label" for="envrnt">Communication</label>
       <input class="" type="radio" id="envrnt" value="Communication" name="envrnt">
 
-    </div>
+      <label class="form-check-label" for="envrnt">Admin</label>
+      <input class="" type="radio" id="envrnt" value="Communication" name="envrnt">
+      </div>
+
+      <label class="form-check-label mt-3" for="envrnt">Autres</label>
+      <input class="" type="text" id="envrnt" value="" name="envrnt">
+      </div>
+      <hr>
 
     <div class="mb-3 ">
-      <label for="email" class="form-label mb-3">Email<span> *</span></label>
+      <label for="email" class="form-label mb-3 mt-3">Email<span> *</span></label>
       <input type="email" name="email" id="email" class="form-control">
     </div>
 
@@ -89,6 +96,8 @@ $currentPage = "userCreate";
       <label for="textaera" class="form-label">Présentez-vous :</label>
       <textarea name="textaera" id="textaera" class="form-control" rows="4" placeholder="Votre description ici..."></textarea>
     </div>
+
+    <hr>
 
     <div class="mb-3 ">
       <label for="userAdr1" class="form-label">N° + rue : </label>
@@ -114,9 +123,10 @@ $currentPage = "userCreate";
 
 
     <!-- NETWORKS -->
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap">   
       <?php foreach ($userList as $user) : ?>
-        <?php
+       
+       <?php        
         // Vérifier que l'attribut `networks` est bien défini et qu'il s'agit d'un tableau
         $networks = $user->getNetworks();
         if (!is_array($networks)) {
@@ -124,27 +134,26 @@ $currentPage = "userCreate";
         }
         ?>
 
-<label for="userTown" class="form-label">Réseaux  </label>
+        <label for="networks[]" class="form-label">Réseaux  </label>
         <?php foreach ($networks as $index => $network) : ?>
-          <div class="me-3  align-items-center small-checkbox">
 
-            <label for="network[]" class="form-check-label ms-1"><?= htmlspecialchars($network->getNetworkLabel()) ?> (Saisir lien )  </label>
-            <input
-              type="text"
-              name="network[]"
-              id="network[]"
-              class="form-check-input"
-              value="">
+          <div class="me-3 align-items-center small-checkbox">
+            
+        <label for="network[<?= $index ?>][networkId]" class="form-check-label ms-1"><?= htmlspecialchars($network->getNetworkLabel()) ?></label>
+        <input type="hidden" name="networks[<?= $index ?>][networkId]" value="<?= $network->getNetworkId() ?>">
+        <input type="text" name="networks[<?= $index ?>][networkLink]" class="form-check-input" placeholder="Saisir lien" required>
           </div>
-
+     
         <?php endforeach; ?>
       <?php endforeach; ?>
+      
     </div>
     <hr>
-
+  
     <!-- SKILLS -->
-    <label for="userTown" class="form-label">Compétences </label>
-    <div class="d-flex flex-row" width="20px">
+    <label for="skills[]" class="form-label">Compétences </label>
+    
+    <div class="d-flex flex-row align-items-center" width="20px">
       <?php foreach ($userList as $user) : ?>
         <?php
         // Vérifier que l'attribut `networks` est bien défini et qu'il s'agit d'un tableau
@@ -156,14 +165,14 @@ $currentPage = "userCreate";
 
         <?php foreach ($skills as $index => $skill) : ?>
          
-
-            <label for="skill[]" class="form-check-label ms-1"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
+          <div class="me-3 align-items-center small-checkbox">
+            <label for="skills[]" class="form-check-label me-1"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
             <input
               type="checkbox"
-              name="skill[]"
-              id="skill[]"
-              class="form-check-input"
-              value="">
+              name="skills[]"
+              id="skills[]"
+              class="me-1"
+              value="<?=$skill-> getSkillId() ?>">
        
 
         <?php endforeach; ?>

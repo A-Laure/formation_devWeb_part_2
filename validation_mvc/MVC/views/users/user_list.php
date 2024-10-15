@@ -12,21 +12,21 @@ $currentPage = "userList";
 
 <h1 class="text-align-center title">Liste des Etudiants</h1>
 
-<div class="container d-flex flex-row">
+<div class="container d-flex flex-row mb-5 ">
   <a href="index.php?ctrl=Dashboard&action=menu" type="button" class="n-btn">
     <i class="fa-solid fa-home"></i>
     <p class="align-items-center"> Menu</p>
   </a>
 </div>
 
-  <section class="n-container n-d-grid supplierList">
+  <section class="container n-d-grid supplierList">
 
     <!-- CARD USER -->
 
     <?php if (!empty($userList)) : ?>
       <?php foreach ($userList as $user) : ?>
         <?php if ($user->getUserStatus() === 'Etudiant') : ?>
-          <div class=" supplierCard n-col-3">
+          <div class="supplierCard d-flex flex-column" style="flex: 1 0 30%; margin: 3px;">
             <h2><?= $user->getUserFirstName() ?></h2>
             <h2><?= $user->getUserLastName() ?></h2>
             <p><?= $user->getUserEmail() ?></p>

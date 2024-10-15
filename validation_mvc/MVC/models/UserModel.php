@@ -169,13 +169,12 @@ class UserModel extends CoreModel
   
           if ($stmt->execute()) {
               $userId = $this->getDb()->lastInsertId();
+              echo $userId;
   
               // Étape 3 : Insertion dans la table `skills` (si des compétences sont fournies)
-             /* This code block is checking if the `` array contains any data for the key
-             'skills'. If the 'skills' key is not empty, it means that the user has provided some
-             skills information. */
+             // pas la peine de mettre les [] ds $request['skills'], php sait l'interpréter
               if (!empty($request['skills'])) {
-                  $skillQuery = "INSERT INTO techskills (user_userId, skill_skillLabel) VALUES (:userId, :skill)";
+                  $skillQuery = "INSERT INTO has (user_userId, skill_skillId) VALUES (:userId, :skill)";
                   $skillStmt = $this->getDb()->prepare($skillQuery);
                   foreach ($request['skills'] as $skill) {
                       $skillStmt->bindValue(':userId', $userId);
@@ -185,15 +184,21 @@ class UserModel extends CoreModel
               }
   
               // Étape 4 : Insertion dans la table `networks` (si des réseaux sont fournis)
+              // pas la peine de mettre les [] ds $request['networks'], php sait l'interpréter
               if (!empty($request['networks'])) {
-                  $networkQuery = "INSERT INTO network (user_userId, netw_networkLabel) VALUES (:userId, :network)";
+                  $networkQuery = "INSERT INTO display (user_userId, netw_networkId, netw_networkLink) VALUES (:userId, :networkId, :networkLink)";
                   $networkStmt = $this->getDb()->prepare($networkQuery);
-                  foreach ($request['networks'] as $network) {
-                      $networkStmt->bindValue(':userId', $userId);
-                      $networkStmt->bindValue(':network', $network);
-                      $networkStmt->execute();
-                  }
-              }
+                  foreach ($request['networks'] as $network) {                
+                    $networkId = $network['networkId']; 
+                    $networkLink = $network['networkLink']; 
+            
+                    // Liez les valeurs
+                    $networkStmt->bindValue(':userId', $userId);
+                    $networkStmt->bindValue(':networkId', $networkId);
+                    $networkStmt->bindValue(':networkLink', $networkLink);
+                    $networkStmt->execute();
+                }
+            }
   
               return $userId; // Retourne l'ID de l'utilisateur nouvellement inséré
           }
@@ -217,7 +222,7 @@ class UserModel extends CoreModel
                     user_userPwd = :pwd,
                     user_userFirstName = :firstname,
                     user_userLastName = :lastname,
-                    user_userTextaera = :textaera,                  
+                    user_userTextaera = :textaera,
                     user_userSpeciality = :speciality,
                     user_userAdr1 = :adr1,
                     user_userAdr2 = :adr2,
@@ -228,8 +233,6 @@ class UserModel extends CoreModel
 
       // Préparation et exécution de la requête pour l'utilisateur
       if ($this->_req = $this->getDb()->prepare($query)) {
-          echo '<br>UserModel, je suis rentré dans prepare</br><hr>';
-
           // Liaison des valeurs
           $this->_req->bindValue(':status', $request['status']);
           $this->_req->bindValue(':envrnt', $request['envrnt']);
@@ -247,7 +250,7 @@ class UserModel extends CoreModel
 
           if ($this->_req->execute()) {
               echo '<br>UserModel, utilisateur mis à jour</br><hr>';
-              
+
               // Suppression des compétences actuelles de l'utilisateur
               $queryDeleteSkills = "DELETE FROM has WHERE user_userId = :id";
               $stmtDeleteSkills = $this->getDb()->prepare($queryDeleteSkills);
@@ -263,6 +266,7 @@ class UserModel extends CoreModel
                       $stmtInsertSkills->bindValue(':userId', $id, PDO::PARAM_INT);
                       $stmtInsertSkills->bindValue(':skillId', $skillId, PDO::PARAM_INT);
                       $stmtInsertSkills->execute();
+                      $stmtInsertSkills->closeCursor(); // Réinitialisation
                   }
               }
 
@@ -273,14 +277,17 @@ class UserModel extends CoreModel
               $stmtDeleteNetworks->execute();
 
               // Insertion des nouveaux réseaux sociaux
-              if (!empty($request['networks'])) {
-                  $queryInsertNetworks = "INSERT INTO display (user_userId, netw_networkId) VALUES (:userId, :networkId)";
+              if (!empty($request['links'])) {
+                  $queryInsertNetworks = "INSERT INTO display (user_userId, netw_networkId, netw_networkLink) VALUES (:userId, :networkId, :networkLink)";
                   $stmtInsertNetworks = $this->getDb()->prepare($queryInsertNetworks);
 
-                  foreach ($request['networks'] as $networkId) {
+                  foreach ($request['links'] as $network) {
+                      // Assure l'association correcte des paramètres de chaque réseau
                       $stmtInsertNetworks->bindValue(':userId', $id, PDO::PARAM_INT);
-                      $stmtInsertNetworks->bindValue(':networkId', $networkId, PDO::PARAM_INT);
+                      $stmtInsertNetworks->bindValue(':networkId', $network['id'], PDO::PARAM_INT); // ID du réseau
+                      $stmtInsertNetworks->bindValue(':networkLink', $network['link'], PDO::PARAM_STR); // Lien du réseau
                       $stmtInsertNetworks->execute();
+                      $stmtInsertNetworks->closeCursor(); // Réinitialisation
                   }
               }
 
@@ -293,6 +300,7 @@ class UserModel extends CoreModel
   }
   return false;
 }
+
 
 
 

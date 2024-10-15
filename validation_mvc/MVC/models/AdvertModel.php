@@ -32,7 +32,8 @@ class AdvertModel extends CoreModel
   }
 
 
-  # READALL : Méthode pour récupérer tous les users 
+  #  -------------- READALL 
+  
   public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC'): array
   {
     // Vérifier que les valeurs pour ORDER BY sont valides
@@ -53,13 +54,17 @@ class AdvertModel extends CoreModel
        j.joba_jobDescription, 
        j.joba_jobAdvantages, 
        j.joba_jobTown,
+       j.user_userId,
+       j.joba_jobStatus,
       GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
-      GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks
+      GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks,
+      GROUP_CONCAT(DISTINCT d.netw_networkLink ORDER BY d.netw_networkLink) AS links
       FROM jobadvert j
-      LEFT JOIN want w  ON w.joba_jobAdvertId =  j.joba_jobAdvertId
+      LEFT JOIN want w  ON w.joba_jobAdvertId =  j.joba_jobAdvertId      
       LEFT JOIN techskills t on t.skill_skillId = w.skill_skillId
       LEFT JOIN needs n ON n.joba_jobAdvertId =  j.joba_jobAdvertId
-      LEFT JOIN socialnetwork s on s.netw_networkId = n.netw_networkId   
+      LEFT JOIN socialnetwork s on s.netw_networkId = n.netw_networkId 
+      LEFT JOIN display d ON w.joba_jobAdvertId =  j.joba_jobAdvertId  
       GROUP BY  j.joba_jobAdvertId
       ORDER BY ' . $orderBy . ' ' . $order . '
       LIMIT :start, :pagination
@@ -92,23 +97,33 @@ class AdvertModel extends CoreModel
     try {
 
       $query = 'SELECT
-      j.joba_jobAdvertId,
-      j.joba_jobLabel, 
-      j.joba_jobEmail,
-      j.joba_jobContractType,
-      j.joba_jobDescription, 
-      j.joba_jobAdvantages, 
-      j.joba_jobTown, 
-      t.skill_skillLabel,
-      GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
-     GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks
-     FROM jobadvert j
-     LEFT JOIN want w  ON w.joba_jobAdvertId =  j.joba_jobAdvertId
-     LEFT JOIN techskills t on t.skill_skillId = w.skill_skillId
-     LEFT JOIN needs n ON n.joba_jobAdvertId =  j.joba_jobAdvertId
-     LEFT JOIN socialnetwork s on s.netw_networkId = n.netw_networkId 
-     WHERE j.joba_jobAdvertId = :id  
-     GROUP BY  j.joba_jobAdvertId
+    j.joba_jobAdvertId,
+    j.joba_jobLabel, 
+    j.joba_jobEmail,
+    j.joba_jobContractType,
+    j.joba_jobDescription, 
+    j.joba_jobAdvantages, 
+    j.joba_jobTown, 
+    j.user_userId,
+    j.joba_jobStatus,
+    GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
+    GROUP_CONCAT(DISTINCT d.netw_networkLink ORDER BY d.netw_networkLink) AS links
+FROM jobadvert j
+LEFT JOIN want w ON w.joba_jobAdvertId = j.joba_jobAdvertId
+LEFT JOIN techskills t ON t.skill_skillId = w.skill_skillId
+LEFT JOIN needs n ON n.joba_jobAdvertId = j.joba_jobAdvertId
+LEFT JOIN display d ON j.user_userId = d.user_userId
+WHERE j.joba_jobAdvertId = :id  
+GROUP BY 
+    j.joba_jobAdvertId,
+    j.joba_jobLabel, 
+    j.joba_jobEmail,
+    j.joba_jobContractType,
+    j.joba_jobDescription, 
+    j.joba_jobAdvantages, 
+    j.joba_jobTown,
+    j.user_userId,
+    j.joba_jobStatus
      ';
 
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
@@ -201,69 +216,49 @@ class AdvertModel extends CoreModel
 
 
 
-  # UPDATE d'un USER
+  # UPDATE d'une Advert
   public function update($id, $request)
-  {
-    // echo '<br>AdvertModel, je suis rentré ds update</br><hr>';
-    dump($_POST, '$_post dans Advertmodel - update');
-    // echo 'AdvertModel - Update GET Id : ' . $_GET['id'];
+{
     try {
-      $query = "UPDATE jobadvert
-     SET   
-     joba_jobLabel = :joblabel,
-     joba_jobEmail = :jobemail,
-     joba_jobContractType = :jobcontracttype,
-     joba_jobDescription = :jobdescription,
-     joba_jobAdvantages = :jobadvantages,
-     joba_jobStatus = :jobstatus,
-     joba_jobTown = :jobtown,
-    user_userId = :userid
-     WHERE joba_jobAdvertId = :id";
+        // Requête de mise à jour
+        $query = "UPDATE jobadvert SET   
+                    joba_jobLabel = :joblabel,
+                    joba_jobEmail = :jobemail,
+                    joba_jobContractType = :jobcontracttype,
+                    joba_jobDescription = :jobdescription,
+                    joba_jobAdvantages = :jobadvantages,
+                    joba_jobStatus = :jobstatus,
+                    joba_jobTown = :jobtown,
+                    user_userId = :userid
+                  WHERE joba_jobAdvertId = :id";
 
+        // Préparation de la requête
+        $stmt = $this->getDb()->prepare($query);
 
-      if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+        // Liaison des valeurs avec les paramètres
+        $stmt->bindValue(':joblabel', $request['joblabel']);
+        $stmt->bindValue(':jobemail', $request['jobemail']);
+        $stmt->bindValue(':jobcontracttype', $request['jobcontracttype']);
+        $stmt->bindValue(':jobdescription', $request['jobdescription']);
+        $stmt->bindValue(':jobadvantages', $request['jobadvantages']);
+        $stmt->bindValue(':jobstatus', $request['jobstatus']);
+        $stmt->bindValue(':jobtown', $request['jobtown']);
+        $stmt->bindValue(':userid', $request['userid']);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
-        // echo '<br>AvertModel - update, je suis rentré ds prepare</br><hr>';
-
-
-
-        if (($this->_req = $this->getDb()->prepare($query)) !== false) {
-          if ((
-
-            $this->_req->bindValue(':joblabel', $request['joblabel'])
-            &&
-            $this->_req->bindValue(':jobemail', $request['jobemail'])
-            &&
-            $this->_req->bindValue(':jobcontracttype', $request['jobcontracttype'])
-            &&
-            $this->_req->bindValue(':jobdescription', $request['jobdescription'])
-            &&
-            $this->_req->bindValue(':jobadvantages', $request['jobadvantages'])
-            &&
-            $this->_req->bindValue(':jobtown', $request['jobtown'])
-            &&
-            $this->_req->bindValue(':userid', $request['userid'])
-            &&
-            $this->_req->bindValue(':jobstatus', $request['jobstatus'])
-            &&
-            $this->_req->bindValue(':id', $id)
-
-          ))
-            if ($this->_req->execute()) {
-              echo '<br>AdvertModel, je suis rentré ds execute</br><hr>';
-              // Compte le nombre de lignes affectées par la requête, renvoi le nombre de lignes modfiées, si 0 -> pb, peut servir pour un renvoi de message
-              echo '<br>AdvertModel, je suis avant le rowCount</br><hr>';
-              $res = $this->_req->rowCount();
-              echo '<br>AdvertModel, je suis après le rowCount</br><hr>' . $res;
-              dump($res, 'AdvertModel, Update $res');
-              return $res;
-            }
+        // Exécution de la requête
+        if ($stmt->execute()) {
+            // Vérifie si des lignes ont été modifiées
+            $res = $stmt->rowCount();
+            echo "<br>Nombre de lignes affectées : {$res}</br><hr>";
+            return $res;
         }
-      }
+
     } catch (PDOException $e) {
-      die($e->getMessage());
+        die('Erreur SQL : ' . $e->getMessage());
     }
-  }
+}
+
 
 
 

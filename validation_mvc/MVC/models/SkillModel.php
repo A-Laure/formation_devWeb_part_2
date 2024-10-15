@@ -31,35 +31,33 @@ public function readAll(): array
 }
 
 # READONE
-   public function readOne($id)
-   {
- 
-     try
-     {
- 
-       if(($this->_req = $this->getDb()->prepare('SELECT *
-        FROM techskills
-        WHERE skill_skillId = :id')) !== false)
-       {
-         if(($this->_req->bindValue(':id', $id, PDO::PARAM_INT)))
-         {
-           if($this->_req->execute())
-           {
- 
-             $datas = $this->_req->fetch(PDO::FETCH_ASSOC);
- 
-             return $datas;
- 
-           }
-         }
-       }
- 
-     } catch(PDOException $e)
-     {
-       die($e->getMessage());
-     }
- 
-   }
+public function readOne($id)
+{
+    // Préparer la requête pour sélectionner un réseau par son ID
+    $query = 'SELECT * FROM techskills WHERE skill_skillId = :id';
+
+    try {
+        // Préparer la requête
+        $this->_req = $this->getDb()->prepare($query);
+
+        // Lier le paramètre ID
+        $this->_req->bindValue(':id', $id, PDO::PARAM_INT);
+
+        // Exécuter la requête
+        if ($this->_req->execute()) {
+            // Récupérer les données
+            $datas = $this->_req->fetch(PDO::FETCH_ASSOC);
+            return $datas; // Retourner les données
+        }
+
+        // Si aucune ligne n'est trouvée, retourner null
+        return null;
+
+    } catch (PDOException $e) {
+        // Gérer les erreurs
+        die('Erreur lors de la récupération du réseau : ' . $e->getMessage());
+    }
+}
 
 
 

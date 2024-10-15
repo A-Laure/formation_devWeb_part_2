@@ -4,6 +4,9 @@
 $title = "Liste des Annonces";
 $currentPage = "advertList";
 
+/* dump($datas, '$datas');
+dump($advertList, 'AdvertCtrl - ReadAll'); */
+
 
 ?>
 
@@ -32,6 +35,14 @@ $currentPage = "advertList";
     </a>
   </div>
   <?php endif ?>
+
+   <!-- BANNER MESSAGE ALERTE -->
+ <?php
+  if (!empty($_GET['_err'])) {
+    $error = htmlspecialchars($_GET['_err']);
+    echo "<div class='bg-warning fs-4 text mt-5'>{$error}</div>";
+  }
+  ?>
 
 </section>
 
@@ -88,22 +99,30 @@ $currentPage = "advertList";
 
 
 
+
 <section class="container n-d-grid supplierList">
 
 
   <?php foreach ($advertList as $advert) : ?>
 
-    <div class=" supplierCard n-col-3">
+    <div class="supplierCard d-flex flex-column" style="flex: 1 0 30%; margin: 10px;">
       <h1 class="card-title"><?= $advert->getJobLabel() ?></h1>
       <p class="card-text"><?= htmlspecialchars($advert->getJobEmail()) ?></p>
-      <p class="card-text"><?= $advert->getJobContractType() ?></p>
-      <p class="card-text"><strong>Avantages : </strong> <?= $advert->getJobAdvantages() ?></p>
-      <p class="card-text"><strong>Localisation : </strong><?= $advert->getJobTown() ?></p>
+      <p class="card-text"><?= $advert->getJobContractType() .' /  ' . $advert->getJobStatus() ?></p>
+      <hr>
+
+      <div class="text-start text-justify">
+      <p class="card-text "><strong>Avantages : </strong> <?= $advert->getJobAdvantages() ?></p>
+      <p class="card-text"><i class="fa-solid fa-location-dot me-2 "></i><?= $advert->getJobTown() ?></p>
       <hr>
       <strong>Description du poste</strong>
-      <p class="card-text"><?= $advert->getJobDescription() ?></p>
+      <p class="card-text text-justify"><?= $advert->getJobDescription() ?></p>
+
+      </div>
+      
       <hr>
       <strong>Compétences:</strong>
+      
       <ul>
         <?php
         $skills = $advert->getSkills();
@@ -127,16 +146,9 @@ $currentPage = "advertList";
         <?php endif; ?>
       </ul>
 
-      <strong>Réseaux sociaux:</strong>
-      <?php if ($advert->getNetworks() && is_array($advert->getNetworks())): ?>
-        <ul>
-          <?php foreach ($advert->getNetworks() as $network): ?>
-            <li><?= htmlspecialchars($network) ?></li>
-          <?php endforeach; ?>
-        </ul>
-      <?php else: ?>
-        <p>*****</p>
-      <?php endif; ?>
+    
+
+   
 
       <div class="d-flex justify-content-center gap-3">
 

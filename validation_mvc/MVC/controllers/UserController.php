@@ -52,7 +52,12 @@ class UserController
     include 'MVC/views/users/user_profile.php';
   }
 
-  # READALL - LISTE DES ENTREPRISES
+
+
+
+
+  # --------------         READALL - LISTE DES ENTREPRISES
+
   public function indexEntrepriseList()
   {
 
@@ -79,7 +84,12 @@ class UserController
     }
   }
 
-  # READALL - PROFILE DES ENTREPRISES
+
+
+
+
+  # ------------------------ READALL - PROFILE DES ENTREPRISES
+
   public function indexEntrepriseProfile()
   {
 
@@ -108,63 +118,46 @@ class UserController
 
 
 
-  # READONE - Affichage d'un utilisateur
+  #  ---------------------- READONE - Affichage d'un utilisateur
+
   public function show($id)
   {
 
     $model = new UserModel();
-    $datas = $model->readOne($id);
+    $user = $model->readOne($id);
+
+    // Récupération des réseaux et compétences
     $networkModel = new NetworkModel();
-    $networkDatas = $networkModel->readAll();
-    dump($networkDatas, 'UserCtrl - Create - $networkDatas');
-
-    $skillModel = new SkillModel();
-    $skillDatas = $skillModel->readAll();
-    dump($skillDatas, 'UserCtrl - Create - $skillDatas');
-
+    $networkDatas = $networkModel->readOne($id); 
     $networkList = [];
-    $skillList = [];
 
-    // Traitement des réseaux
-    foreach ($networkDatas as $data) {
-        $networkId = $data['netw_networkId'] ?? null;
-        $networkLabel = $data['netw_networkLabel'] ?? null;
-        $networkLink = $data['netw_networkLink'] ?? null;
-
-        if ($networkId !== null && $networkLabel !== null) {
-            $network = new Networks([
-                'networkId' => (int)$networkId,
-                'networkLabel' => $networkLabel,
-                'networkLink' => $networkLink
-            ]);
-            $networkList[] = $network;
-        }
+      // Traitement des réseaux
+      foreach ($networkDatas as $data) {
+        $network = new Networks([
+            'networkId' => (int)$data['netw_networkId'],
+            'networkLabel' => $data['netw_networkLabel'],
+            'networkLink' => $data['netw_networkLink']
+        ]);
+        $networkList[] = $network;
     }
-    dump($networkList, 'UserCtrl - Create - $networkList');
 
+    $user->setNetworks($networkList);
+
+    // Récupération des compétences
+    $skillModel = new SkillModel();
+    $skillDatas = $skillModel->readOne($id); 
+    $skillList = [];
+    
     // Traitement des compétences
     foreach ($skillDatas as $data) {
-        $skillId = $data['skill_skillId'] ?? null;
-        $skillLabel = $data['skill_skillLabel'] ?? null;
-
-        if ($skillId !== null && $skillLabel !== null) {
-            $skill = new Skills([
-                'skillId' => (int)$skillId,
-                'skillLabel' => $skillLabel
-            ]);
-            $skillList[] = $skill;
-        }
+        $skill = new Skills([
+            'skillId' => (int)$data['skill_skillId'],
+            'skillLabel' => $data['skill_skillLabel']
+        ]);
+        $skillList[] = $skill;
     }
-    dump($skillList, 'UserCtrl - Create - $skillList');
 
-    // Création de l'utilisateur avec réseaux et compétences
-    $user = new User([]);
-    $user->setNetworks($networkList);
     $user->setSkills($skillList);
-
-    $userList = [$user];
-    dump($userList, 'UserCtrl - Create - $userList');
-
     include "../views/users/user_profile.php";
   }
 
@@ -229,7 +222,9 @@ class UserController
 
 
 
-  # TRAITEMENT DU CREATE - Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
+  # ---------------TRAITEMENT DU CREATE 
+
+  //- Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
   public function store($request)
   {
     echo '<br>Je rentre dans store de UserCtrl</br><hr>';
@@ -240,51 +235,70 @@ class UserController
     $id = $model->create($request);
 
     if ($id) {
-      header('Location: index.php?ctrl=Dashboard&action=menu&_err=Création User avec Succés');
+      header('Location: index.php?ctrl=Home&action=index&_err=Création User avec Succés');
       exit;
     } else {
 
-      header('Location: index.php?ctrl=Dashboard&action=menu&_err=Création User a échoué');
+      header('Location: index.php?ctrl=Home&action=index&_err=Création User a échoué');
     }
     exit;
   }
 
-  #  Affichage du formulaire - UPDATE -avec les données d'un utilisateur
+
+
+
+
+  #  -------------Affichage du formulaire - UPDATE -avec les données d'un utilisateur
+
   public function edit($id)
-  {
+{
     // DONNEES USER
     $model = new UserModel();
     $userEditDatas = $model->readOne($id);
 
-    // Vérifie si l'utilisateur existe avant de créer l'objet
     if (empty($userEditDatas)) {
-      // Redirection si l'utilisateur n'existe pas
-      header('Location: index.php?ctrl=Error&action=notFound&message=' . urlencode("Utilisateur non trouvé"));
-      exit;
+        header('Location: index.php?ctrl=Dashboard&action=menu&_err=Utilisateur non trouvé');
+        exit;
     }
 
-    // Instancie l'objet User avec les données récupérées
-    $user = new User($userEditDatas);
-
-    // Array skills User
-    // Extraire les IDs des compétences de l'utilisateur
-    $userSkills = !empty($userEditDatas['skills']) ? array_map('trim', explode(',', $userEditDatas['skills'])) : [];
-
-    // Récupérer toutes les compétences disponibles pour affichage
-    $skillModel = new SkillModel();
-    $allSkills = $skillModel->readAll();
-
-    // Array network User
-    // Extraire les IDs des réseaux de l'utilisateur
-    $userNetworks = !empty($userEditDatas['networks']) ? array_map('trim', explode(',', $userEditDatas['networks'])) : [];
-
-    // Récupérer tous les réseaux disponibles pour affichage
+    // Récupération des réseaux et compétences
     $networkModel = new NetworkModel();
-    $allNetworks = $networkModel->readAll();
+    $networkDatas = $networkModel->readOne($id); // Renvoie [] si aucun résultat
 
-    // Inclure la vue et transmettre les données nécessaires
+    $skillModel = new SkillModel();
+    $skillDatas = $skillModel->readOne($id); // Renvoie [] si aucun résultat
+
+    $networkList = [];
+    $skillList = [];
+
+    // Traitement des réseaux
+    foreach ($networkDatas as $data) {
+        $network = new Networks([
+            'networkId' => (int)$data['netw_networkId'],
+            'networkLabel' => $data['netw_networkLabel'],
+            'networkLink' => $data['netw_networkLink']
+        ]);
+        $networkList[] = $network;
+    }
+
+    // Traitement des compétences
+    foreach ($skillDatas as $data) {
+        $skill = new Skills([
+            'skillId' => (int)$data['skill_skillId'],
+            'skillLabel' => $data['skill_skillLabel']
+        ]);
+        $skillList[] = $skill;
+    }
+
+    // Création de l'utilisateur avec réseaux et compétences
+    $user = new User($userEditDatas);
+    $user->setNetworks($networkList);
+    $user->setSkills($skillList);
+
     include "MVC/views/users/user_edit.php";
-  }
+}
+
+
 
 
 
@@ -294,7 +308,14 @@ class UserController
   {
     echo 'UserCtrl, je suis rentré dans update';
 
-    // Vérification des données et encryptage du mot de passe (à implémenter)
+    if (empty($request['email']) || !filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+      header('Location: index.php&ctrl=User&action=edit&-err=Adresse email non invalide');
+  exit;
+
+// Encryptage du mot de passe si présent
+if (!empty($request['pwd'])) {
+  $request['pwd'] = password_hash($request['pwd'], PASSWORD_DEFAULT);
+}
 
     $model = new UserModel();
     $upd = $model->update($id, $request);
@@ -309,6 +330,7 @@ class UserController
       header('Location: index.php?ctrl=Dashboard&action=edit&error');
     }
   }
+}
 
   # TRAITEMENT DELETE - Récupère le $_POST et le $_GET['id'] pour le transmettre au modele, modifier les données et faire la redirection vers la liste des users
   public function delete($id)

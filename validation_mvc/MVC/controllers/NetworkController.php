@@ -46,6 +46,8 @@ class NetworksController
 
 
 
+
+
   # Affichage Formulaire CREATE skills
   public function create()
   {

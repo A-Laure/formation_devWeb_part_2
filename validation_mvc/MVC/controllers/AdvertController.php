@@ -7,6 +7,7 @@ class AdvertController
   # READALL - Affichage de tous les Adverts
   public function index()
   {
+    /* dump($_POST, '$Post'); */
     # On initialise la valeur de la page courante a 1
     $currentPage = 1;
 
@@ -105,6 +106,9 @@ class AdvertController
     }
   }
 
+
+ /*  ----------SEARCH FUNCTION ------- */
+
   public function search($jobLabel = '', $jobContractType = '')
   {
     try {
@@ -143,35 +147,37 @@ $start = ($currentPage - 1) * $pagination;
     }
   }
 
+  /*  ----------READALL FUNCTION ------- */
+
   # Recup de toutles compétences
   public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC')
-  {
+{
     $model = new AdvertModel();
     $datas = $model->readAll($pagination, $start, $orderBy, $order);
 
     $advertList = [];
 
-    // Si $datas contient des données, créez des objets Adverts
     if (!empty($datas)) {
-      foreach ($datas as $data) {
-        // Création d'un objet Advert pour chaque annonce
-        $advert = new Advert($data);
-        // dump($advertList, "AdvertList");
-        // Transformation des champs `skills` et `networks` en tableaux
-        $skills = isset($data['skills']) ? explode(',', $data['skills']) : [];
-        // $networks = isset($data['networks']) ? explode(',', $data['networks']) : [];
+        foreach ($datas as $data) {
+            $advert = new Advert($data);
 
-        // Attribution des compétences et des réseaux à l'objet Advert
-        $advert->setSkills($skills);
-        // $advert->setNetworks($networks);
+            $skills = isset($data['skills']) ? explode(',', $data['skills']) : [];
+            $networks = isset($data['links']) ? explode(',', $data['links']) : [];
 
-        // Ajout de l'objet complet à la liste
-        $advertList[] = $advert;
-        dump($advertList, 'AdvertCtrl -ReadAll');
-      }
+            $advert->setSkills($skills);
+            $advert->setNetworks($networks);
+
+            // Vérifiez les réseaux pour confirmer l'attribution
+            dump($advert->getNetworks(), 'AdvertCtrl - ReadAll - networks');
+
+            $advertList[] = $advert;
+        }
     }
+
     return $advertList;
-  }
+}
+
+/*  ----------CREATE FUNCTION ------- */
 
   # Affichage Formulaire CREATE Advert
   public function create()
@@ -233,7 +239,7 @@ $advertList = [$advert];
     include 'MVC/views/advert/advert_create.php';
   }
 
-
+/*  ----------TRAITEMENT CREATE FUNCTION ------- */
 
   # TRAITEMENT DU CREATE - Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
   public function store($request)
@@ -256,18 +262,29 @@ $advertList = [$advert];
     exit;
   }
 
-  #  Affichage du formulaire - UPDATE -avec les données d'un utilisateur
-  public function edit($id)
-  {
 
+/*  ----------EDIT FUNCTION ------- */
+
+  #  Affichage du formulaire - UPDATE -avec les données d'un utilisateur
+  public function edit($id) {
     $model = new AdvertModel();
     $advertEditDatas = $model->readOne($id);
+    
+    // Vérifie que les données sont valides avant de les envoyer à la vue
+    if (!$advertEditDatas) {
+        header('Location: index.php?ctrl=Advert&action=index&_err=Annonce introuvable');
+        exit;
+    }
+
     $advert = new Advert($advertEditDatas);
     dump($advertEditDatas, 'AdvertCtrl - edit -  $advertEditDatas');
-
+    dump($advert, 'AdvertCtrl - edit -  $advert');
 
     include "MVC/views/advert/advert_edit.php";
-  }
+}
+
+
+/*  ----------TRAITEMENT EDIT FUNCTION ------- */
 
 
   # TRAITEMENT DU UPDATE - Récupère le $_POST  et le $_GET['id'] pour le transmettre au modèle, modifier les données et faire la redirection 
@@ -304,4 +321,6 @@ $advertList = [$advert];
     //   exit;
     // }
   }
+
+  
 }

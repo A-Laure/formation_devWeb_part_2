@@ -38,22 +38,23 @@ class LoginModel extends CoreModel
       echo '<br>Je suis rentré dans le try de LoginModel - LoginProcessing</br><hr> ';
       # POUR RECUPERER les infos du  USER
       $query = 'SELECT
-       u.user_userId,
-       u.user_userStatus, 
-       u.user_userEnvrnt,
-       u.user_userEmail, 
-       u.user_userPwd, 
-       u.user_userFirstname, 
-       u.user_userlastname, 
-       u.user_userTextaera, 
-       u.user_userSpeciality, 
-       u.user_userAdr1, 
-       u.user_userAdr2, 
-       u.user_userTown, 
-       u.user_userCp,
-        GROUP_CONCAT(DISTINCT t.skill_skillLabel) AS skills,
-       GROUP_CONCAT(DISTINCT j.joba_jobLabel, j.joba_jobAdvertId) AS adverts,
-      GROUP_CONCAT(DISTINCT s.netw_networkLabel) AS networks
+    u.user_userId,
+    u.user_userStatus,
+    u.user_userEnvrnt,
+    u.user_userEmail,
+    u.user_userPwd,
+    u.user_userFirstname,
+    u.user_userlastname,
+    u.user_userTextaera,
+    u.user_userSpeciality,
+    u.user_userAdr1,
+    u.user_userAdr2,
+    u.user_userTown,
+    u.user_userCp,
+    GROUP_CONCAT(DISTINCT d.netw_networkLink) AS links,
+    GROUP_CONCAT(DISTINCT t.skill_skillLabel) AS skills,
+    GROUP_CONCAT(DISTINCT j.joba_jobLabel, j.joba_jobAdvertId) AS adverts,
+    GROUP_CONCAT(DISTINCT s.netw_networkLabel) AS networks
         FROM user u 
       LEFT JOIN has h ON h.user_userId = u.user_userId
       LEFT JOIN techskills t on t.skill_skillId = h.skill_skillId
@@ -120,6 +121,7 @@ class LoginModel extends CoreModel
                 echo '<br>Mot de passe correct</br><hr>';
                 // Conversion des compétences et réseaux en tableaux
                 $userConnected['skills'] = isset($userConnected['skills']) ? explode(',', $userConnected['skills']) : [];
+                $userConnected['links'] = isset($userConnected['skills']) ? explode(',', $userConnected['links']) : [];
                 $userConnected['networks'] = isset($userConnected['networks']) ? explode(',', $userConnected['networks']) : [];
                 $userConnected['adverts'] = isset($userConnected['adverts']) ? explode(',', $userConnected['adverts']) : [];
 

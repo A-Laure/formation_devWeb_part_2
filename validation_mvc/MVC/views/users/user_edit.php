@@ -1,5 +1,9 @@
 <?php
 session_start();
+dump($user);
+dump($userEditDatas, 'UserCtrl- Edit- $userEditDatas');
+dump($skillDatas, 'UserCtrl- Edit- $skillDatas');
+dump($networkDatas, 'UserCtrl- Edit- $networktDatas');
 ?>
 
 
@@ -58,123 +62,52 @@ session_start();
 
     <hr>
  
-   
-    <!-- NETWORKS -->
-    <div class="d-flex flex-wrap">
-      <?php foreach ($networkList as $network) : ?>
-        <?php
-        // Vérifier que l'attribut `networks` est bien défini et qu'il s'agit d'un tableau
-        $networks = $network->getNetworkLabel();
-        
-        
-        ?>
-
-<label for="userTown" class="form-label">Réseaux  </label>
-        <?php foreach ($networks as $network) : ?>
-          <div class="me-3  align-items-center small-checkbox">
-
-            <label for="network[]" class="form-check-label ms-1"><?= htmlspecialchars($network->getNetworkLabel()) ?> (Saisir lien )  </label>
-            <input
-              type="text"
-              name="network[]"
-              id="network[]"
-              class="form-check-input"
-              value="">
-          </div>
-
+   <!-- NETWORKS -->
+<div class="d-flex flex-wrap">
+    <?php if (!empty($user->getNetworks())) : ?>
+        <label class="form-label">Réseaux</label>
+        <?php foreach ($user->getNetworks() as $index => $network) : ?>
+            <div class="me-3 align-items-center small-checkbox">
+                <label for="links_<?= $index ?>" class="form-check-label ms-1">
+                    <?= htmlspecialchars($network->getNetworkLabel()) ?>
+                </label>
+                <input
+                    type="text"
+                    name="links[]"
+                    id="links_<?= $index ?>"
+                    class="form-check-input"
+                    value="<?= htmlspecialchars($network->getNetworkLink()) ?>">
+            </div>
         <?php endforeach; ?>
-      <?php endforeach; ?>
-    </div>
-    <hr>
-
-    <!-- SKILLS -->
-    <label for="userTown" class="form-label">Compétences </label>
-    <div class="d-flex flex-row" width="20px">
-      <?php foreach ($skillList as $user) : ?>
-        <?php
-        // Vérifier que l'attribut `networks` est bien défini et qu'il s'agit d'un tableau
-        $skills = $user->getskills();
-        if (!is_array($skills)) {
-          continue;
-        }
-        ?>
-
-        <?php foreach ($skills as $index => $skill) : ?>
-         
-
-            <label for="skill[]" class="form-check-label ms-1"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
-            <input
-              type="checkbox"
-              name="skill[]"
-              id="skill[]"
-              class="form-check-input"
-              value="">
-       
-
-        <?php endforeach; ?>
-      <?php endforeach; ?>
-    </div>
-
-
-<!-- /* ----------------------- */ -->
-<?php
-$isAdmin = ($_SESSION[APP_TAG]['connected']['user_userStatus'] ?? '') === 'Administrateur';
-$isEditingStudent = ($userToEdit['user_userStatus'] ?? '') === 'Etudiant';
-$isSelfEdit = ($_SESSION[APP_TAG]['connected']['user_userId'] ?? '') === ($userToEdit['user_userId'] ?? '');
-
-
-if (($isSelfEdit && $isEditingStudent) || ($isAdmin && $isEditingStudent)) : 
-?>
-    <label for="skills[]" class="form-label">Compétences</label>
-
-    <ul class="card-text">
-    <?php if (!empty($allSkills)): ?>
-        <?php 
-        $userSkills = !empty($userToEdit['skills']) ? explode(',', $userToEdit['skills']) : [];
-        foreach ($allSkills as $skill):
-            $skillLabel = $skill['skill_skillLabel'];
-        ?>
-        <li>
-            <label>
-                <input type="checkbox" 
-                       name="skills[]" 
-                       value="<?= htmlspecialchars($skillLabel) ?>"
-                       <?= in_array($skillLabel, $userSkills) ? 'checked' : '' ?>>
-                <?= htmlspecialchars($skillLabel) ?>
-            </label>
-        </li>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <li>Aucune compétence disponible</li>
+    <?php else : ?>
+        <p>Aucun réseau disponible.</p>
     <?php endif; ?>
-    </ul>
-    <hr>
+</div>
+<hr>
 
-    <label for="networks[]" class="form-label">Réseaux Sociaux</label>
-
-    <ul class="card-text">
-    <?php if (!empty($allNetworks)): ?>
-        <?php 
-        $userNetworks = !empty($userToEdit['networks']) ? explode(',', $userToEdit['networks']) : [];
-        foreach ($allNetworks as $network):
-            $networkLabel = $network['netw_networkLabel'];
-        ?>
-        <li>
-            <label>
-                <input type="checkbox" 
-                       name="networks[]" 
-                       value="<?= htmlspecialchars($networkLabel) ?>"
-                       <?= in_array($networkLabel, $userNetworks) ? 'checked' : '' ?>>
-                <?= htmlspecialchars($networkLabel) ?>
+<!-- SKILLS -->
+<label for="u" class="form-label">Compétences</label>
+<div class="d-flex flex-row">
+    <?php if (isset($skillList)) : ?>
+        <?php foreach ($skillList as $skill) : ?>
+            <label for="skill[]" class="form-check-label ms-1">
+                <?= htmlspecialchars($skill->getSkillLabel()) ?>
             </label>
-        </li>
+            <input
+                type="checkbox"
+                name="skill[]"
+                id="skill[]"
+                class="form-check-input"
+                value="<?= htmlspecialchars($skill->getSkillId()) ?>">
         <?php endforeach; ?>
-    <?php else: ?>
-        <li>Aucun réseau social disponible</li>
+    <?php else : ?>
+        <p>Aucune compétence disponible.</p>
     <?php endif; ?>
-    </ul>
-<?php endif; ?>
-    <hr>
+</div>
+
+
+
+
     
 
     <label for="pwd" class="form-label">Mot de Passe</label>
