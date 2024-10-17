@@ -7,6 +7,8 @@ class AdvertController
   # READALL - Affichage de tous les Adverts
   public function index()
   {
+
+    
     /* dump($_POST, '$Post'); */
     # On initialise la valeur de la page courante a 1
     $currentPage = 1;
@@ -109,43 +111,45 @@ class AdvertController
 
  /*  ----------SEARCH FUNCTION ------- */
 
-  public function search($jobLabel = '', $jobContractType = '')
-  {
-    try {
-      $advertModel = new AdvertModel();
-      $skillModel = new SkillModel();
+ public function searchJob()
+{
+    // Vérifiez si les paramètres de recherche sont présents
+    $jobLabel = isset($_GET['jobLabel']) ? $_GET['jobLabel'] : '';
+    $jobContractType = isset($_GET['jobContractType']) ? $_GET['jobContractType'] : '';
 
-// Récupération des paramètres de pagination depuis l'URL
-$currentPage = !empty($_GET['page']) && ctype_digit($_GET['page']) ? (int)$_GET['page'] : 1;
-$pagination = !empty($_GET['pagination']) && ctype_digit($_GET['pagination']) ? (int)$_GET['pagination'] : 10;
-$start = ($currentPage - 1) * $pagination;
+    // Initialisation de la pagination
+    $pagination = 10; // Nombre de résultats par page
+    $start = isset($_GET['start']) ? (int)$_GET['start'] : 0; // Position de départ
+    $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'joba_jobAdvertId'; // Colonne par défaut pour le tri
+    $order = isset($_GET['order']) ? strtoupper($_GET['order']) : 'DESC'; // Ordre par défaut pour le tri
 
+    // Valider les colonnes et ordres autorisés pour le tri
+    $allowedColumns = ['joba_jobAdvertId', 'joba_jobEmail', 'joba_jobLabel', 'joba_jobContractType', 'joba_jobDescription', 'joba_jobAdvantages', 'joba_jobTown'];
+    $allowedOrders = ['ASC', 'DESC'];
 
-      # Application des filtres de recherche
-      $datas = $advertModel->search($jobLabel, $jobContractType, $pagination, $start);
-
-      $advertList = [];
-      if (!empty($datas)) {
-        foreach ($datas as $data) {
-          $advert = new Advert($data);
-          $skillsArray = [];
-
-          foreach (explode(',', $data['skills']) as $skillLabel) {
-            $skill = new Skills($data);
-            $skill->setSkillLabel(trim($skillLabel)); 
-            $skillsArray[] = $skill;
-          }
-
-          $advert->setSkills($skillsArray);
-          $advertList[] = $advert;
-        }
-      }
-
-      include 'MVC/views/advert/advert_search.php'; 
-    } catch (Exception $e) {
-      die($e->getMessage());
+    if (!in_array($orderBy, $allowedColumns)) {
+        $orderBy = 'joba_jobAdvertId'; // Valeur par défaut
     }
-  }
+
+    if (!in_array($order, $allowedOrders)) {
+        $order = 'DESC'; // Valeur par défaut
+    }
+
+    $model = new AdvertModel(); // Assurez-vous d'importer le modèle correct
+
+    // Appel de la méthode de recherche dans le modèle
+    if (!empty($jobLabel) || !empty($jobContractType)) {
+        // Si des critères de recherche sont fournis, effectuez la recherche
+        $results = $model->search($jobLabel, $jobContractType, $pagination, $start);
+    } else {
+        // Sinon, récupérez toutes les annonces
+        $results = $model->readAll($pagination, $start, $orderBy, $order); // Appel de readAll avec pagination et tri
+    }
+
+    // Passer les résultats à la vue
+    include 'MVC/views/adverts/advert_list.php'; // Chemin vers votre vue de résultats de recherche
+}
+
 
   /*  ----------READALL FUNCTION ------- */
 
@@ -321,6 +325,9 @@ $advertList = [$advert];
     //   exit;
     // }
   }
+
+
+
 
   
 }

@@ -19,6 +19,7 @@ class User extends CoreEntity
     
     private array $skills = [];
     private array $networks = [];
+    private array $links = [];
 
     # Getters
     public function getUserId(): ?int { return $this->userId; }
@@ -36,6 +37,7 @@ class User extends CoreEntity
     public function getUserCp(): ?int { return $this->userCp; }
     public function getSkills(): array { return $this->skills; }
     public function getNetworks(): array { return $this->networks; }
+    public function getLinks(): array { return $this->links; }
 
     # Setters
     public function setUserId(?int $userId): void { $this->userId = $userId; }
@@ -54,4 +56,5 @@ class User extends CoreEntity
 
     public function setSkills(array $skills): void { $this->skills = $skills; }
     public function setNetworks(array $networks): void { $this->networks = $networks; }
+    public function setLinks(array $links): void { $this->links = $links; }
 }

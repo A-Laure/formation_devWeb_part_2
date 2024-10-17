@@ -34,7 +34,10 @@ public function readAll(): array
 public function readOne($id)
 {
     // Préparer la requête pour sélectionner un réseau par son ID
-    $query = 'SELECT * FROM socialnetwork WHERE netw_networkId = :id';
+    $query = 'SELECT DISTINCT s.netw_networkId, s.netw_networkLabel 
+              FROM display d 
+              JOIN socialnetwork s ON s.netw_networkId = d.netw_networkId 
+              WHERE d.user_userId = :id';
 
     try {
         // Préparer la requête

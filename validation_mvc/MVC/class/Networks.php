@@ -8,13 +8,13 @@ class Networks extends CoreEntity
 
   private int $networkId;
   private string $networkLabel;
-  private ?string $networkLink;
-
+  /* private ?string $networkLink;
+ */
   public function __construct(array $data = [])
   {
       $this->networkId = $data['networkId'] ?? 0;
       $this->networkLabel = $data['networkLabel'] ?? '';
-      $this->networkLink = $data['networkLink'] ?? null;
+      /* $this->networkLink = $data['networkLink'] ?? null; */
   }
 
   # GETTERS
@@ -23,7 +23,7 @@ class Networks extends CoreEntity
 
 	public function getNetworkLabel(): string {return $this->networkLabel;}
 
-	public function getNetworkLink(): ?string {return $this->networkLink  ?? null;}
+/* 	public function getNetworkLink(): ?string {return $this->networkLink  ?? null;} */
 
 	
 
@@ -33,8 +33,8 @@ class Networks extends CoreEntity
   public function setNetworkId(int $networkId): void {$this->networkId = $networkId;}
 
 	public function setNetworkLabel(string $networkLabel): void {$this->networkLabel = $networkLabel;}
-
-	public function setNetworkLink(string $networkLink): void {$this->networkLink = $networkLink;}
+/* 
+	public function setNetworkLink(string $networkLink): void {$this->networkLink = $networkLink;} */
 
 	
 }
