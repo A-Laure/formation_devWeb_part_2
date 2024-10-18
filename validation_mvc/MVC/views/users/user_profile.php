@@ -25,27 +25,27 @@ dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
 
     <div class="card text-bg-light mb-3" style="max-width: 60rem">
 
-      <div class="card-header fz30-fwb"><?= $_SESSION[APP_TAG]['connected']['user_userFirstname'] . "  " . $_SESSION[APP_TAG]['connected']['user_userlastname'] ?></div>
-      <div class="card-header fz20-fwb "><?= $_SESSION[APP_TAG]['connected']['user_userStatus'] ?></div>
-      <div class="card-header fz20-fwb text-capitalize "><?= $_SESSION[APP_TAG]['connected']['user_userSpeciality']  ?></div>
+      <div class="card-header fz30-fwb"><?= $user->getUserFirstName() . "  " . $user->getUserLastName() ?></div>
+      <div class="card-header fz20-fwb "><?= $user->getUserStatus() ?></div>
+      <div class="card-header fz20-fwb text-capitalize "><?= $user->getUserSpeciality()  ?></div>
 
       <div class="card-body">
 
-        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userEmail'] ?></p>
-        <p class="card-text">Secteur : <?= $_SESSION[APP_TAG]['connected']['user_userEnvrnt'] ?></p>
+        <p class="card-text"><?= $user->getUserEmail() ?></p>
+        <p class="card-text">Secteur : <?= $user->getUserEnvrnt() ?></p>
         <hr>
         <p class="">Adresse : </p>
 
-        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userAdr1'] ?></p>
-        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userAdr2'] ?></p>
-        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userCp'] . '  ' . $_SESSION[APP_TAG]['connected']['user_userTown'] ?></p>
+        <p class="card-text"><?= $user->getUserAdr1() ?></p>
+        <p class="card-text"><?= $user->getUserAdr2() ?></p>
+        <p class="card-text"><?= $user->getUserCp() . '  ' . $user->getUserTown() ?></p>
         <hr>
 
         
           <p class="">Compétences : </p>
           <ul class="card-text">
-            <?php if (!empty($_SESSION[APP_TAG]['connected']['skills'])): ?>
-              <?php foreach ($_SESSION[APP_TAG]['connected']['skills'] as $skill): ?>
+            <?php if (!empty($user->getSkills())): ?>
+              <?php foreach ($user->getSkills() as $skill): ?>
                 <li><?= htmlspecialchars($skill) ?></li>
               <?php endforeach; ?>
             <?php else: ?>
@@ -58,9 +58,9 @@ dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
     
           <p class="">Réseaux Sociaux : </p>
           <ul class="card-text">
-            <?php if (!empty($_SESSION[APP_TAG]['connected']['links'])): ?>
-              <?php foreach ($_SESSION[APP_TAG]['connected']['links'] as $network): ?>
-                <li><?= htmlspecialchars($network) ?></li>
+            <?php if (!empty($user->getLinks())): ?>
+              <?php foreach ($user->getLinks() as $link): ?>
+                <li><?= htmlspecialchars($link) ?></li>
               <?php endforeach; ?>
             <?php else: ?>
               <li>****</li>
@@ -71,7 +71,7 @@ dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
 
         <p class="">Description : </p>
 
-        <p class="card-text"><?= $_SESSION[APP_TAG]['connected']['user_userTextaera'] ?></p>
+        <p class="card-text"><?= $user->getUserTextaera() ?></p>
         <hr>
 
         <!-- BUTTON EDIT / DELETE -->
@@ -89,10 +89,13 @@ dump($_SESSION[APP_TAG]['connected'], 'dans user_profile, session CONNECTED');
 
           <ul class="card-text">
 
-            <?php if (!empty($_SESSION[APP_TAG]['connected']['adverts'])): ?>
-              <?php foreach ($_SESSION[APP_TAG]['connected']['adverts'] as $advert): ?>
+            <?php if (!empty($user->getAdverts())): ?>
+              <?php foreach ($user->getAdverts() as $advert): ?>
 
-                <li><?= htmlspecialchars($advert) ?></li>
+               
+               <li><?= htmlspecialchars($advert) ?></li>
+
+         
 
               <?php endforeach; ?>
             <?php else: ?>

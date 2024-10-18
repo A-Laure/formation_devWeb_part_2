@@ -49,17 +49,19 @@ $title = "Menu";
       isset($_SESSION[APP_TAG]['connected']['user_userStatus']) 
     ):
       // Assign the correct href based on the user status
-      $href = $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant'
-        ? 'index.php?ctrl=User&action=indexEtudiantProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId']
-        : 'index.php?ctrl=User&action=indexEntrepriseProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId'];
+
+
+      /* $href = $_SESSION[APP_TAG]['connected']['user_userStatus'] === 'Etudiant'
+        ? 'index.php?ctrl=User&action=indexProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId']
+        : 'index.php?ctrl=User&action=indexProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId'];
 
       $href = ($_SESSION[APP_TAG]['connected']['user_userStatus']  === 'Etudiant' || $_SESSION[APP_TAG]['connected']['user_userStatus']  === 'Administrateur')
-        ? 'index.php?ctrl=User&action=indexEtudiantProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId']
-        : 'index.php?ctrl=User&action=indexEntrepriseProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId'];
+        ? 'index.php?ctrl=User&action=indexProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId']
+        : 'index.php?ctrl=User&action=indexProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId']; */
     ?>
 
       <div class="justify-content-center mt-5 mb-5" >
-        <a href="<?= htmlspecialchars($href) ?>" method="get" type="button" class="n-btn">
+        <a href="<?= htmlspecialchars('index.php?ctrl=User&action=indexProfile&id=' . $_SESSION[APP_TAG]['connected']['user_userId']) ?>" method="get" type="button" class="n-btn">
         <i class="fa-regular fa-user"></i>
           <p class="align-items-center">Mon Profil</p>
         </a>

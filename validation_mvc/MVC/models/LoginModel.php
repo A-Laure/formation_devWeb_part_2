@@ -96,8 +96,7 @@ class LoginModel extends CoreModel
                 exit;
             
             } else {
-            
-                echo '<br>Utilisateur trouvé :</br>';
+          
                 dump($userConnected, 'userConnected suite Fetch');
             
                 // Vérification du statut de l'utilisateur
@@ -120,10 +119,11 @@ class LoginModel extends CoreModel
               if (password_verify($pwd, $userConnected['user_userPwd'])) {
                 echo '<br>Mot de passe correct</br><hr>';
                 // Conversion des compétences et réseaux en tableaux
-                $userConnected['skills'] = isset($userConnected['skills']) ? explode(',', $userConnected['skills']) : [];
-                $userConnected['links'] = isset($userConnected['skills']) ? explode(',', $userConnected['links']) : [];
-                $userConnected['networks'] = isset($userConnected['networks']) ? explode(',', $userConnected['networks']) : [];
-                $userConnected['adverts'] = isset($userConnected['adverts']) ? explode(',', $userConnected['adverts']) : [];
+               
+                $userConnected['skills'] = !empty($userConnected['skills']) ? explode(',', $userConnected['skills']) : [];
+                $userConnected['links'] = !empty($userConnected['links']) ? explode(',', $userConnected['links']) : [];
+                $userConnected['networks'] = !empty($userConnected['networks']) ? explode(',', $userConnected['networks']) : [];
+                $userConnected['adverts'] = !empty($userConnected['adverts']) ? explode(',', $userConnected['adverts']) : [];
 
                 // Suppression du mot de passe avant stockage en session
                 unset($userConnected['user_UserPwd']);

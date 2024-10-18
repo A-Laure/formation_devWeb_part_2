@@ -6,6 +6,14 @@ $currentPage = "advertList";
 
 /* dump($datas, '$datas');*/
 /* dump($advertList, 'AdvertCtrl - ReadAll');  */
+/* dump($_GET, 'Filter $_get'); */
+
+if(isset($_GET['skills']) || isset($_GET['loc'])){
+  dump($_GET['skills'], '$_get skills');
+  dump($_GET['loc'], '$_get loc');
+
+}
+
 
 
 ?>
@@ -59,31 +67,39 @@ $currentPage = "advertList";
 
   </div>
 
-  <!-- SEARCH BAR-->
+  
+  <!-- SEARCH BAR -->
 
-  <section class="container d-flex flex-row col-6 ms-0 w-25">
-    <form action="index.php?ctrl=Advert&action=search" method="get" class="search-bar d-flex flex-column mb-4 w-100">
-        <!-- Champ pour le titre de l'annonce -->
-        <div class="mb-3">
-            
-            <input type="text" name="jobLabel" id="jobLabel" class="form-control" placeholder="Rechercher par titre d'annonce...">
-        </div>
+   <!--  <input type="hidden" name="ctrl" value="Advert">
+    <input type="hidden" name="action" value="filtre"> -->
 
-        <!-- Champ pour le type de contrat -->
-        <div class="mb-3">
+    <section class="container">
+
+      <!-- Message d'erreur si les deux champs sont vides -->
+<?php if (!empty($_GET['_err'])): ?>
+    <div class="bg-warning fs-4 text mt-5 mb-4">
+        <?= htmlspecialchars($_GET['_err']); ?>
+    </div>
+<?php endif; ?>
+
+    <form action="index.php?ctrl=Advert&action=filtre" method="get" class="row g-3 my-3">
+    <div class="col-md-5">
+        <input type="text" class="form-control" name="skills" placeholder="Compétences" value="<?= isset($_GET['skills']) ? htmlspecialchars($_GET['skills']) : '' ?>">
+    </div>
     
-            <select name="jobContractType" id="jobContractType" class="form-control">
-                <option value="">Choisir un type de contrat</option>
-                <option value="CDI">CDI</option>
-                <option value="CDD">CDD</option>
-                <option value="Alternance">Alternance</option>
-                <option value="Freelance">Freelance</option>
-            </select>
-        </div>
+    <div class="col-md-5">
+        <input type="text" class="form-control" name="loc" placeholder="Localisation" value="<?= isset($_GET['loc']) ? htmlspecialchars($_GET['loc']) : '' ?>">
+    </div>
 
-        <button type="submit" class="n-btn">Rechercher</button>
-    </form>
-</section>
+    <div class="col-md-2 d-flex justify-content-center">
+        <button type="submit" id="btnFilter" class="btn btn-primary w-100">
+            <i class="fa-solid fa-magnifying-glass"></i> Rechercher
+        </button>
+    </div>
+</form>
+    </section>
+   
+        
 
   <!-- FIN PAGINATION AND CO -->
 

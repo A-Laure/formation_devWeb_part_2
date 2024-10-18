@@ -108,53 +108,50 @@ class AdvertController
     }
   }
 
-
- /*  ----------SEARCH FUNCTION ------- */
-
- public function searchJob()
-{
-    // Vérifiez si les paramètres de recherche sont présents
-    $jobLabel = isset($_GET['jobLabel']) ? $_GET['jobLabel'] : '';
-    $jobContractType = isset($_GET['jobContractType']) ? $_GET['jobContractType'] : '';
-
-    // Initialisation de la pagination
-    $pagination = 10; // Nombre de résultats par page
-    $start = isset($_GET['start']) ? (int)$_GET['start'] : 0; // Position de départ
-    $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'joba_jobAdvertId'; // Colonne par défaut pour le tri
-    $order = isset($_GET['order']) ? strtoupper($_GET['order']) : 'DESC'; // Ordre par défaut pour le tri
-
-    // Valider les colonnes et ordres autorisés pour le tri
-    $allowedColumns = ['joba_jobAdvertId', 'joba_jobEmail', 'joba_jobLabel', 'joba_jobContractType', 'joba_jobDescription', 'joba_jobAdvantages', 'joba_jobTown'];
-    $allowedOrders = ['ASC', 'DESC'];
-
-    if (!in_array($orderBy, $allowedColumns)) {
-        $orderBy = 'joba_jobAdvertId'; // Valeur par défaut
-    }
-
-    if (!in_array($order, $allowedOrders)) {
-        $order = 'DESC'; // Valeur par défaut
-    }
-
-    $model = new AdvertModel(); // Assurez-vous d'importer le modèle correct
-
-    // Appel de la méthode de recherche dans le modèle
-    if (!empty($jobLabel) || !empty($jobContractType)) {
-        // Si des critères de recherche sont fournis, effectuez la recherche
-        $results = $model->search($jobLabel, $jobContractType, $pagination, $start);
-    } else {
-        // Sinon, récupérez toutes les annonces
-        $results = $model->readAll($pagination, $start, $orderBy, $order); // Appel de readAll avec pagination et tri
-    }
-
-    // Passer les résultats à la vue
-    include 'MVC/views/adverts/advert_list.php'; // Chemin vers votre vue de résultats de recherche
-}
+  public function show($id)
+  {
+      try {
+          // Créez des instances des modèles nécessaires
+          $advertModel = new AdvertModel();
+          $skillModel = new SkillModel();      
+  
+          // Récupération de l'annonce par son ID
+          $advertData = $advertModel->readOne($id);
+  
+          // Vérifiez si des données ont été récupérées
+          if (!empty($advertData)) {
+              // Créez un objet Advert à partir des données récupérées
+              $advert = new Advert($advertData);
+  
+              // Créez une liste de Skills en fonction des données
+              $skillsArray = [];
+              foreach (explode(',', $advertData['skills']) as $skillLabel) {
+                  $skill = new Skills();
+                  $skill->setSkillLabel(trim($skillLabel)); 
+                  $skillsArray[] = $skill;
+              }
+  
+              // Associez la liste de compétences à l'annonce
+              $advert->setSkills($skillsArray);
+          } else {
+              // Gérer le cas où aucune annonce n'est trouvée
+              throw new Exception("Aucune annonce trouvée avec l'ID: $id");
+          }
+  
+         
+          include 'MVC/views/advert/advert_detail.php';
+      } catch (Exception $e) {
+         
+          die($e->getMessage());
+      }
+  }
+  
 
 
   /*  ----------READALL FUNCTION ------- */
 
   # Recup de toutles compétences
-  public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC')
+/*   public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC')
 {
     $model = new AdvertModel();
     $datas = $model->readAll($pagination, $start, $orderBy, $order);
@@ -179,7 +176,10 @@ class AdvertController
     }
 
     return $advertList;
-}
+} */
+
+
+
 
 /*  ----------CREATE FUNCTION ------- */
 
@@ -327,6 +327,41 @@ $advertList = [$advert];
   }
 
 
+  public function filtre() {
+    try {
+        // Vérifiez la session ici
+        if (!isset($_SESSION[APP_TAG]['connected'])) {
+            header('Location: index.php?ctrl=User&action=login&_err=Pas de session connectée');
+            exit;
+        }
+
+        $skills = $_GET['skills'] ?? '';
+        $loc = $_GET['loc'] ?? '';
+
+        if (empty($skills) && empty($loc)) {
+            header('Location: index.php?ctrl=Advert&action=index&_err=Veuillez remplir au moins un champ pour la recherche.');
+            exit;
+        }
+
+$advertModel = new AdvertModel();
+
+// Logique de filtrage
+
+$datas = $advertModel->readFilter($skills, $loc); // Assurez-vous que cette méthode existe et est correctement implémentée
+
+if ($datas) {
+    // Inclure la vue avec les données filtrées
+    include 'MVC/views/advert/advert_list.php';
+} else {
+    // Aucune annonce trouvée
+    header('Location: index.php?ctrl=Advert&action=index&_err=Aucune annonce trouvée.');
+    exit;
+}
+        
+    } catch (Exception $e) {
+        echo 'Erreur : ' . $e->getMessage(); // ou logger l'erreur
+    }
+}
 
 
   

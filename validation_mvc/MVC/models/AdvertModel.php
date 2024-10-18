@@ -34,7 +34,16 @@ class AdvertModel extends CoreModel
 
   #  -------------- READALL 
   
-  public function readAll(int $pagination, int $start = 0, string $orderBy = 'joba_jobContractType', string $order = 'DESC'): array
+  public function readAll(
+    int $pagination, 
+    int $start = 0, 
+    string $orderBy = 'joba_jobContractType', 
+    string $order = 'DESC', 
+    string $skills = '', 
+    string $loc = ''
+     ): array
+
+
   {
     // Vérifier que les valeurs pour ORDER BY sont valides
     $validOrderBys = ['joba_jobAdvertId', 'joba_jobEmail', 'joba_jobLabel', 'joba_jobContractType', 'joba_jobDescription', 'joba_jobAdvantages', 'joba_jobTown'];
@@ -43,9 +52,7 @@ class AdvertModel extends CoreModel
     if (!in_array($orderBy, $validOrderBys) || !in_array($order, $validOrders)) {
       throw new InvalidArgumentException('Invalid order parameters');
     }
-
-
-    /*  echo 'Je rentre dans la fonction readAll de AdvertModel '; */
+  
     $query = 'SELECT
        j.joba_jobAdvertId,
        j.joba_jobEmail,
@@ -65,11 +72,22 @@ class AdvertModel extends CoreModel
       LEFT JOIN needs n ON n.joba_jobAdvertId =  j.joba_jobAdvertId
       LEFT JOIN socialnetwork s on s.netw_networkId = n.netw_networkId 
       LEFT JOIN display d ON w.joba_jobAdvertId =  j.joba_jobAdvertId  
-      GROUP BY  j.joba_jobAdvertId
-      ORDER BY ' . $orderBy . ' ' . $order . '
-      LIMIT :start, :pagination
+      WHERE 1=1 '; // Toujours vrai pour simplifier l'ajout de conditions
      
-      ';
+      
+
+      // Ajouter des conditions de filtre si des valeurs sont présentes
+    if (!empty($skills)) {
+      $query .= ' AND LOWER(t.skill_skillLabel) LIKE LOWER(:skills)';
+  }
+  if (!empty($loc)) {
+      $query .= ' AND LOWER(j.joba_jobTown) LIKE LOWER(:loc)';
+  }
+
+  // Ajout de la clause GROUP BY et ORDER BY
+  $query .= ' GROUP BY j.joba_jobAdvertId
+              ORDER BY ' . $orderBy . ' ' . $order . '
+              LIMIT :start, :pagination';
 
     try {
       if (($this->_req = $this->getDb()->prepare($query)) !== false) {
@@ -282,71 +300,44 @@ GROUP BY
     }
   }
 
-/* ---------------  SEARCH ADVERT ------------------ */
+  public function readFilter(string $skills, string $loc) : array  
+  {
 
-  public function search($jobLabel = '', $jobContractType = '', $pagination = 10, $start = 0)
-{
-    // Début de la requête
-    $query = 'SELECT
-        j.joba_jobAdvertId,
-        j.joba_jobEmail,
-        j.joba_jobLabel, 
-        j.joba_jobContractType,
-        j.joba_jobDescription, 
-        j.joba_jobAdvantages, 
-        j.joba_jobTown,
-        GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
-        GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks
-    FROM jobadvert j
-    LEFT JOIN want w ON w.joba_jobAdvertId = j.joba_jobAdvertId
-    LEFT JOIN techskills t ON t.skill_skillId = w.skill_skillId
-    LEFT JOIN needs n ON n.joba_jobAdvertId = j.joba_jobAdvertId
-    LEFT JOIN socialnetwork s ON s.netw_networkId = n.netw_networkId   
-    WHERE 1=1'; // Pour faciliter l'ajout de filtres
-
-    // Tableau pour les paramètres
-    $params = [];
-
-    // Application des filtres de recherche
-    if (!empty($jobLabel)) {
-        $query .= " AND j.joba_jobLabel LIKE :jobLabel"; 
-        $params[':jobLabel'] = '%' . $jobLabel . '%';
-    }
-    
-    if (!empty($jobContractType)) {
-        $query .= " AND j.joba_jobContractType = :jobContractType"; 
-        $params[':jobContractType'] = $jobContractType; 
-    }
-
-    // Ajout de la clause GROUP BY
-    $query .= ' GROUP BY j.joba_jobAdvertId';
-
-    // Ajout de la limite de pagination
-    $query .= ' LIMIT :start, :pagination';
-    
-    // Ajout des paramètres de pagination
-    $params[':start'] = (int)$start;
-    $params[':pagination'] = (int)$pagination;
-
-    try {
-      // Préparation de la requête
-      if (($this->_req = $this->getDb()->prepare($query)) !== false) {
-          // Exécution de la requête avec les paramètres
-          if ($this->_req->execute($params)) {
-              // Récupération des résultats
-              return $this->_req->fetchAll(PDO::FETCH_ASSOC);
-          } else {
-              // Redirection en cas de pas de résultats
-              header('Location: index.php?ctrl=Advert&action=index&P_err=Pas de résultat');
-              exit; 
-          }
-      }
-  } catch (PDOException $e) {
-      die($e->getMessage());
-  }
-    
-    return []; // Retourne un tableau vide en cas d'erreur ou sans résultats
+    // Si les deux champs sont vides, redirection avec message d'erreur
+if (empty($skills) && empty($loc)) {
+header('Location: index.php?ctrl=Advert&action=index&_err=Veuillez remplir au moins un champ');
+exit;
 }
+
+    $skills = strtolower($skills);
+    $loc = strtolower($loc);
+
+    $skillsTest = !empty($skills) ? " LOWER(skill_skillLabel) LIKE '%$skills%' OR " : '';
+
+
+    $query = "SELECT * 
+    FROM jobadvert 
+    WHERE $skillsTest LOWER(joba_jobTown) = :loc";
+
+try {
+if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+    
+    if (!empty($skills)) {
+        $this->_req->bindValue(':skills', "%$skills%", PDO::PARAM_STR);
+    }
+    $this->_req->bindValue(':loc', "%$loc%", PDO::PARAM_STR);  // Recherche de localisation
+
+    if ($this->_req->execute()) {
+        $datas = $this->_req->fetchAll();
+        return $datas;  // Retourner les données des annonces filtrées
+    }
+}
+return [];
+} catch (PDOException $e) {
+die($e->getMessage());
+    }
+
+  }
 
 
 }

@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 
 class UserController
@@ -6,8 +7,37 @@ class UserController
 
 # --------------LES DIFFERENTS INDEX  -----------
 
+  # 1 - INDEX PROFILE USER
+  public function indexProfile()
+  {
+      $model = new UserModel();
+  
+   
+      $userId = $_GET['id'] ?? null;  // Récupère l'ID de l'utilisateur depuis l'URL ou une autre source
+  
+      if ($userId) {
+          $datas = $model->readOne($userId);  
+  
+          $userList = [];
+  
+          if ($datas && count($datas) > 0) {
+             
+              $user = new User($datas);
+              $user->setSkills(isset($datas['skills']) ? explode(',', $datas['skills']) : []);
+              $user->setNetworks(isset($datas['networks']) ? explode(',', $datas['networks']) : []);
+              $user->setLinks(isset($datas['links']) ? explode(',', $datas['links']) : []);
+              $user->setAdverts(isset($datas['adverts']) ? explode(',', $datas['adverts']) : []);
+              $userList[] = $user;
+          }
+  
+          include 'MVC/views/users/user_profile.php';
+      } else {
+          echo "Aucun ID d'utilisateur n'a été fourni.";
+      }
+  }
 
-  # 1 - READALL - LISTE DES ETUDIANTS
+
+  # 2 - Index - LISTE DES ETUDIANTS
   public function indexEtudiantList()
   {
     $model = new UserModel();
@@ -35,31 +65,8 @@ class UserController
     include 'MVC/views/users/user_list.php';
   }
 
-  # READALL - Affichage de tous les étudiants
-  public function indexEtudiantProfile()
-  {
-    $model = new UserModel();
-    $datas = $model->readAll();
 
-    $userList = [];
-
-    if (count($datas) > 0) {
-      foreach ($datas as $data) {
-        $user = new User($data);
-        $user->setSkills(isset($data['skills']) ? explode(',', $data['skills']) : []);
-        $user->setNetworks(isset($data['networks']) ? explode(',', $data['networks']) : []);
-        $userList[] = $user;
-      }
-    }
-
-    include 'MVC/views/users/user_profile.php';
-  }
-
-
-
-
-
-  # --------------  2 -  READALL - LISTE DES ENTREPRISES
+  # --------------  3 -  INDEX - LISTE DES ENTREPRISES
 
   public function indexEntrepriseList()
   {
@@ -93,36 +100,36 @@ class UserController
 
   # ------------ 3 - READALL - PROFILE DES ENTREPRISES
 
-  public function indexEntrepriseProfile()
+ /*  public function indexEntrepriseProfile()
   {
 
     $model = new UserModel();
-    $datas = $model->readAll();
+    $datas = $model->readAll(); */
     /*   dump($datas,'Userctrl - Index - $datas'); */
 
-    $userList = [];
+    //$userList = [];
     /* echo 'UserCtrl - Index, Count du nombre de données ds $datas : ' . count($datas); */
 
-
+/* 
     if (count($datas) > 0) {
 
       foreach ($datas as $data) {
         // Créer un utilisateur en ajoutant ses compétences et réseaux sous forme de tableau
         $user = new User($data);
         $userList[] = $user;
-      }
+      } */
 
       /*  dump($userList, 'UserCtrl - index - Foreach Object UserList'); */
 
 
-      include 'MVC/views/users/user_profile.php';
+    /*   include 'MVC/views/users/user_profile.php';
     }
-  }
+  } */
 
 
 
   #  -------  SHOW / READONE - Affichage d'un utilisateur
-
+/* 
   public function show($id)
   {
 
@@ -176,12 +183,13 @@ $user->setLinks($links);
 include "MVC/views/users/user_profile.php";
 
 
-}
+} */
 
 /* --------------- CREATE AFFICHAGE DU FORMULAIRE--------------*/
                    
   public function create()
 {
+  unset($_SESSION['form_data']);
     $networkModel = new NetworkModel();
     $networkDatas = $networkModel->readAll();
     // dump($networkDatas, 'UserCtrl - Create - $networkDatas');
@@ -242,22 +250,30 @@ include "MVC/views/users/user_profile.php";
   //- Récupère le $_POST pour le transmettre au modèle et faire la redirection vers la liste des users
   public function store($request)
   {
-    echo '<br>Je rentre dans store de UserCtrl</br><hr>';
-    # FAIRE VERIF DES DONNEES : droits, hmtl char, géré par validate static
-    # FAIRE ENCRYPTAGE MDP
-
-    $model = new UserModel;
-    $id = $model->create($request);
-
-    if ($id) {
-      header('Location: index.php?ctrl=Home&action=index&_err=Création User avec Succés');
-      exit;
-    } else {
-
-      header('Location: index.php?ctrl=Home&action=index&_err=Création User a échoué');
-    }
-    exit;
+   
+      echo '<br>Je rentre dans store de UserCtrl</br><hr>';
+  
+      // Récupérer les données du formulaire
+      $form_data = $request;
+        
+      // Si toutes les validations passent, vous pouvez procéder à l'enregistrement
+      $model = new UserModel;
+      $id = $model->create($form_data); // Utilisez les données validées
+  
+      
+      if ($id) {
+         unset($_SESSION['form_data']); // Supprimez les données de session après un succès
+          header('Location: index.php?ctrl=Home&action=index&_err=Votre profil a bien été créé, vous pouvez vous déconnecter');
+          exit;
+      } else {
+          // Ici, vous pouvez décider de garder les données si une autre erreur se produit
+          // Par exemple, vous pouvez décider de garder $_SESSION['form_data'] pour que l'utilisateur puisse voir ce qu'il a entré.
+          $_SESSION['form_data'] = $form_data; // Si une erreur d'enregistrement, effacez aussi
+          header('Location: index.php?ctrl=Home&action=index&_err=Création User a échoué');
+          exit;
+      }
   }
+  
 
 
 

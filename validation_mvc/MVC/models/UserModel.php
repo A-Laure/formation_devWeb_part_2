@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 class UserModel extends CoreModel
 {
@@ -15,7 +16,7 @@ class UserModel extends CoreModel
   }
 
 
-  # READALL : Méthode pour récupérer tous les users 
+   # READALL : Méthode pour récupérer tous les users 
   public function readAll()
   {
     /*  echo 'Je rentre dans la fonction readAll de UserModel '; */
@@ -57,13 +58,58 @@ class UserModel extends CoreModel
     } catch (PDOException $e) {
       die($e->getMessage());
     }
-  }
+  } 
+   # --------------- READONE ------------
+   public function readOne($id)
+   {
+       $query = 'SELECT
+          u.user_userId,
+          u.user_userStatus, 
+          u.user_userEnvrnt,
+          u.user_userEmail, 
+          u.user_userPwd, 
+          u.user_userFirstname, 
+          u.user_userlastname, 
+          u.user_userTextaera, 
+          u.user_userSpeciality, 
+          u.user_userAdr1, 
+          u.user_userAdr2, 
+          u.user_userTown, 
+          u.user_userCp, 
+        GROUP_CONCAT(DISTINCT t.skill_skillLabel ORDER BY t.skill_skillLabel) AS skills,
+          GROUP_CONCAT(DISTINCT s.netw_networkLabel ORDER BY s.netw_networkLabel) AS networks,
+          GROUP_CONCAT(DISTINCT d.netw_networkLink ORDER BY d.netw_networkLink) AS links,  
+          GROUP_CONCAT(DISTINCT a.joba_jobLabel ORDER BY a.joba_jobLabel) AS adverts  
+    FROM user u 
+    LEFT JOIN has h ON h.user_userId = u.user_userId
+    LEFT JOIN techskills t ON t.skill_skillId = h.skill_skillId
+    LEFT JOIN display d ON d.user_userId = u.user_userId
+    LEFT JOIN socialnetwork s ON s.netw_networkId = d.netw_networkId
+    LEFT JOIN jobadvert a ON a.user_userId = u.user_userId 
+        WHERE   u.user_userId = :id';
+   
+       try {
+           if (($this->_req = $this->getDb()->prepare($query)) !== false) {
+               // Bind the value for :id
+               $this->_req->bindValue(':id', $id, PDO::PARAM_INT);
+   
+               if ($this->_req->execute()) {
+                   $datas = $this->_req->fetch(PDO::FETCH_ASSOC);
+                   return $datas;
+               }
+           }
+           return false;
+       } catch (PDOException $e) {
+           die($e->getMessage());
+       }
+   }
+   
 
 
 
   # ----------------    READONE 
 
-  public function readOne($id)
+  /* public function readOne($id)
   {
     try {
 
@@ -123,7 +169,7 @@ GROUP BY
       die($e->getMessage());
     }
   }
-
+ */
 
 
 
@@ -131,107 +177,137 @@ GROUP BY
 
 
   public function create($request)
+{
+    
+  // on stocke les données déjà remplies pour éviter une re-saisie
+  /* $_SESSION['form_data'] = $_POST;  */
 
-  {
-    echo '<br>Je rentre dans create de UseModel</br><hr>';
-    dump($_POST, 'post create User dans userModel create');
+
+// Test des zones obligatoires si vides...
+
+// On initialise un tableau d'erreurs
+$errors = [];
+
+// Vérification des champs obligatoires
+if (empty($request['status'])) {
+    $errors[] = "Le statut est obligatoire";
+}
+
+if (empty($request['spe'])) {
+    $errors[] = "La spécialité est obligatoire";
+}
+
+if (empty($request['lastname'])) {
+    $errors[] = "Le prénom est obligatoire";
+}
+
+if (empty($request['email'])) {
+    $errors[] = "L'email est obligatoire";
+}
+
+if (empty($request['pwd'])) {
+    $errors[] = "Le mot de passe est obligatoire";
+}
+
+// Si des erreurs sont présentes, on stocke les données et on redirige
+/* if (!empty($errors)) {
+    $_SESSION['form_data'] = $request; // Stocke les données pour affichage
+    header('Location: index.php?ctrl=User&action=create&_err=' . urlencode(implode(", ", $errors)));
+    exit;
+} */
 
     try {
-      // Étape 1 : Vérifier si l'email existe déjà
-      $checkQuery = "SELECT COUNT(*) FROM user WHERE user_userEmail = :email";
-      $checkStmt = $this->getDb()->prepare($checkQuery);
-      $checkStmt->bindValue(':email', $request['email']);
-      $checkStmt->execute();
+        // Étape 1 : Vérifier si l'email existe déjà
+        $checkQuery = "SELECT COUNT(*) FROM user WHERE user_userEmail = :email";
+        $checkStmt = $this->getDb()->prepare($checkQuery);
+        $checkStmt->bindValue(':email', $request['email']);
+        $checkStmt->execute();
 
-      if ($checkStmt->fetchColumn() > 0) {
-        // Si l'email existe déjà, renvoyer un message ou false`
-        header('Location: index.php?ctrl=Home&action=index&_err=email existe déjà');
-        return false;
-      }
-
-      // Étape 2 : Insertion dans la table `user`
-      $query = "INSERT INTO `user`(
-              `user_userStatus`, 
-              `user_userEnvrnt`, 
-              `user_userEmail`, 
-              `user_userPwd`, 
-              `user_userFirstName`, 
-              `user_userLastName`, 
-              `user_userTextaera`,         
-              `user_userSpeciality`, 
-              `user_userAdr1`, 
-              `user_userAdr2`, 
-              `user_userTown`,
-              `user_userCp`
-          ) VALUES (
-              :status, 
-              :envrnt, 
-              :email,          
-              :pwd, 
-              :firstName,
-              :lastName, 
-              :textaera, 
-              :speciality,    
-              :userAdr1, 
-              :userAdr2, 
-              :userTown, 
-              :userCp
-          )";
-
-      // rajouter htmlspecialchars($request['firstName']);
-      $stmt = $this->getDb()->prepare($query);
-      $stmt->bindValue(':status', htmlspecialchars($request['status']));
-      $stmt->bindValue(':envrnt', htmlspecialchars($request['envrnt']));
-      $stmt->bindValue(':email', htmlspecialchars($request['email']));
-      $stmt->bindValue(':pwd', password_hash(htmlspecialchars($request['pwd']), PASSWORD_BCRYPT));  // Hachage du mot de passe
-      $stmt->bindValue(':firstName', htmlspecialchars($request['firstName']));
-      $stmt->bindValue(':lastName', htmlspecialchars($request['lastName']));
-      $stmt->bindValue(':textaera', htmlspecialchars($request['textaera']));
-      $stmt->bindValue(':speciality', htmlspecialchars($request['speciality']));
-      $stmt->bindValue(':userAdr1', htmlspecialchars($request['userAdr1']));
-      $stmt->bindValue(':userAdr2', htmlspecialchars($request['userAdr2']));
-      $stmt->bindValue(':userTown', htmlspecialchars($request['userTown']));
-      $stmt->bindValue(':userCp', htmlspecialchars($request['userCp']));
-
-      if ($stmt->execute()) {
-        $userId = $this->getDb()->lastInsertId();
-        echo $userId;
-
-        // Étape 3 : Insertion dans la table `skills` (si des compétences sont fournies)
-        // pas la peine de mettre les [] ds $request['skills'], php sait l'interpréter
-        if (!empty($request['skills'])) {
-          $skillQuery = "INSERT INTO has (user_userId, skill_skillId) VALUES (:userId, :skill)";
-          $skillStmt = $this->getDb()->prepare($skillQuery);
-          foreach ($request['skills'] as $skill) {
-            $skillStmt->bindValue(':userId', $userId);
-            $skillStmt->bindValue(':skill', $skill);
-            $skillStmt->execute();
-          }
+        if ($checkStmt->fetchColumn() > 0) {
+            // Si l'email existe déjà, renvoyer un message ou false
+            header('Location: index.php?ctrl=Home&action=index&_err=email existe déjà');
+            return false;
         }
 
-        // Étape 4 : Insertion dans la table `networks` (si des réseaux sont fournis)
-        // pas la peine de mettre les [] ds $request['networks'], php sait l'interpréter
-        if (!empty($request['networks'])) {
-          $networkQuery = "INSERT INTO display (user_userId, netw_networkId, netw_networkLink) VALUES (:userId, :networkId, :networkLink)";
-          $networkStmt = $this->getDb()->prepare($networkQuery);
-          foreach ($request['networks'] as $network) {
-            $networkId = $network['networkId'];
-            $networkLink = $network['networkLink'];
+        // Étape 2 : Insertion dans la table `user`
+        $query = "INSERT INTO `user`(
+                `user_userStatus`, 
+                `user_userEnvrnt`, 
+                `user_userEmail`, 
+                `user_userPwd`, 
+                `user_userFirstName`, 
+                `user_userLastName`, 
+                `user_userTextaera`,         
+                `user_userAdr1`, 
+                `user_userAdr2`, 
+                `user_userTown`,
+                `user_userCp`
+            ) VALUES (
+                :status, 
+                :spe, 
+                :email,          
+                :pwd, 
+                :firstname,
+                :lastname, 
+                :textaera,    
+                :userAdr1, 
+                :userAdr2, 
+                :userTown, 
+                :userCp
+            )";
 
-            // Liez les valeurs
-            $networkStmt->bindValue(':userId', $userId);
-            $networkStmt->bindValue(':networkId', $networkId);
-            $networkStmt->bindValue(':networkLink', $networkLink);
-            $networkStmt->execute();
-          }
+        // Préparation de la requête
+        $stmt = $this->getDb()->prepare($query);
+        $stmt->bindValue(':status', htmlspecialchars($request['status']));
+        $stmt->bindValue(':spe', htmlspecialchars($request['spe']));
+        $stmt->bindValue(':email', htmlspecialchars($request['email']));
+        $stmt->bindValue(':pwd', password_hash(htmlspecialchars($request['pwd']), PASSWORD_BCRYPT));  // Hachage du mot de passe
+        $stmt->bindValue(':firstname', htmlspecialchars($request['firstname']));
+        $stmt->bindValue(':lastname', htmlspecialchars($request['lastname']));
+        $stmt->bindValue(':textaera', htmlspecialchars($request['textaera']));
+        $stmt->bindValue(':userAdr1', htmlspecialchars($request['userAdr1']));
+        $stmt->bindValue(':userAdr2', htmlspecialchars($request['userAdr2']));
+        $stmt->bindValue(':userTown', htmlspecialchars($request['userTown']));
+        $stmt->bindValue(':userCp', htmlspecialchars($request['userCp']));
+
+        if ($stmt->execute()) {
+            $userId = $this->getDb()->lastInsertId();
+            echo $userId;
+
+            // Étape 3 : Insertion dans la table `skills` (si des compétences sont fournies)
+            if (!empty($request['skills'])) {
+                $skillQuery = "INSERT INTO has (user_userId, skill_skillId) VALUES (:userId, :skill)";
+                $skillStmt = $this->getDb()->prepare($skillQuery);
+                foreach ($request['skills'] as $skill) {
+                    $skillStmt->bindValue(':userId', $userId);
+                    $skillStmt->bindValue(':skill', $skill);
+                    $skillStmt->execute();
+                }
+            }
+
+            // Étape 4 : Insertion dans la table `networks` (si des réseaux sont fournis)
+            if (!empty($request['networks'])) {
+                $networkQuery = "INSERT INTO display (user_userId, netw_networkId, netw_networkLink) VALUES (:userId, :networkId, :networkLink)";
+                $networkStmt = $this->getDb()->prepare($networkQuery);
+                foreach ($request['networks'] as $network) {
+                    $networkId = $network['networkId'];
+                    $networkLink = $network['networkLink'];
+
+                    // Liez les valeurs
+                    $networkStmt->bindValue(':userId', $userId);
+                    $networkStmt->bindValue(':networkId', $networkId);
+                    $networkStmt->bindValue(':networkLink', $networkLink);
+                    $networkStmt->execute();
+                }
+            }
+
+            return $userId; // Retourne l'ID de l'utilisateur nouvellement inséré
         }
-
-        return $userId; // Retourne l'ID de l'utilisateur nouvellement inséré
-      }
     } catch (PDOException $e) {
-      die($e->getMessage());
+        die($e->getMessage());
     }
-  }
+}
+
 
 
 
