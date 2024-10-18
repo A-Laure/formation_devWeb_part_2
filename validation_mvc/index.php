@@ -4,8 +4,6 @@
 require 'lib_vendor/helpers_debug/helpers.php';
 require_once 'admin/config/config.php';
 require_once 'lib_vendor/autoloader.php';
-
-// dump($_POST);
 require 'inc/header.php';
 /* require 'inc/navbar.php';  */
 

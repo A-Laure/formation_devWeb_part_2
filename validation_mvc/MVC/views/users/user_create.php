@@ -3,9 +3,11 @@
 
 /* if (isset(($_SESSION['form_data']))) {
   dump($_SESSION['form_data'], '$session Form data / Récup Data si zone manquante');
-}  */
+} else {
+  echo 'no session form_data';
+} */
 
-dump($_POST, '$_post');
+/* dump($_POST, '$_post'); */
 
 
 
@@ -14,19 +16,11 @@ $currentPage = "userCreate";
 
 // Récup des infos déjà saisies en cas de zones manquantes pour éviter de tout retaper
 $form_data = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : [];
-
-unset($_SESSION['form_data']);
 ?>
-
 
 <h1 class="text-align-center title">Création d'un Compte Utilisateur</h1>
 
-
-
 <section class="container m-l-45">
-
-
-
   <?php
 
   # BANNER MESSAGE ALERTE
@@ -34,6 +28,7 @@ unset($_SESSION['form_data']);
     $error = htmlspecialchars($_GET['_err']);
     echo "<div class='bg-warning fs-4 text mb-4'>{$error}</div>";
   }
+
   ?>
 
 
@@ -76,20 +71,20 @@ unset($_SESSION['form_data']);
 
 
     <hr>
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row ">
       <span> *</span>
       <label class="form-check-label" for="envrnt">IT</label>
-      <input class="" type="radio" id="envrnt" value="IT" name="envrnt">
+      <input class="" type="radio" value="IT" name="envrnt">
 
       <label class="form-check-label" for="envrnt">Communication</label>
-      <input class="" type="radio" id="envrnt" value="Communication" name="envrnt">
+      <input class="" type="radio" value="Communication" name="envrnt">
 
       <label class="form-check-label" for="envrnt">Admin</label>
-      <input class="" type="radio" id="envrnt" value="Communication" name="envrnt">
+      <input class="" type="radio" value="Admin" name="envrnt">
     </div>
-
+    <!--  On ne met pas le même name car ce n est pas un radio mais text, ce qui porte à confusion -->
     <label class="form-check-label mt-3" for="envrnt">Autres</label>
-    <input class="" type="text" id="envrnt" value="" name="envrnt">
+    <input class="" type="text" value="" name="envrnt_autre">
     </div>
     <hr>
 
@@ -123,59 +118,59 @@ unset($_SESSION['form_data']);
     <div class="mb-3 ">
       <label for="userAdr2" class="form-label">Complément d'adresse : </label>
       <input type="text" name="userAdr2" id="userAdr2" class="form-control" value="<?= isset($form_data['userAdr2']) ? htmlspecialchars($form_data['userAdr2']) : ''; ?>">
-      </div>
+    </div>
 
-      <!-- Cp-->
-      <div class="mb-3 ">
-        <label for="userCp" class="form-label">Code Postal: </label>
-        <input type="text" name="userCp" id="userCp" class="form-control" value="<?= isset($form_data['userCp']) ? htmlspecialchars($form_data['userCp']) : ''; ?>">
-      </div>
+    <!-- Cp-->
+    <div class="mb-3 ">
+      <label for="userCp" class="form-label">Code Postal: </label>
+      <input type="text" name="userCp" id="userCp" class="form-control" value="<?= isset($form_data['userCp']) ? htmlspecialchars($form_data['userCp']) : ''; ?>">
+    </div>
 
-      <!-- Ville-->
+    <!-- Ville-->
 
-      <div class="mb-3 ">
-        <label for="userTown" class="form-label">Ville : </label>
-        <input type="text" name="userTown" id="userTown" class="form-control" value="<?= isset($form_data['userTown']) ? htmlspecialchars($form_data['userTown']) : ''; ?>">
-      </div>
-      <hr>
+    <div class="mb-3 ">
+      <label for="userTown" class="form-label">Ville : </label>
+      <input type="text" name="userTown" id="userTown" class="form-control" value="<?= isset($form_data['userTown']) ? htmlspecialchars($form_data['userTown']) : ''; ?>">
+    </div>
+    <hr>
 
 
-      <!-- NETWORKS -->
-      <div class="d-flex flex-wrap">
-        <?php foreach ($userList as $user) : ?>
-          <?php $networks = $user->getNetworks(); ?>
-          <?php foreach ($networks as $index => $network) : ?>
-            <div class="me-3 align-items-center small-checkbox">
-              <label for="networks[<?= $index ?>][networkLink]" class="form-check-label ms-1"><?= htmlspecialchars($network->getNetworkLabel()) ?></label>
-              <input type="hidden" name="networks[<?= $index ?>][networkId]" value="<?= $network->getNetworkId() ?>">
-              <input type="text" name="networks[<?= $index ?>][networkLink]" class="form-check-input" placeholder="Saisir lien"
-                value="<?= isset($form_data['networks'][$index]['networkLink']) ? htmlspecialchars($form_data['networks'][$index]['networkLink']) : ''; ?>">
-            </div>
-          <?php endforeach; ?>
-        <?php endforeach; ?>
-      </div>
-      <hr>
-
-      <!-- SKILLS -->
-      <label for="skills[]" class="form-label">Compétences </label>
-
+    <!-- NETWORKS / LINKS -->
+    <div class="d-flex flex-wrap">
       <?php foreach ($userList as $user) : ?>
-        <?php $skills = $user->getskills(); ?>
-        <?php foreach ($skills as $index => $skill) : ?>
+        <?php $networks = $user->getNetworks(); ?>
+        <?php foreach ($networks as $index => $network) : ?>
           <div class="me-3 align-items-center small-checkbox">
-            <label for="skills[<?= $index ?>]" class="form-check-label me-1"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
-            <input type="checkbox" name="skills[]" id="skills[<?= $index ?>]" class="me-1" value="<?= $skill->getSkillId() ?>"
-              <?= (isset($form_data['skills']) && in_array($skill->getSkillId(), $form_data['skills'])) ? 'checked' : ''; ?>>
+            <label for="networks[<?= $index ?>][networkLink]" class="form-check-label ms-1"><?= htmlspecialchars($network->getNetworkLabel()) ?></label>
+            <input type="hidden" name="networks[<?= $index ?>][networkId]" value="<?= $network->getNetworkId() ?>">
+            <input type="text" name="networks[<?= $index ?>][networkLink]" class="form-check-input" placeholder="Saisir lien"
+              value="<?= isset($form_data['networks'][$index]['networkLink']) ? htmlspecialchars($form_data['networks'][$index]['networkLink']) : ''; ?>">
           </div>
         <?php endforeach; ?>
       <?php endforeach; ?>
+    </div>
+    <hr>
 
-      </div>
+    <!-- SKILLS -->
+    <label for="skills[]" class="form-label">Compétences </label>
+
+    <?php foreach ($userList as $user) : ?>
+      <?php $skills = $user->getskills(); ?>
+      <?php foreach ($skills as $index => $skill) : ?>
+        <div class="me-3 align-items-center small-checkbox">
+          <label for="skills[<?= $index ?>]" class="form-check-label me-1"><?= htmlspecialchars($skill->getSkillLabel()) ?></label>
+          <input type="checkbox" name="skills[]" id="skills[<?= $index ?>]" class="me-1" value="<?= $skill->getSkillId() ?>"
+            <?= (isset($form_data['skills']) && in_array($skill->getSkillId(), $form_data['skills'])) ? 'checked' : ''; ?>>
+        </div>
+      <?php endforeach; ?>
+    <?php endforeach; ?>
+
+    </div>
 
 
 
 
-      <button type="submit" class="n-btn btn-primary fs-3">Valider</button>
+    <button type="submit" class="n-btn btn-primary fs-3">Valider</button>
 
   </form>
 
