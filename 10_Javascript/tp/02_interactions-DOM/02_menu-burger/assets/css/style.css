@@ -1,0 +1,201 @@
+
+html{
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+body{
+
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+a{
+  text-decoration: none;
+  color: #222;
+}
+
+.container{
+  max-width: 120rem;
+  margin: auto;
+  padding: 0 1.6rem;
+}
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+}
+
+.main-nav > [class*='column-']{
+  padding: 0 1.6rem;
+}
+
+.column-2{grid-column: span 2;}
+
+.column-10{grid-column: span 10;}
+
+
+/* HEADER */
+header{
+  border-bottom: 1px solid #e3dddd;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  background-color: #fff;
+}
+
+.logo{
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 8rem;
+  letter-spacing: .7px;
+}
+
+.main-nav{
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.menu li + li {
+  margin-left: 2.4rem;
+}
+
+.menu a{
+  line-height: 8rem;
+  color: #888;
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.menu a:hover{
+  color: #222;
+}
+
+/* MENU BURGER */
+/* .menu-btn, .menu-icon{
+  display: none;
+  justify-self: end;
+} */
+
+.menu-icon{
+  display: none;
+  justify-self: end;
+  cursor: pointer;
+}
+
+/* .menu-icon i{
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background-color: #222;
+  transition: transform .2s ease;
+} */
+.menu-icon span{
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background-color: #222;
+  transition: transform .2s ease;
+}
+
+.menu-icon i + i{
+  margin-top: 6px;
+}
+.menu-icon span + span{
+  margin-top: 6px;
+}
+
+
+/* .menu-btn:checked ~ .menu{
+  height: 100vh;
+  height: calc(100vh - 7rem);
+  opacity: 1;
+} */
+
+.open ~ .menu{
+  height: 100vh;
+  height: calc(100vh - 7rem);
+  opacity: 1;
+}
+
+/* .menu-btn:checked + .menu-icon i:nth-child(1){
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-btn:checked + .menu-icon i:nth-child(2){
+  opacity: 0;
+}
+
+.menu-btn:checked + .menu-icon i:nth-child(3){
+  transform: translateY(-7px) rotate(-45deg);
+} */
+
+.open span:nth-child(1){
+  transform: translateY(7px) rotate(45deg);
+}
+
+.open span:nth-child(2){
+  opacity: 0;
+}
+
+.open span:nth-child(3){
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* CONTENT */
+section{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+section:nth-child(even){
+  background-color: #ccc;
+}
+
+section h2{
+  font-size: 52px;
+}
+
+
+/* MEDIA QUERIES */
+@media (max-width: 899px){
+
+
+  .menu-icon{
+    cursor: pointer;
+    display: inline-block;
+    z-index: 1;
+  }
+
+  .menu{
+    grid-column: span 12;
+    flex: 1 1 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 0;
+    opacity: 0;
+    transition: all .4s ease-in-out;
+  }
+
+  .menu li{
+    width: 100%;
+    text-align: center;
+    margin-left: 0!important;
+  }
+
+
+}

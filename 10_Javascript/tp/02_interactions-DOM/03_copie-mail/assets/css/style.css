@@ -1,0 +1,56 @@
+body{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+a{
+  text-decoration: none;
+}
+
+.btn{
+  display: inline-block;
+  background-color: lightcoral;
+  color: #fff;
+  padding: 0 24px;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.mail{
+  position: relative;
+}
+
+.copied::after{
+  content: "copié!";
+  font-size: 14px;
+  color: #1a1a1a;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 110%;
+  opacity: 0;
+
+  animation: showcopied 1.5s ease;
+}
+
+@keyframes showcopied {
+
+  0%{
+    opacity: 0;
+  }
+
+  70%{
+    opacity: 1;
+  }
+
+  100%{
+    opacity: 0;
+  }
+
+}

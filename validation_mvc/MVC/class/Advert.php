@@ -58,10 +58,6 @@ public function getJobAdvertId(): int {return $this->jobAdvertId;}
 	public function getJobStatus(): string {return $this->jobStatus;}
 
 	
-
-	
-
-	
   public function getSkills(): array { return $this->skills; } 
   public function getNetworks(): array { return $this->networks; } 
 

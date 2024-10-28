@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ex DOM 2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
+  <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> -->
+
+  <link rel="icon" type="image/jpg" href="avatar_webuser.jpg">
+
+  <style>
+    h2{
+      margin-top: 40px;
+    }
+
+    li{
+      padding: 16px;
+      cursor: pointer;
+    }
+
+    li:hover{
+      background-color: #EEE;
+    }
+
+    .error{
+      border-color: red!important;
+    }
+
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- <div class="container">
+    <h1>Exo 2 : Partie 2</h1>
+
+
+    <label for="item">Texte</label>
+    <input type="text" id="item">
+    <button class="button-primary" onclick="ajouter()">Ajouter</button>
+    <button onclick="supprimer()">Supprimer le dernier élément</button>
+
+
+    <h2>Liste</h2>
+    <ul id='liste'>
+      <li onclick="deleteItem(this)">item 1</li>
+      <li onclick="deleteItem(this)">item 2</li>
+    </ul>
+
+  </div> -->
+
+  <div class="container">
+    <h1>Exo 2 : Partie 2</h1>
+
+
+    <label for="item">Texte</label>
+    <input type="text" id="item">
+    <button class="button-primary" onclick="ajouter()">Ajouter</button>
+    <button onclick="superDelete()">Supprimer le dernier élément</button>
+
+
+    <h2>Liste</h2>
+    <ul id='liste'>
+      <li onclick="superDelete(this)">item 1</li>
+      <li onclick="superDelete(this)">item 2</li>
+    </ul>
+
+  </div>
+
+
+
+  <script src="ex.js"></script>
+</body>
+
+</html>
